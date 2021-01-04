@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xinshineng.information.dao.menzhen.MenzhenUsersDao">
+	<resultMap id="MenZhenDomain" type="com.xinshineng.information.domain.menzhen.MenzhenUsersDO">
+		<id column="u_id" property="uid"/>
+		<result column="u_name" property="uname"/>
+		<result column="u_organization" property="uorganization"/>
+		<result column="u_gender" property="ugender"/>
+		<result column="u_grand" property="ugrand"/>
+		<result column="u_age" property="uage"/>
+		<result column="u_birthday" property="ubirthday"/>
+		<result column="u_idcard" property="uidcard"/>
+		<result column="u_phone" property="uphone"/>
+		<result column="u_height" property="uheight"/>
+		<result column="u_weight" property="uweight"/>
+		<result column="u_img" property="uimg"/>
+		<result column="m_name" property="mname"/>
+		<result column="u_updateDate" property="uupdatedate"/>
+	</resultMap>
+
+	<select id="get" resultType="com.xinshineng.information.domain.menzhen.MenzhenUsersDO">
+		select `u_id`,q_r_code,`u_name`,`u_organization`,`u_gender`,`u_grand`,`u_age`,`u_birthday`,`u_idcard`,`u_phone`,`u_height`,`u_weight`,`u_folder`,`m_name`,`u_updateDate`,`u_img`
+		from m_user where u_id = #{value}
+	</select>
+
+	<select id="getFileByid" resultType="com.xinshineng.information.domain.menzhen.MenzhenUsersDO">
+		select  u_name,u_folder from m_user where u_id = #{uid}
+	</select>
+	
+	<select id="getfileByname" resultType="com.xinshineng.information.domain.menzhen.MenzhenUsersDO">
+		select u_img,u_folder,m_name from m_user where (u_name is NULL or u_name = '')
+		<if test="username != null and username != ''"> and m_name = #{username} </if> 
+	</select>
+	
+	<select id="getNameByimg" resultType="com.xinshineng.information.domain.menzhen.MenzhenUsersDO">
+		select m_name from m_user where u_img = #{uimg}
+	</select>
+	
+	<select id="selectManById"  resultType="com.xinshineng.information.domain.menzhen.MenzhenUsersDO">
+		select username from m_managers where m_Id = #{userId}
+	</select>
+	
+	<!-- 导出列表 -->
+	<select id="exeList" resultType="java.util.Map">
+		select 
+		IFNULL(u_id,'')  as id,
+		IFNULL(u_name,'') as 用户名,
+		IFNULL(u_organization,'') as 单位或学校,
+		IFNULL(u_gender,'') as 性别0男1女,
+		IFNULL(u_grand,'') as 年级或职业 ,
+		IFNULL(u_age,'') as 年龄,
+		IFNULL(u_birthday,'') as 出生日期,
+		IFNULL(u_idcard,'') as 身份证号,
+		IFNULL(u_phone,'') as 联系电话,
+		IFNULL(u_height,'') as '身高(单位:cm)',
+		IFNULL(u_weight,'') as '体重(单位:kg)' ,
+		IFNULL(u_folder,'') as 3D扫描数据存放目录 , 
+		IFNULL(m_name,'') as 负责人（医生）,
+		IFNULL(u_updateDate,'') as 创建时间  from m_user
+
+		<where>
+			<if test="ids != null and ids != ''"> and u_id in (${ids}) </if>
+			<if test="mname != null and mname != null">and m_name = #{mname} </if>
+		</where> 
+	</select>
+	
+	
+	<select id="list" resultMap="MenZhenDomain">
+		select
+			u_id,u_name,u_organization,u_gender,u_age,u_birthday,u_idcard,u_phone,u_height,u_weight,u_img,m_name,u_updateDate
+		from m_user
+        <where>  
+		  		  <if test="uid != null and uid != ''"> and u_id = #{uid} </if>
+		  		  <if test="uname != null and uname != ''"> and u_name = #{uname} </if>
+		  		  <if test="uorganization != null and uorganization != ''"> and u_organization = #{uorganization} </if>
+		  		  <if test="ugender != null and ugender != ''"> and u_gender = #{ugender} </if>
+		  		  <if test="ugrand != null and ugrand != ''"> and u_grand = #{ugrand} </if>
+		  		  <if test="uage != null and uage != ''"> and u_age = #{uage} </if>
+		  		  <if test="ubirthday != null and ubirthday != ''"> and u_birthday = #{ubirthday} </if>
+		  		  <if test="uidcard != null and uidcard != ''"> and u_idcard = #{uidcard} </if>
+		  		  <if test="uphone != null and uphone != ''"> and u_phone = #{uphone} </if>
+		  		  <if test="uheight != null and uheight != ''"> and u_height = #{uheight} </if>
+		  		  <if test="uweight != null and uweight != ''"> and u_weight = #{uweight} </if>
+		  		  <!--<if test="ufolder != null and ufolder != ''"> and u_folder = #{ufolder} </if>-->
+		  		  <if test="username != null and username != ''"> and m_name = #{username} </if>
+		  		  <if test="uupdatedate != null and uupdatedate != ''"> and u_updateDate = #{uupdatedate} </if>
+		  		  <if test="uimg != null and uimg != ''"> and u_img= #{uimg} </if>
+		  		  <if test="mname != null and mname != ''"> and m_name= #{mname} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by u_id DESC
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+	
+	<select id="selectlist" resultType="com.xinshineng.information.domain.menzhen.MenzhenUsersDO">
+		select `u_id`,`u_name`,`u_organization`,`u_gender`,`u_grand`,`u_age`,`u_birthday`,`u_idcard`,`u_phone`,`u_height`,`u_weight`,`u_folder`,`m_name`,`u_updateDate`,`u_img` 
+		from m_user
+        <where>  
+		  		  <if test="uid != null and uid != ''"> and u_id like '%${uid}%'</if>
+		  		  <if test="uname != null and uname != ''"> and u_name like '%${uname}%' </if>
+		  		  <if test="uorganization != null and uorganization != ''"> and u_organization like '%${uorganization}%'</if>
+		  		  <if test="ugender != null and ugender != ''"> and u_gender like '%${ugender}%'</if>
+		  		  <if test="ugrand != null and ugrand != ''"> and u_grand like '%${ugrand}%' </if>
+		  		  <if test="uage != null and uage != ''"> and u_age like '%${uage}%'</if>
+		  		  <if test="ubirthday != null and ubirthday != ''"> and u_birthday like '%${ubirthday}%'   </if>
+		  		  <if test="uidcard != null and uidcard != ''"> and u_idcard like '%${uidcard}%'</if>
+		  		  <if test="uphone != null and uphone != ''"> and u_phone like '%${uphone}%'</if>
+		  		  <if test="uheight != null and uheight != ''"> and u_height like '%${uheight}%' </if>
+		  		  <if test="uweight != null and uweight != ''"> and u_weight like '%${uweight}%' </if>
+		  		  <if test="ufolder != null and ufolder != ''"> and u_folder like '%${ufolder}%'</if>
+		  		  <if test="username != null and username != ''"> and m_name like '%${username}%'</if>
+		  		  <if test="uupdatedate != null and uupdatedate != ''"> and u_updateDate like '%${uupdatedate}%'</if>
+		  		  <if test="uimg != null and uimg != ''"> and u_img like '%${uimg}%'</if>
+		  		  <if test="mname != null and mname != ''"> and m_name like '%${mname}%'</if>
+		  </where>
+      	<choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by u_id ASC
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+	
+	
+	<select id="lists" resultType="com.xinshineng.information.domain.menzhen.MenzhenUsersDO">
+		select `u_id`,`u_name`,`u_organization`,`u_gender`,`u_grand`,`u_age`,`u_birthday`,`u_idcard`,`u_phone`,`u_height`,`u_weight`,`u_folder`,`m_name`,`u_updateDate`
+		from m_user
+    </select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from m_user
+		 <where>  
+		  		  <if test="uid != null and uid != ''"> and u_id = #{uid} </if>
+		  		  <if test="uname != null and uname != ''"> and u_name = #{uname} </if>
+		  		  <if test="uorganization != null and uorganization != ''"> and u_organization = #{uorganization} </if>
+		  		  <if test="ugender != null and ugender != ''"> and u_gender = #{ugender} </if>
+		  		  <if test="ugrand != null and ugrand != ''"> and u_grand = #{ugrand} </if>
+		  		  <if test="uage != null and uage != ''"> and u_age = #{uage} </if>
+		  		  <if test="ubirthday != null and ubirthday != ''"> and u_birthday = #{ubirthday} </if>
+		  		  <if test="uidcard != null and uidcard != ''"> and u_idcard = #{uidcard} </if>
+		  		  <if test="uphone != null and uphone != ''"> and u_phone = #{uphone} </if>
+		  		  <if test="uheight != null and uheight != ''"> and u_height = #{uheight} </if>
+		  		  <if test="uweight != null and uweight != ''"> and u_weight = #{uweight} </if>
+		  		  <if test="ufolder != null and ufolder != ''"> and u_folder = #{ufolder} </if>
+		  		  <if test="mname != null and mname != ''"> and m_name = #{mname} </if>
+		  		  <if test="uupdatedate != null and uupdatedate != ''"> and u_updateDate = #{uupdatedate} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.xinshineng.information.domain.menzhen.MenzhenUsersDO" useGeneratedKeys="true" keyProperty="uid">
+		insert into m_user
+		(
+			`u_name`, 
+			`u_organization`, 
+			`u_gender`, 
+			`u_grand`, 
+			`u_age`, 
+			`u_birthday`, 
+			`u_idcard`, 
+			`u_phone`, 
+			`u_height`, 
+			`u_weight`, 
+			`u_folder`, 
+			`m_name`, 
+			`u_updateDate`,
+			`u_img`,
+			q_r_code
+		)
+		values
+		(
+			#{uname}, 
+			#{uorganization}, 
+			#{ugender}, 
+			#{ugrand}, 
+			#{uage}, 
+			#{ubirthday}, 
+			#{uidcard}, 
+			#{uphone}, 
+			#{uheight}, 
+			#{uweight}, 
+			#{ufolder}, 
+			#{mname}, 
+			#{uupdatedate},
+			#{uimg},
+			#{QRCode}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.xinshineng.information.domain.menzhen.MenzhenUsersDO">
+		update m_user
+		<set>
+			<if test="uname != null">`u_name` = #{uname}, </if>
+			<if test="uorganization != null">`u_organization` = #{uorganization}, </if>
+			<if test="ugender != null">`u_gender` = #{ugender}, </if>
+			<if test="ugrand != null">`u_grand` = #{ugrand}, </if>
+			<if test="uage != null">`u_age` = #{uage}, </if>
+			<if test="ubirthday != null">`u_birthday` = #{ubirthday}, </if>
+			<if test="uidcard != null">`u_idcard` = #{uidcard}, </if>
+			<if test="uphone != null">`u_phone` = #{uphone}, </if>
+			<if test="uheight != null">`u_height` = #{uheight}, </if>
+			<if test="uweight != null">`u_weight` = #{uweight}, </if>
+			<if test="ufolder != null">`u_folder` = #{ufolder}, </if>
+			<if test="mname != null">`m_name` = #{mname}, </if>
+			<if test="uupdatedate != null">`u_updateDate` = #{uupdatedate},</if>
+			<if test="uimg != null">`u_img` = #{uimg}</if>
+		</set>
+		where u_id = #{uid}
+	</update>
+	
+	<update id="updateUser" parameterType="com.xinshineng.information.domain.menzhen.MenzhenUsersDO">
+		update m_user
+		set u_folder = NULL ,u_img = NULL
+		where u_id = #{uid}
+	</update>
+	
+	<delete id="remove">
+		delete from m_user where u_id = #{value}
+	</delete>
+	
+	<delete id="removeByimg">
+		delete from m_user where u_img = #{uimg} and u_name is NULL or u_name = ''
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from m_user where u_id in
+		<foreach item="uid" collection="array" open="(" separator="," close=")">
+			#{uid}
+		</foreach>
+	</delete>
+
+</mapper>

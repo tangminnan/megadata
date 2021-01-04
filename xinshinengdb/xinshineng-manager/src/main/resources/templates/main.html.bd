@@ -1,0 +1,2408 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<title>山东省</title>
+	<link rel="stylesheet" href="/css/css1.css">
+	<script src="/js/jquery-3.5.1.min.js"></script>
+	<script src="/js/echarts.min.js"></script>
+	<script src="/js/shandong.js"></script>
+	<script src="/js/jquery.SuperSlide.2.1.3.js"></script>
+</head>
+<body>
+<div class="allBox">
+	<h3>山东省儿童青少年近视防控预警大数据平台</h3>
+	<!--左侧数据-->
+	<div class="shujuBox LeftB">
+		<div class="bd">
+			<ul>
+				<li><div id="main2" class="shape panel"></div></li>
+				<li><div id="main1" class="shape panel"></div></li>
+				<!--<li><div id="main6" class="shape panel"></div></li>-->
+			</ul>
+		</div>
+	</div>
+	<!--中间地图-->
+	<div class="shujuBox mapLi">
+		<ul class="topLi">
+			<li id="all">总体 <span id="totalNum">255</span></li> |
+			<li id="shaiCha">筛查  <span id="shaiChaiNum">366</span></li> |
+			<li id="liuDiao">流调  <span id="liuDiaoNum">128</span></li> |
+			<!--<li>视光门诊  <span>684</span></li> |
+			<li>用眼行为  <span>985</span></li>-->
+		</ul>
+		<div class="allPOP" style="z-index: 99">
+			总人数
+			<p>
+				<span id="sp1">2</span>
+				<span id="sp2">6</span>
+				<span id="sp3">0</span>
+				<span id="sp4">0</span>
+				<span id="sp5">0</span>
+				<span id="sp6">0</span>
+			</p>
+		</div>
+		
+		<div id="mainMap" style="z-index: 1"></div>
+		<div class="botLi">
+			<p><i></i>进入子系统<i></i></p>
+            <ul>
+                <li><a href="http://shaicha.dddmaker.com" target="_blank">筛查</a></li>
+                <li><a href="http://liudiao.dddmaker.com" target="_blank">流调</a></li>
+                <li><a href="http://shiguang.dddmaker.com" target="_blank">视光门诊</a></li>
+                <li><a href="http://eyemonitor.dddmaker.com" target="_blank">用眼行为</a></li>
+                <li><a href="http://121.36.8.243:8058" target="_blank">社区</a></li>
+                <li><a href="http://3dface.dddmaker.com" target="_blank">3D扫描</a></li>
+                <li><a href="http://teas.dddmaker.com" target="_blank">Eye-TEAS</a></li>
+                <li><a href="">科研</a></li>
+            </ul>
+		</div>
+		<div class="friendlink">山东中医药大学附属眼科医院</div>
+	</div>
+	<!--右侧数据-->
+	<div class="shujuBox LeftB">
+		<div class="bd">
+			<ul>
+				<li><div id="main3" class="shape panel"></div></li>
+				<li><div id="main4" class="shape panel"></div></li>
+				<!--<li><div id="main5" class="shape panel"></div></li>-->
+			</ul>
+		</div>
+	</div>
+	
+	
+</div>          
+</body>
+</html>
+<!--
+<script>
+
+	// 基于准备好的dom，初始化echarts实例
+        var myChart1 = echarts.init(document.getElementById('main1'));
+		var myChart2 = echarts.init(document.getElementById('main2'));
+		var myChart3 = echarts.init(document.getElementById('main3'));
+		var myChart4 = echarts.init(document.getElementById('main4'));
+		/*var myChart5 = echarts.init(document.getElementById('main5'));
+		var myChart6 = echarts.init(document.getElementById('main6'));*/
+		var chart = echarts.init(document.getElementById('mainMap'));
+		var checkType="all";
+        //患病数
+        setTimeout(function () {
+        	$.ajax({
+				cache : true,
+				type : "GET",
+				async:false,
+				url : "/xinshineng/shouYe/HuanBingNum?checkType="+checkType,
+				error : function(request) {
+					parent.layer.alert("网络超时");
+				},
+				success : function(data) {
+					option = {
+						title : {
+							text: '患病/正常人数',
+							//subtext: '纯属虚构',
+							x:'left',
+							textStyle: {
+								fontWeight: 'normal',
+								color:'#fff'
+							}
+						},
+						legend: {
+							textStyle: {
+								"fontSize": 14,
+								color:'#fff'
+							}
+						},
+						grid: {
+							left: '3%',
+							right: '5%',
+							bottom: '3%',
+							containLabel: true
+						},
+						tooltip: {},
+						dataset: {
+							dimensions: ['product', '患病', '正常'],
+							source: [
+								{product: '视力低下', '患病': data.jinshiNumber, '正常': data.zhengchangNumber},
+								{product: '近视患病', '患病': data.buliangshiliNumber, '正常': data.wubuliangNumber},
+								{product: '远视患病', '患病': data.yuanshiNumber, '正常': data.wuyuanshiNumber},
+								{product: '屈光参差患病', '患病': data.quguangcenciNumber, '正常': data.wuquguangNumber},
+								{product: '正视眼', '患病': data.zhengshiNumber, '正常': data.wuzhengshiNumber}
+							]
+						},
+						xAxis: {
+							type: 'category',
+							axisLabel: {
+								//formatter: '{value} ml',//单位
+								textStyle: {
+									fontSize : 12 ,
+									color:'#fff'
+								},
+								interval:0,
+							}
+						},
+						yAxis: {
+							axisLabel: {
+								//formatter: '{value} ml',//单位
+								textStyle: {
+									fontSize : 14 ,
+									color:'#fff'
+								},
+							}
+						},
+						// Declare several bar series, each will be mapped
+						// to a column of dataset.source by default.
+						series: [
+							{type: 'bar'},
+							{type: 'bar'}
+						]
+					};
+					myChart1.setOption(option);
+
+				}
+			})
+
+		});
+		//男女比例
+		setTimeout(function () {
+			$.ajax({
+				cache : true,
+				type : "GET",
+				async:false,
+				url : "/xinshineng/shouYe/ManAndWomenCount?checkType="+checkType,
+				error : function(request) {
+					parent.layer.alert("网络超时");
+				},
+				success : function(data) {
+					option = {
+						title : {
+							text: '男女生比例',
+							x:'center',
+							textStyle: {
+								"fontSize":18,
+								color:'#fff',
+								fontWeight: 'normal'
+							}
+						},
+						tooltip : {
+							trigger: 'item',
+							formatter: "{a} <br/>{b} : {c} ({d}%)"
+						},
+						legend: {
+							orient: 'vertical',
+							left: 'left',
+							data: ['男生','女生'],
+							textStyle: {
+								"fontSize": 14,
+								color:'#fff'
+							}
+						},
+						grid: {
+							left: '3%',
+							right: '5%',
+							bottom: '3%',
+							containLabel: true
+						},
+						series : [
+							{
+								name: '人数',
+								type: 'pie',
+								radius : '55%',
+								center: ['50%', '60%'],
+								data:[
+									{value:data.man, name:'男生'},
+									{value:data.women, name:'女生'},
+								],
+								label: {
+									textStyle: {
+										"fontSize": 14,//饼图上文字
+										color:'#fff'
+									}
+								},
+								itemStyle: {
+									emphasis: {
+										shadowBlur: 10,
+										shadowOffsetX: 0,
+										shadowColor: 'rgba(0, 0, 0, 0.5)'
+									}
+								}
+							}
+						]
+					};
+
+					myChart2.setOption(option);
+				}
+			})
+
+		});	
+		
+		//每年受检人数
+		setTimeout(function () {
+			$.ajax({
+				cache : true,
+				type : "GET",
+				async:false,
+				url : "/xinshineng/shouYe/EveryYearCount?checkType="+checkType,
+				error : function(request) {
+					parent.layer.alert("网络超时");
+				},
+				success : function(data) {
+					option = {
+						// 标题
+						title: {
+							text: '历年受检者总数',
+							//subtext:'东软出品',
+							left:'center',
+							textStyle: {
+								"fontSize":16,
+								color:'#fff',
+								fontWeight: 'normal'
+							}
+						},
+						// 工具箱
+						toolbox: {
+							show: true,
+							feature:{
+								restore:{
+									show:true
+								},
+								dataView:{
+									show:true
+								},
+								dataZoom:{
+									show:true
+								},
+								magicType:{
+									type:['line','bar']
+								}
+
+							}
+						},
+						tooltip:{
+							trigger:'axis'
+						},
+						// 图例
+						legend: {
+							show: false,
+							//data: ['销量'],
+						},
+						grid: {
+							left: '0',
+							right: '5%',
+							bottom: '0',
+							containLabel: true
+						},
+						// x轴
+						xAxis: {
+							data: ["2012年", "2013年", "2014年", "2015年", "2018年", "2019年", "2020年"],
+							splitLine:{show:false }, //隐藏网格线
+							axisLabel: {
+								color: "rgba(255, 255, 255, 1)"
+							}
+						},
+						yAxis: {
+							splitLine:{show:false }, //隐藏网格线
+							type : 'value',
+							show:false   //隐藏Y轴
+
+						},
+						// 数据
+						series: [{
+							name: '人数',
+							type: 'bar',
+							barWidth: 30,//柱的粗细
+							data: [data.in2012,data.in2013,data.in2014,data.in2015,data.in2018,data.in2019,data.in2020],        //x轴对应列的值
+							itemStyle: {        //上方显示数值
+								normal: {
+									color:'#5c9ad3',//柱状颜色
+									label: {
+										show: true, //开启显示
+										position: 'top', //在上方显示
+										textStyle: { //数值样式
+											color: '#fff',
+											fontSize: 12
+										}
+									}
+								}
+							}
+						}]
+					};
+					myChart3.setOption(option);
+				}
+			})
+
+			
+
+		});	
+	
+		//近视发生与发展走势预警
+		setTimeout(function () {
+			$.ajax({
+				cache : true,
+				type : "GET",
+				async:false,
+				url : "/xinshineng/shouYe/DevelopmentAndWarning?checkType="+checkType,
+				error : function(request) {
+					parent.layer.alert("网络超时");
+				},
+				success : function(data) {
+					option = {
+						title: {
+							text: '人数',
+							textStyle: {
+								fontWeight: 'normal',
+								color: '#fff',//标题颜色
+							},
+
+							x:"left"
+						},
+						tooltip: {
+							trigger: 'axis'
+						},
+						legend: {
+							data:['临床前期','假性近视','真性近视'],
+							textStyle: {
+								"fontSize": 14,
+								color:'#fff',
+							}
+						},
+						grid: {
+							left: '3%',
+							right: '5%',
+							bottom: '3%',
+							containLabel: true
+						},
+						toolbox: {
+							feature: {
+								saveAsImage: {}
+							}
+						},
+						xAxis: {
+							type: 'category',
+							boundaryGap: false,
+							data: ['2012年','2013年','2014年','2015年','2018年','2019年','2020年'],
+							axisLabel: {
+								//formatter: '{value} ml',//单位
+								textStyle: {
+									fontSize : 14 ,
+									color:'#fff'
+								},
+							}
+						},
+						yAxis: {
+							type: 'value',
+							axisLabel: {
+								//formatter: '{value} ml',//单位
+								textStyle: {
+									fontSize : 14,
+									color:'#fff'
+								},
+							}
+						},
+						series: [
+							{
+								name:'临床前期',
+								type:'line',
+								stack: '总量',
+								data:data.linchuangqianqi
+							},
+							{
+								name:'假性近视',
+								type:'line',
+								stack: '总量',
+								data:data.jiaxingjinshi
+							},
+							{
+								name:'真性近视',
+								type:'line',
+								stack: '总量',
+								data:data.zhenxingjinshi
+							}
+						]
+					};
+
+					myChart4.setOption(option);
+				}
+			})
+
+		});
+
+
+		//山东省地图
+		setTimeout(function (){
+			$.ajax({
+				cache : true,
+				type : "GET",
+				async:false,
+				url : "/xinshineng/shouYe/Data?checkType="+checkType,
+				error : function(request) {
+					parent.layer.alert("网络超时");
+				},
+				success : function(data) {
+					$("#shaiChaiNum").text(data.shaiChaNum);
+					$("#totalNum").text(data.totalNum)
+					$("#liuDiaoNum").text(data.liuDiaoNum)
+					$("#sp1").text(data.totalNum.toString()[0]);
+					$("#sp2").text(data.totalNum.toString()[1]);
+					$("#sp3").text(data.totalNum.toString()[2]);
+					$("#sp4").text(data.totalNum.toString()[3]);
+					$("#sp5").text(data.totalNum.toString()[4]);
+					$("#sp6").text(data.totalNum.toString()[5]);
+
+					chart.setOption({
+						tooltip: {
+							trigger: 'item',
+							formatter: '{b}<br/>{c}'
+						},
+						series: [{
+							//name: '山东',
+							type: 'map',
+							mapType: '山东', // 自定义扩展图表类型
+							selectedMode: false,//single 表示单选;multiple表示多选 默认flase不选
+							itemStyle: {
+								normal: {//未选中状态
+									borderWidth:1,//边框大小
+									borderColor:'#0a718a',
+									areaColor: '#142957',//背景颜色
+									label: {
+										show: true,//显示市名称
+										color:'#3ed4ff'
+									}
+								},
+								emphasis: {// 选中样式
+									borderWidth:1,
+									borderColor:'#0a718a',
+									areaColor: '#0b1c2d',
+									label: {
+										show: true,
+										textStyle: {
+											color: '#ffa022'
+										}
+									}
+								}
+							},
+							layoutCenter: ['50%', '50%'],//距离左右，上下距离的百分比
+							layoutSize:'135%',//map百分比大小
+
+							data: [
+								{name: '济南市', value: data.JiNanShi},
+								{name: '青岛市', value: data.QingDaoShi},
+								{name: '烟台市', value: data.YanTaiShi},
+								{name: '潍坊市', value: data.WeiFangShi},
+								{name: '威海市', value: data.WeiHaiShi},
+								{name: '日照市', value: data.RiZhaoShi},
+								{name: '临沂市', value: data.LinYiShi},
+								{name: '枣庄市', value: data.ZaoZhuangShi},
+								{name: '淄博市', value: data.ZiBoShi},
+								{name: '济宁市', value: data.JiNingShi},
+								{name: '菏泽市', value: data.HeZeShi},
+								{name: '聊城市', value: data.LiaoChengShi},
+								{name: '泰安市', value: data.TaiAnShi},
+								{name: '莱芜市', value: data.LaiWuShi},
+								{name: '东营市', value: data.DongYingShi},
+								{name: '滨州市', value: data.BinZhouShi},
+								{name: '德州市', value: data.DeZhouShi}
+							],
+							// 自定义名称映射
+							nameMap: {
+								'JiNanShi': '济南市',
+								'QingDaoShi': '青岛市',
+								'YanTaiShi': '烟台市',
+								'WeiFangShi': '潍坊市',
+								'WeiHaiShi': '威海市',
+								'RiZhaoShi': '日照市',
+								'LinYiShi': '临沂市',
+								'ZaoZhuangShi': '枣庄市',
+								'ZiBoShi': '淄博市',
+								'JiNingShi': '济宁市',
+								'HeZeShi': '菏泽市',
+								'LiaoChengShi': '聊城市',
+								'TaiAnShi': '泰安市',
+								'LaiWuShi': '莱芜市',
+								'DongYingShi': '东营市',
+								'BinZhouShi': '滨州市',
+								'DeZhouShi': '德州市'
+							}
+						}]
+
+					});
+				}
+			});
+			}
+		)
+
+
+		chart.on('click',function (params){
+
+			//患病数
+			setTimeout(function () {
+				$.ajax({
+					cache : true,
+					type : "GET",
+					async:false,
+					url : "/xinshineng/shouYe/HuanBingNum?cityName="+params.name+"&checkType="+checkType,
+					error : function(request) {
+						parent.layer.alert("网络超时");
+					},
+					success : function(data) {
+						option = {
+							title : {
+								text: '患病/正常人数',
+								//subtext: '纯属虚构',
+								x:'left',
+								textStyle: {
+									fontWeight: 'normal',
+									color:'#fff'
+								}
+							},
+							legend: {
+								textStyle: {
+									"fontSize": 14,
+									color:'#fff'
+								}
+							},
+							grid: {
+								left: '3%',
+								right: '5%',
+								bottom: '3%',
+								containLabel: true
+							},
+							tooltip: {},
+							dataset: {
+								dimensions: ['product', '患病', '正常'],
+								source: [
+									{product: '视力低下', '患病': data.jinshiNumber, '正常': data.zhengchangNumber},
+									{product: '近视患病', '患病': data.buliangshiliNumber, '正常': data.wubuliangNumber},
+									{product: '远视患病', '患病': data.yuanshiNumber, '正常': data.wuyuanshiNumber},
+									{product: '屈光参差患病', '患病': data.quguangcenciNumber, '正常': data.wuquguangNumber},
+									{product: '正视眼', '患病': data.zhengshiNumber, '正常': data.wuzhengshiNumber}
+								]
+							},
+							xAxis: {
+								type: 'category',
+								axisLabel: {
+									//formatter: '{value} ml',//单位
+									textStyle: {
+										fontSize : 12 ,
+										color:'#fff'
+									},
+									interval:0,
+								}
+							},
+							yAxis: {
+								axisLabel: {
+									//formatter: '{value} ml',//单位
+									textStyle: {
+										fontSize : 14 ,
+										color:'#fff'
+									},
+								}
+							},
+							// Declare several bar series, each will be mapped
+							// to a column of dataset.source by default.
+							series: [
+								{type: 'bar'},
+								{type: 'bar'}
+							]
+						};
+						myChart1.setOption(option);
+
+					}
+				})
+
+			});
+			//男女比例
+			setTimeout(function () {
+				$.ajax({
+					cache : true,
+					type : "GET",
+					async:false,
+					url : "/xinshineng/shouYe/ManAndWomenCount?cityName="+params.name+"&checkType="+checkType,
+					error : function(request) {
+						parent.layer.alert("网络超时");
+					},
+					success : function(data) {
+						option = {
+							title : {
+								text: '男女生比例',
+								x:'center',
+								textStyle: {
+									"fontSize":18,
+									color:'#fff',
+									fontWeight: 'normal'
+								}
+							},
+							tooltip : {
+								trigger: 'item',
+								formatter: "{a} <br/>{b} : {c} ({d}%)"
+							},
+							legend: {
+								orient: 'vertical',
+								left: 'left',
+								data: ['男生','女生'],
+								textStyle: {
+									"fontSize": 14,
+									color:'#fff'
+								}
+							},
+							grid: {
+								left: '3%',
+								right: '5%',
+								bottom: '3%',
+								containLabel: true
+							},
+							series : [
+								{
+									name: '人数',
+									type: 'pie',
+									radius : '55%',
+									center: ['50%', '60%'],
+									data:[
+										{value:data.man, name:'男生'},
+										{value:data.women, name:'女生'},
+									],
+									label: {
+										textStyle: {
+											"fontSize": 14,//饼图上文字
+											color:'#fff'
+										}
+									},
+									itemStyle: {
+										emphasis: {
+											shadowBlur: 10,
+											shadowOffsetX: 0,
+											shadowColor: 'rgba(0, 0, 0, 0.5)'
+										}
+									}
+								}
+							]
+						};
+
+						myChart2.setOption(option);
+					}
+				})
+
+			});
+
+			//每年受检人数
+			setTimeout(function () {
+				$.ajax({
+					cache : true,
+					type : "GET",
+					async:false,
+					url : "/xinshineng/shouYe/EveryYearCount?cityName="+params.name+"&checkType="+checkType,
+					error : function(request) {
+						parent.layer.alert("网络超时");
+					},
+					success : function(data) {
+						option = {
+							// 标题
+							title: {
+								text: '历年受检者总数',
+								//subtext:'东软出品',
+								left:'center',
+								textStyle: {
+									"fontSize":16,
+									color:'#fff',
+									fontWeight: 'normal'
+								}
+							},
+							// 工具箱
+							toolbox: {
+								show: true,
+								feature:{
+									restore:{
+										show:true
+									},
+									dataView:{
+										show:true
+									},
+									dataZoom:{
+										show:true
+									},
+									magicType:{
+										type:['line','bar']
+									}
+
+								}
+							},
+							tooltip:{
+								trigger:'axis'
+							},
+							// 图例
+							legend: {
+								show: false,
+								//data: ['销量'],
+							},
+							grid: {
+								left: '0',
+								right: '5%',
+								bottom: '0',
+								containLabel: true
+							},
+							// x轴
+							xAxis: {
+								data: ["2012年", "2013年", "2014年", "2015年", "2018年", "2019年", "2020年"],
+								splitLine:{show:false }, //隐藏网格线
+								axisLabel: {
+									color: "rgba(255, 255, 255, 1)"
+								}
+							},
+							yAxis: {
+								splitLine:{show:false }, //隐藏网格线
+								type : 'value',
+								show:false   //隐藏Y轴
+
+							},
+							// 数据
+							series: [{
+								name: '人数',
+								type: 'bar',
+								barWidth: 30,//柱的粗细
+								data: [data.in2012,data.in2013,data.in2014,data.in2015,data.in2018,data.in2019,data.in2020],        //x轴对应列的值
+								itemStyle: {        //上方显示数值
+									normal: {
+										color:'#5c9ad3',//柱状颜色
+										label: {
+											show: true, //开启显示
+											position: 'top', //在上方显示
+											textStyle: { //数值样式
+												color: '#fff',
+												fontSize: 12
+											}
+										}
+									}
+								}
+							}]
+						};
+						myChart3.setOption(option);
+					}
+				})
+
+
+
+			});
+
+			//近视发生与发展走势预警
+			setTimeout(function () {
+				$.ajax({
+					cache : true,
+					type : "GET",
+					async:false,
+					url : "/xinshineng/shouYe/DevelopmentAndWarning?cityName="+params.name+"&checkType="+checkType,
+					error : function(request) {
+						parent.layer.alert("网络超时");
+					},
+					success : function(data) {
+						option = {
+							title: {
+								text: '人数',
+								textStyle: {
+									fontWeight: 'normal',
+									color: '#fff',//标题颜色
+								},
+
+								x:"left"
+							},
+							tooltip: {
+								trigger: 'axis'
+							},
+							legend: {
+								data:['临床前期','假性近视','真性近视'],
+								textStyle: {
+									"fontSize": 14,
+									color:'#fff',
+								}
+							},
+							grid: {
+								left: '3%',
+								right: '5%',
+								bottom: '3%',
+								containLabel: true
+							},
+							toolbox: {
+								feature: {
+									saveAsImage: {}
+								}
+							},
+							xAxis: {
+								type: 'category',
+								boundaryGap: false,
+								data: ['2012年','2013年','2014年','2015年','2018年','2019年','2020年'],
+								axisLabel: {
+									//formatter: '{value} ml',//单位
+									textStyle: {
+										fontSize : 14 ,
+										color:'#fff'
+									},
+								}
+							},
+							yAxis: {
+								type: 'value',
+								axisLabel: {
+									//formatter: '{value} ml',//单位
+									textStyle: {
+										fontSize : 14,
+										color:'#fff'
+									},
+								}
+							},
+							series: [
+								{
+									name:'临床前期',
+									type:'line',
+									stack: '总量',
+									data:data.linchuangqianqi
+								},
+								{
+									name:'假性近视',
+									type:'line',
+									stack: '总量',
+									data:data.jiaxingjinshi
+								},
+								{
+									name:'真性近视',
+									type:'line',
+									stack: '总量',
+									data:data.zhenxingjinshi
+								}
+							]
+						};
+
+						myChart4.setOption(option);
+					}
+				})
+
+			});
+		})
+		$("#all").click(function (){
+			checkType="all";
+			//患病数
+			setTimeout(function () {
+				$.ajax({
+					cache : true,
+					type : "GET",
+					async:false,
+					url : "/xinshineng/shouYe/HuanBingNum?checkType="+checkType,
+					error : function(request) {
+						parent.layer.alert("网络超时");
+					},
+					success : function(data) {
+						option = {
+							title : {
+								text: '患病/正常人数',
+								//subtext: '纯属虚构',
+								x:'left',
+								textStyle: {
+									fontWeight: 'normal',
+									color:'#fff'
+								}
+							},
+							legend: {
+								textStyle: {
+									"fontSize": 14,
+									color:'#fff'
+								}
+							},
+							grid: {
+								left: '3%',
+								right: '5%',
+								bottom: '3%',
+								containLabel: true
+							},
+							tooltip: {},
+							dataset: {
+								dimensions: ['product', '患病', '正常'],
+								source: [
+									{product: '视力低下', '患病': data.jinshiNumber, '正常': data.zhengchangNumber},
+									{product: '近视患病', '患病': data.buliangshiliNumber, '正常': data.wubuliangNumber},
+									{product: '远视患病', '患病': data.yuanshiNumber, '正常': data.wuyuanshiNumber},
+									{product: '屈光参差患病', '患病': data.quguangcenciNumber, '正常': data.wuquguangNumber},
+									{product: '正视眼', '患病': data.zhengshiNumber, '正常': data.wuzhengshiNumber}
+								]
+							},
+							xAxis: {
+								type: 'category',
+								axisLabel: {
+									//formatter: '{value} ml',//单位
+									textStyle: {
+										fontSize : 12 ,
+										color:'#fff'
+									},
+									interval:0,
+								}
+							},
+							yAxis: {
+								axisLabel: {
+									//formatter: '{value} ml',//单位
+									textStyle: {
+										fontSize : 14 ,
+										color:'#fff'
+									},
+								}
+							},
+							// Declare several bar series, each will be mapped
+							// to a column of dataset.source by default.
+							series: [
+								{type: 'bar'},
+								{type: 'bar'}
+							]
+						};
+						myChart1.setOption(option);
+
+					}
+				})
+
+			});
+			//男女比例
+			setTimeout(function () {
+				$.ajax({
+					cache : true,
+					type : "GET",
+					async:false,
+					url : "/xinshineng/shouYe/ManAndWomenCount?checkType="+checkType,
+					error : function(request) {
+						parent.layer.alert("网络超时");
+					},
+					success : function(data) {
+						option = {
+							title : {
+								text: '男女生比例',
+								x:'center',
+								textStyle: {
+									"fontSize":18,
+									color:'#fff',
+									fontWeight: 'normal'
+								}
+							},
+							tooltip : {
+								trigger: 'item',
+								formatter: "{a} <br/>{b} : {c} ({d}%)"
+							},
+							legend: {
+								orient: 'vertical',
+								left: 'left',
+								data: ['男生','女生'],
+								textStyle: {
+									"fontSize": 14,
+									color:'#fff'
+								}
+							},
+							grid: {
+								left: '3%',
+								right: '5%',
+								bottom: '3%',
+								containLabel: true
+							},
+							series : [
+								{
+									name: '人数',
+									type: 'pie',
+									radius : '55%',
+									center: ['50%', '60%'],
+									data:[
+										{value:data.man, name:'男生'},
+										{value:data.women, name:'女生'},
+									],
+									label: {
+										textStyle: {
+											"fontSize": 14,//饼图上文字
+											color:'#fff'
+										}
+									},
+									itemStyle: {
+										emphasis: {
+											shadowBlur: 10,
+											shadowOffsetX: 0,
+											shadowColor: 'rgba(0, 0, 0, 0.5)'
+										}
+									}
+								}
+							]
+						};
+
+						myChart2.setOption(option);
+					}
+				})
+
+			});
+
+			//每年受检人数
+			setTimeout(function () {
+				$.ajax({
+					cache : true,
+					type : "GET",
+					async:false,
+					url : "/xinshineng/shouYe/EveryYearCount?checkType="+checkType,
+					error : function(request) {
+						parent.layer.alert("网络超时");
+					},
+					success : function(data) {
+						option = {
+							// 标题
+							title: {
+								text: '历年受检者总数',
+								//subtext:'东软出品',
+								left:'center',
+								textStyle: {
+									"fontSize":16,
+									color:'#fff',
+									fontWeight: 'normal'
+								}
+							},
+							// 工具箱
+							toolbox: {
+								show: true,
+								feature:{
+									restore:{
+										show:true
+									},
+									dataView:{
+										show:true
+									},
+									dataZoom:{
+										show:true
+									},
+									magicType:{
+										type:['line','bar']
+									}
+
+								}
+							},
+							tooltip:{
+								trigger:'axis'
+							},
+							// 图例
+							legend: {
+								show: false,
+								//data: ['销量'],
+							},
+							grid: {
+								left: '0',
+								right: '5%',
+								bottom: '0',
+								containLabel: true
+							},
+							// x轴
+							xAxis: {
+								data: ["2012年", "2013年", "2014年", "2015年", "2018年", "2019年", "2020年"],
+								splitLine:{show:false }, //隐藏网格线
+								axisLabel: {
+									color: "rgba(255, 255, 255, 1)"
+								}
+							},
+							yAxis: {
+								splitLine:{show:false }, //隐藏网格线
+								type : 'value',
+								show:false   //隐藏Y轴
+
+							},
+							// 数据
+							series: [{
+								name: '人数',
+								type: 'bar',
+								barWidth: 30,//柱的粗细
+								data: [data.in2012,data.in2013,data.in2014,data.in2015,data.in2018,data.in2019,data.in2020],        //x轴对应列的值
+								itemStyle: {        //上方显示数值
+									normal: {
+										color:'#5c9ad3',//柱状颜色
+										label: {
+											show: true, //开启显示
+											position: 'top', //在上方显示
+											textStyle: { //数值样式
+												color: '#fff',
+												fontSize: 12
+											}
+										}
+									}
+								}
+							}]
+						};
+						myChart3.setOption(option);
+					}
+				})
+
+
+
+			});
+
+			//近视发生与发展走势预警
+			setTimeout(function () {
+				$.ajax({
+					cache : true,
+					type : "GET",
+					async:false,
+					url : "/xinshineng/shouYe/DevelopmentAndWarning?checkType="+checkType,
+					error : function(request) {
+						parent.layer.alert("网络超时");
+					},
+					success : function(data) {
+						option = {
+							title: {
+								text: '人数',
+								textStyle: {
+									fontWeight: 'normal',
+									color: '#fff',//标题颜色
+								},
+
+								x:"left"
+							},
+							tooltip: {
+								trigger: 'axis'
+							},
+							legend: {
+								data:['临床前期','假性近视','真性近视'],
+								textStyle: {
+									"fontSize": 14,
+									color:'#fff',
+								}
+							},
+							grid: {
+								left: '3%',
+								right: '5%',
+								bottom: '3%',
+								containLabel: true
+							},
+							toolbox: {
+								feature: {
+									saveAsImage: {}
+								}
+							},
+							xAxis: {
+								type: 'category',
+								boundaryGap: false,
+								data: ['2012年','2013年','2014年','2015年','2018年','2019年','2020年'],
+								axisLabel: {
+									//formatter: '{value} ml',//单位
+									textStyle: {
+										fontSize : 14 ,
+										color:'#fff'
+									},
+								}
+							},
+							yAxis: {
+								type: 'value',
+								axisLabel: {
+									//formatter: '{value} ml',//单位
+									textStyle: {
+										fontSize : 14,
+										color:'#fff'
+									},
+								}
+							},
+							series: [
+								{
+									name:'临床前期',
+									type:'line',
+									stack: '总量',
+									data:data.linchuangqianqi
+								},
+								{
+									name:'假性近视',
+									type:'line',
+									stack: '总量',
+									data:data.jiaxingjinshi
+								},
+								{
+									name:'真性近视',
+									type:'line',
+									stack: '总量',
+									data:data.zhenxingjinshi
+								}
+							]
+						};
+
+						myChart4.setOption(option);
+					}
+				})
+
+			});
+
+			setTimeout(function (){
+						$.ajax({
+							cache : true,
+							type : "GET",
+							async:false,
+							url : "/xinshineng/shouYe/Data?checkType="+checkType,
+							error : function(request) {
+								parent.layer.alert("网络超时");
+							},
+							success : function(data) {
+								chart.setOption({
+									tooltip: {
+										trigger: 'item',
+										formatter: '{b}<br/>{c}'
+									},
+									series: [{
+										//name: '山东',
+										type: 'map',
+										mapType: '山东', // 自定义扩展图表类型
+										selectedMode: false,//single 表示单选;multiple表示多选 默认flase不选
+										itemStyle: {
+											normal: {//未选中状态
+												borderWidth:1,//边框大小
+												borderColor:'#0a718a',
+												areaColor: '#142957',//背景颜色
+												label: {
+													show: true,//显示市名称
+													color:'#3ed4ff'
+												}
+											},
+											emphasis: {// 选中样式
+												borderWidth:1,
+												borderColor:'#0a718a',
+												areaColor: '#0b1c2d',
+												label: {
+													show: true,
+													textStyle: {
+														color: '#ffa022'
+													}
+												}
+											}
+										},
+										layoutCenter: ['50%', '50%'],//距离左右，上下距离的百分比
+										layoutSize:'135%',//map百分比大小
+
+										data: [
+											{name: '济南市', value: data.JiNanShi},
+											{name: '青岛市', value: data.QingDaoShi},
+											{name: '烟台市', value: data.YanTaiShi},
+											{name: '潍坊市', value: data.WeiFangShi},
+											{name: '威海市', value: data.WeiHaiShi},
+											{name: '日照市', value: data.RiZhaoShi},
+											{name: '临沂市', value: data.LinYiShi},
+											{name: '枣庄市', value: data.ZaoZhuangShi},
+											{name: '淄博市', value: data.ZiBoShi},
+											{name: '济宁市', value: data.JiNingShi},
+											{name: '菏泽市', value: data.HeZeShi},
+											{name: '聊城市', value: data.LiaoChengShi},
+											{name: '泰安市', value: data.TaiAnShi},
+											{name: '莱芜市', value: data.LaiWuShi},
+											{name: '东营市', value: data.DongYingShi},
+											{name: '滨州市', value: data.BinZhouShi},
+											{name: '德州市', value: data.DeZhouShi}
+										],
+										// 自定义名称映射
+										nameMap: {
+											'JiNanShi': '济南市',
+											'QingDaoShi': '青岛市',
+											'YanTaiShi': '烟台市',
+											'WeiFangShi': '潍坊市',
+											'WeiHaiShi': '威海市',
+											'RiZhaoShi': '日照市',
+											'LinYiShi': '临沂市',
+											'ZaoZhuangShi': '枣庄市',
+											'ZiBoShi': '淄博市',
+											'JiNingShi': '济宁市',
+											'HeZeShi': '菏泽市',
+											'LiaoChengShi': '聊城市',
+											'TaiAnShi': '泰安市',
+											'LaiWuShi': '莱芜市',
+											'DongYingShi': '东营市',
+											'BinZhouShi': '滨州市',
+											'DeZhouShi': '德州市'
+										}
+									}]
+
+								});
+							}
+						});
+					}
+			)
+		});
+
+		$("#shaiCha").click(function (){
+			checkType="shaiCha";
+			//患病数
+			setTimeout(function () {
+				$.ajax({
+					cache : true,
+					type : "GET",
+					async:false,
+					url : "/xinshineng/shouYe/HuanBingNum?checkType="+checkType,
+					error : function(request) {
+						parent.layer.alert("网络超时");
+					},
+					success : function(data) {
+						option = {
+							title : {
+								text: '患病/正常人数',
+								//subtext: '纯属虚构',
+								x:'left',
+								textStyle: {
+									fontWeight: 'normal',
+									color:'#fff'
+								}
+							},
+							legend: {
+								textStyle: {
+									"fontSize": 14,
+									color:'#fff'
+								}
+							},
+							grid: {
+								left: '3%',
+								right: '5%',
+								bottom: '3%',
+								containLabel: true
+							},
+							tooltip: {},
+							dataset: {
+								dimensions: ['product', '患病', '正常'],
+								source: [
+									{product: '视力低下', '患病': data.jinshiNumber, '正常': data.zhengchangNumber},
+									{product: '近视患病', '患病': data.buliangshiliNumber, '正常': data.wubuliangNumber},
+									{product: '远视患病', '患病': data.yuanshiNumber, '正常': data.wuyuanshiNumber},
+									{product: '屈光参差患病', '患病': data.quguangcenciNumber, '正常': data.wuquguangNumber},
+									{product: '正视眼', '患病': data.zhengshiNumber, '正常': data.wuzhengshiNumber}
+								]
+							},
+							xAxis: {
+								type: 'category',
+								axisLabel: {
+									//formatter: '{value} ml',//单位
+									textStyle: {
+										fontSize : 12 ,
+										color:'#fff'
+									},
+									interval:0,
+								}
+							},
+							yAxis: {
+								axisLabel: {
+									//formatter: '{value} ml',//单位
+									textStyle: {
+										fontSize : 14 ,
+										color:'#fff'
+									},
+								}
+							},
+							// Declare several bar series, each will be mapped
+							// to a column of dataset.source by default.
+							series: [
+								{type: 'bar'},
+								{type: 'bar'}
+							]
+						};
+						myChart1.setOption(option);
+
+					}
+				})
+
+			});
+			//男女比例
+			setTimeout(function () {
+				$.ajax({
+					cache : true,
+					type : "GET",
+					async:false,
+					url : "/xinshineng/shouYe/ManAndWomenCount?checkType="+checkType,
+					error : function(request) {
+						parent.layer.alert("网络超时");
+					},
+					success : function(data) {
+						option = {
+							title : {
+								text: '男女生比例',
+								x:'center',
+								textStyle: {
+									"fontSize":18,
+									color:'#fff',
+									fontWeight: 'normal'
+								}
+							},
+							tooltip : {
+								trigger: 'item',
+								formatter: "{a} <br/>{b} : {c} ({d}%)"
+							},
+							legend: {
+								orient: 'vertical',
+								left: 'left',
+								data: ['男生','女生'],
+								textStyle: {
+									"fontSize": 14,
+									color:'#fff'
+								}
+							},
+							grid: {
+								left: '3%',
+								right: '5%',
+								bottom: '3%',
+								containLabel: true
+							},
+							series : [
+								{
+									name: '人数',
+									type: 'pie',
+									radius : '55%',
+									center: ['50%', '60%'],
+									data:[
+										{value:data.man, name:'男生'},
+										{value:data.women, name:'女生'},
+									],
+									label: {
+										textStyle: {
+											"fontSize": 14,//饼图上文字
+											color:'#fff'
+										}
+									},
+									itemStyle: {
+										emphasis: {
+											shadowBlur: 10,
+											shadowOffsetX: 0,
+											shadowColor: 'rgba(0, 0, 0, 0.5)'
+										}
+									}
+								}
+							]
+						};
+
+						myChart2.setOption(option);
+					}
+				})
+
+			});
+
+			//每年受检人数
+			setTimeout(function () {
+				$.ajax({
+					cache : true,
+					type : "GET",
+					async:false,
+					url : "/xinshineng/shouYe/EveryYearCount?checkType="+checkType,
+					error : function(request) {
+						parent.layer.alert("网络超时");
+					},
+					success : function(data) {
+						option = {
+							// 标题
+							title: {
+								text: '历年受检者总数',
+								//subtext:'东软出品',
+								left:'center',
+								textStyle: {
+									"fontSize":16,
+									color:'#fff',
+									fontWeight: 'normal'
+								}
+							},
+							// 工具箱
+							toolbox: {
+								show: true,
+								feature:{
+									restore:{
+										show:true
+									},
+									dataView:{
+										show:true
+									},
+									dataZoom:{
+										show:true
+									},
+									magicType:{
+										type:['line','bar']
+									}
+
+								}
+							},
+							tooltip:{
+								trigger:'axis'
+							},
+							// 图例
+							legend: {
+								show: false,
+								//data: ['销量'],
+							},
+							grid: {
+								left: '0',
+								right: '5%',
+								bottom: '0',
+								containLabel: true
+							},
+							// x轴
+							xAxis: {
+								data: ["2012年", "2013年", "2014年", "2015年", "2018年", "2019年", "2020年"],
+								splitLine:{show:false }, //隐藏网格线
+								axisLabel: {
+									color: "rgba(255, 255, 255, 1)"
+								}
+							},
+							yAxis: {
+								splitLine:{show:false }, //隐藏网格线
+								type : 'value',
+								show:false   //隐藏Y轴
+
+							},
+							// 数据
+							series: [{
+								name: '人数',
+								type: 'bar',
+								barWidth: 30,//柱的粗细
+								data: [data.in2012,data.in2013,data.in2014,data.in2015,data.in2018,data.in2019,data.in2020],        //x轴对应列的值
+								itemStyle: {        //上方显示数值
+									normal: {
+										color:'#5c9ad3',//柱状颜色
+										label: {
+											show: true, //开启显示
+											position: 'top', //在上方显示
+											textStyle: { //数值样式
+												color: '#fff',
+												fontSize: 12
+											}
+										}
+									}
+								}
+							}]
+						};
+						myChart3.setOption(option);
+					}
+				})
+
+
+
+			});
+
+			//近视发生与发展走势预警
+			setTimeout(function () {
+				$.ajax({
+					cache : true,
+					type : "GET",
+					async:false,
+					url : "/xinshineng/shouYe/DevelopmentAndWarning?checkType="+checkType,
+					error : function(request) {
+						parent.layer.alert("网络超时");
+					},
+					success : function(data) {
+						option = {
+							title: {
+								text: '人数',
+								textStyle: {
+									fontWeight: 'normal',
+									color: '#fff',//标题颜色
+								},
+
+								x:"left"
+							},
+							tooltip: {
+								trigger: 'axis'
+							},
+							legend: {
+								data:['临床前期','假性近视','真性近视'],
+								textStyle: {
+									"fontSize": 14,
+									color:'#fff',
+								}
+							},
+							grid: {
+								left: '3%',
+								right: '5%',
+								bottom: '3%',
+								containLabel: true
+							},
+							toolbox: {
+								feature: {
+									saveAsImage: {}
+								}
+							},
+							xAxis: {
+								type: 'category',
+								boundaryGap: false,
+								data: ['2012年','2013年','2014年','2015年','2018年','2019年','2020年'],
+								axisLabel: {
+									//formatter: '{value} ml',//单位
+									textStyle: {
+										fontSize : 14 ,
+										color:'#fff'
+									},
+								}
+							},
+							yAxis: {
+								type: 'value',
+								axisLabel: {
+									//formatter: '{value} ml',//单位
+									textStyle: {
+										fontSize : 14,
+										color:'#fff'
+									},
+								}
+							},
+							series: [
+								{
+									name:'临床前期',
+									type:'line',
+									stack: '总量',
+									data:data.linchuangqianqi
+								},
+								{
+									name:'假性近视',
+									type:'line',
+									stack: '总量',
+									data:data.jiaxingjinshi
+								},
+								{
+									name:'真性近视',
+									type:'line',
+									stack: '总量',
+									data:data.zhenxingjinshi
+								}
+							]
+						};
+
+						myChart4.setOption(option);
+					}
+				})
+
+			});
+
+			setTimeout(function (){
+						$.ajax({
+							cache : true,
+							type : "GET",
+							async:false,
+							url : "/xinshineng/shouYe/Data?checkType="+checkType,
+							error : function(request) {
+								parent.layer.alert("网络超时");
+							},
+							success : function(data) {
+								chart.setOption({
+									tooltip: {
+										trigger: 'item',
+										formatter: '{b}<br/>{c}'
+									},
+									series: [{
+										//name: '山东',
+										type: 'map',
+										mapType: '山东', // 自定义扩展图表类型
+										selectedMode: false,//single 表示单选;multiple表示多选 默认flase不选
+										itemStyle: {
+											normal: {//未选中状态
+												borderWidth:1,//边框大小
+												borderColor:'#0a718a',
+												areaColor: '#142957',//背景颜色
+												label: {
+													show: true,//显示市名称
+													color:'#3ed4ff'
+												}
+											},
+											emphasis: {// 选中样式
+												borderWidth:1,
+												borderColor:'#0a718a',
+												areaColor: '#0b1c2d',
+												label: {
+													show: true,
+													textStyle: {
+														color: '#ffa022'
+													}
+												}
+											}
+										},
+										layoutCenter: ['50%', '50%'],//距离左右，上下距离的百分比
+										layoutSize:'135%',//map百分比大小
+
+										data: [
+											{name: '济南市', value: data.JiNanShi},
+											{name: '青岛市', value: data.QingDaoShi},
+											{name: '烟台市', value: data.YanTaiShi},
+											{name: '潍坊市', value: data.WeiFangShi},
+											{name: '威海市', value: data.WeiHaiShi},
+											{name: '日照市', value: data.RiZhaoShi},
+											{name: '临沂市', value: data.LinYiShi},
+											{name: '枣庄市', value: data.ZaoZhuangShi},
+											{name: '淄博市', value: data.ZiBoShi},
+											{name: '济宁市', value: data.JiNingShi},
+											{name: '菏泽市', value: data.HeZeShi},
+											{name: '聊城市', value: data.LiaoChengShi},
+											{name: '泰安市', value: data.TaiAnShi},
+											{name: '莱芜市', value: data.LaiWuShi},
+											{name: '东营市', value: data.DongYingShi},
+											{name: '滨州市', value: data.BinZhouShi},
+											{name: '德州市', value: data.DeZhouShi}
+										],
+										// 自定义名称映射
+										nameMap: {
+											'JiNanShi': '济南市',
+											'QingDaoShi': '青岛市',
+											'YanTaiShi': '烟台市',
+											'WeiFangShi': '潍坊市',
+											'WeiHaiShi': '威海市',
+											'RiZhaoShi': '日照市',
+											'LinYiShi': '临沂市',
+											'ZaoZhuangShi': '枣庄市',
+											'ZiBoShi': '淄博市',
+											'JiNingShi': '济宁市',
+											'HeZeShi': '菏泽市',
+											'LiaoChengShi': '聊城市',
+											'TaiAnShi': '泰安市',
+											'LaiWuShi': '莱芜市',
+											'DongYingShi': '东营市',
+											'BinZhouShi': '滨州市',
+											'DeZhouShi': '德州市'
+										}
+									}]
+
+								});
+							}
+						});
+					}
+			)
+		});
+
+		$("#liuDiao").click(function (){
+			checkType="liuDiao";
+			//患病数
+			setTimeout(function () {
+				$.ajax({
+					cache : true,
+					type : "GET",
+					async:false,
+					url : "/xinshineng/shouYe/HuanBingNum?checkType="+checkType,
+					error : function(request) {
+						parent.layer.alert("网络超时");
+					},
+					success : function(data) {
+						option = {
+							title : {
+								text: '患病/正常人数',
+								//subtext: '纯属虚构',
+								x:'left',
+								textStyle: {
+									fontWeight: 'normal',
+									color:'#fff'
+								}
+							},
+							legend: {
+								textStyle: {
+									"fontSize": 14,
+									color:'#fff'
+								}
+							},
+							grid: {
+								left: '3%',
+								right: '5%',
+								bottom: '3%',
+								containLabel: true
+							},
+							tooltip: {},
+							dataset: {
+								dimensions: ['product', '患病', '正常'],
+								source: [
+									{product: '视力低下', '患病': data.jinshiNumber, '正常': data.zhengchangNumber},
+									{product: '近视患病', '患病': data.buliangshiliNumber, '正常': data.wubuliangNumber},
+									{product: '远视患病', '患病': data.yuanshiNumber, '正常': data.wuyuanshiNumber},
+									{product: '屈光参差患病', '患病': data.quguangcenciNumber, '正常': data.wuquguangNumber},
+									{product: '正视眼', '患病': data.zhengshiNumber, '正常': data.wuzhengshiNumber}
+								]
+							},
+							xAxis: {
+								type: 'category',
+								axisLabel: {
+									//formatter: '{value} ml',//单位
+									textStyle: {
+										fontSize : 12 ,
+										color:'#fff'
+									},
+									interval:0,
+								}
+							},
+							yAxis: {
+								axisLabel: {
+									//formatter: '{value} ml',//单位
+									textStyle: {
+										fontSize : 14 ,
+										color:'#fff'
+									},
+								}
+							},
+							// Declare several bar series, each will be mapped
+							// to a column of dataset.source by default.
+							series: [
+								{type: 'bar'},
+								{type: 'bar'}
+							]
+						};
+						myChart1.setOption(option);
+
+					}
+				})
+
+			});
+			//男女比例
+			setTimeout(function () {
+				$.ajax({
+					cache : true,
+					type : "GET",
+					async:false,
+					url : "/xinshineng/shouYe/ManAndWomenCount?checkType="+checkType,
+					error : function(request) {
+						parent.layer.alert("网络超时");
+					},
+					success : function(data) {
+						option = {
+							title : {
+								text: '男女生比例',
+								x:'center',
+								textStyle: {
+									"fontSize":18,
+									color:'#fff',
+									fontWeight: 'normal'
+								}
+							},
+							tooltip : {
+								trigger: 'item',
+								formatter: "{a} <br/>{b} : {c} ({d}%)"
+							},
+							legend: {
+								orient: 'vertical',
+								left: 'left',
+								data: ['男生','女生'],
+								textStyle: {
+									"fontSize": 14,
+									color:'#fff'
+								}
+							},
+							grid: {
+								left: '3%',
+								right: '5%',
+								bottom: '3%',
+								containLabel: true
+							},
+							series : [
+								{
+									name: '人数',
+									type: 'pie',
+									radius : '55%',
+									center: ['50%', '60%'],
+									data:[
+										{value:data.man, name:'男生'},
+										{value:data.women, name:'女生'},
+									],
+									label: {
+										textStyle: {
+											"fontSize": 14,//饼图上文字
+											color:'#fff'
+										}
+									},
+									itemStyle: {
+										emphasis: {
+											shadowBlur: 10,
+											shadowOffsetX: 0,
+											shadowColor: 'rgba(0, 0, 0, 0.5)'
+										}
+									}
+								}
+							]
+						};
+
+						myChart2.setOption(option);
+					}
+				})
+
+			});
+
+			//每年受检人数
+			setTimeout(function () {
+				$.ajax({
+					cache : true,
+					type : "GET",
+					async:false,
+					url : "/xinshineng/shouYe/EveryYearCount?checkType="+checkType,
+					error : function(request) {
+						parent.layer.alert("网络超时");
+					},
+					success : function(data) {
+						option = {
+							// 标题
+							title: {
+								text: '历年受检者总数',
+								//subtext:'东软出品',
+								left:'center',
+								textStyle: {
+									"fontSize":16,
+									color:'#fff',
+									fontWeight: 'normal'
+								}
+							},
+							// 工具箱
+							toolbox: {
+								show: true,
+								feature:{
+									restore:{
+										show:true
+									},
+									dataView:{
+										show:true
+									},
+									dataZoom:{
+										show:true
+									},
+									magicType:{
+										type:['line','bar']
+									}
+
+								}
+							},
+							tooltip:{
+								trigger:'axis'
+							},
+							// 图例
+							legend: {
+								show: false,
+								//data: ['销量'],
+							},
+							grid: {
+								left: '0',
+								right: '5%',
+								bottom: '0',
+								containLabel: true
+							},
+							// x轴
+							xAxis: {
+								data: ["2012年", "2013年", "2014年", "2015年", "2018年", "2019年", "2020年"],
+								splitLine:{show:false }, //隐藏网格线
+								axisLabel: {
+									color: "rgba(255, 255, 255, 1)"
+								}
+							},
+							yAxis: {
+								splitLine:{show:false }, //隐藏网格线
+								type : 'value',
+								show:false   //隐藏Y轴
+
+							},
+							// 数据
+							series: [{
+								name: '人数',
+								type: 'bar',
+								barWidth: 30,//柱的粗细
+								data: [data.in2012,data.in2013,data.in2014,data.in2015,data.in2018,data.in2019,data.in2020],        //x轴对应列的值
+								itemStyle: {        //上方显示数值
+									normal: {
+										color:'#5c9ad3',//柱状颜色
+										label: {
+											show: true, //开启显示
+											position: 'top', //在上方显示
+											textStyle: { //数值样式
+												color: '#fff',
+												fontSize: 12
+											}
+										}
+									}
+								}
+							}]
+						};
+						myChart3.setOption(option);
+					}
+				})
+
+
+
+			});
+
+			//近视发生与发展走势预警
+			setTimeout(function () {
+				$.ajax({
+					cache : true,
+					type : "GET",
+					async:false,
+					url : "/xinshineng/shouYe/DevelopmentAndWarning?checkType="+checkType,
+					error : function(request) {
+						parent.layer.alert("网络超时");
+					},
+					success : function(data) {
+						option = {
+							title: {
+								text: '人数',
+								textStyle: {
+									fontWeight: 'normal',
+									color: '#fff',//标题颜色
+								},
+
+								x:"left"
+							},
+							tooltip: {
+								trigger: 'axis'
+							},
+							legend: {
+								data:['临床前期','假性近视','真性近视'],
+								textStyle: {
+									"fontSize": 14,
+									color:'#fff',
+								}
+							},
+							grid: {
+								left: '3%',
+								right: '5%',
+								bottom: '3%',
+								containLabel: true
+							},
+							toolbox: {
+								feature: {
+									saveAsImage: {}
+								}
+							},
+							xAxis: {
+								type: 'category',
+								boundaryGap: false,
+								data: ['2012年','2013年','2014年','2015年','2018年','2019年','2020年'],
+								axisLabel: {
+									//formatter: '{value} ml',//单位
+									textStyle: {
+										fontSize : 14 ,
+										color:'#fff'
+									},
+								}
+							},
+							yAxis: {
+								type: 'value',
+								axisLabel: {
+									//formatter: '{value} ml',//单位
+									textStyle: {
+										fontSize : 14,
+										color:'#fff'
+									},
+								}
+							},
+							series: [
+								{
+									name:'临床前期',
+									type:'line',
+									stack: '总量',
+									data:data.linchuangqianqi
+								},
+								{
+									name:'假性近视',
+									type:'line',
+									stack: '总量',
+									data:data.jiaxingjinshi
+								},
+								{
+									name:'真性近视',
+									type:'line',
+									stack: '总量',
+									data:data.zhenxingjinshi
+								}
+							]
+						};
+
+						myChart4.setOption(option);
+					}
+				})
+
+			});
+
+			setTimeout(function (){
+						$.ajax({
+							cache : true,
+							type : "GET",
+							async:false,
+							url : "/xinshineng/shouYe/Data?checkType="+checkType,
+							error : function(request) {
+								parent.layer.alert("网络超时");
+							},
+							success : function(data) {
+								chart.setOption({
+									tooltip: {
+										trigger: 'item',
+										formatter: '{b}<br/>{c}'
+									},
+									series: [{
+										//name: '山东',
+										type: 'map',
+										mapType: '山东', // 自定义扩展图表类型
+										selectedMode: false,//single 表示单选;multiple表示多选 默认flase不选
+										itemStyle: {
+											normal: {//未选中状态
+												borderWidth:1,//边框大小
+												borderColor:'#0a718a',
+												areaColor: '#142957',//背景颜色
+												label: {
+													show: true,//显示市名称
+													color:'#3ed4ff'
+												}
+											},
+											emphasis: {// 选中样式
+												borderWidth:1,
+												borderColor:'#0a718a',
+												areaColor: '#0b1c2d',
+												label: {
+													show: true,
+													textStyle: {
+														color: '#ffa022'
+													}
+												}
+											}
+										},
+										layoutCenter: ['50%', '50%'],//距离左右，上下距离的百分比
+										layoutSize:'135%',//map百分比大小
+
+										data: [
+											{name: '济南市', value: data.JiNanShi},
+											{name: '青岛市', value: data.QingDaoShi},
+											{name: '烟台市', value: data.YanTaiShi},
+											{name: '潍坊市', value: data.WeiFangShi},
+											{name: '威海市', value: data.WeiHaiShi},
+											{name: '日照市', value: data.RiZhaoShi},
+											{name: '临沂市', value: data.LinYiShi},
+											{name: '枣庄市', value: data.ZaoZhuangShi},
+											{name: '淄博市', value: data.ZiBoShi},
+											{name: '济宁市', value: data.JiNingShi},
+											{name: '菏泽市', value: data.HeZeShi},
+											{name: '聊城市', value: data.LiaoChengShi},
+											{name: '泰安市', value: data.TaiAnShi},
+											{name: '莱芜市', value: data.LaiWuShi},
+											{name: '东营市', value: data.DongYingShi},
+											{name: '滨州市', value: data.BinZhouShi},
+											{name: '德州市', value: data.DeZhouShi}
+										],
+										// 自定义名称映射
+										nameMap: {
+											'JiNanShi': '济南市',
+											'QingDaoShi': '青岛市',
+											'YanTaiShi': '烟台市',
+											'WeiFangShi': '潍坊市',
+											'WeiHaiShi': '威海市',
+											'RiZhaoShi': '日照市',
+											'LinYiShi': '临沂市',
+											'ZaoZhuangShi': '枣庄市',
+											'ZiBoShi': '淄博市',
+											'JiNingShi': '济宁市',
+											'HeZeShi': '菏泽市',
+											'LiaoChengShi': '聊城市',
+											'TaiAnShi': '泰安市',
+											'LaiWuShi': '莱芜市',
+											'DongYingShi': '东营市',
+											'BinZhouShi': '滨州市',
+											'DeZhouShi': '德州市'
+										}
+									}]
+
+								});
+							}
+						});
+					}
+			)
+		});
+	//柱状图2
+	/*setTimeout(function () {
+        option = {
+            title : {
+                text: '来访人数',
+                //subtext: '纯属虚构',
+                x:'left',
+                textStyle: {
+                    fontWeight: 'normal',
+                    color:'#fff'
+                }
+            },
+            legend: {
+                textStyle: {
+                    "fontSize": 14,
+                    color:'#fff'
+                }
+            },
+            grid: {
+                left: '3%',
+                right: '5%',
+                bottom: '3%',
+                containLabel: true
+            },
+            tooltip: {},
+            dataset: {
+                dimensions: ['product', '2019年', '2018年', '2017年'],
+                source: [
+                    {product: '日照', '2019年': 202, '2018年': 324, '2017年': 325},
+                    {product: '烟台', '2019年': 150, '2018年': 156, '2017年': 257},
+                    {product: '青岛', '2019年': 111, '2018年': 325, '2017年': 156},
+                    {product: '威海', '2019年': 200, '2018年': 205, '2017年': 327}
+                ]
+            },
+            xAxis: {
+                    type: 'category',
+                    axisLabel: {
+                        //formatter: '{value} ml',//单位
+                        textStyle: {
+                           fontSize : 14 ,
+                            color:'#fff'
+                       },
+                    }
+                },
+            yAxis: {
+                    axisLabel: {
+                        //formatter: '{value} ml',//单位
+                        textStyle: {
+                           fontSize : 14 ,
+                            color:'#fff'
+                       },
+                    }
+                },
+            // Declare several bar series, each will be mapped
+            // to a column of dataset.source by default.
+            series: [
+                {type: 'bar'},
+                {type: 'bar'},
+                {type: 'bar'}
+            ]
+        };
+
+        myChart5.setOption(option);
+    });	*/
+
+	//饼状图2
+	/*setTimeout(function () {
+        option = {
+            title : {
+                text: '2020年注册',
+                subtext: '纯属虚构',
+                x:'center',
+                textStyle: {
+                    "fontSize":18,
+                    color:'#fff',
+                    fontWeight: 'normal'
+                }
+            },
+            tooltip : {
+                trigger: 'item',
+                formatter: "{a} <br/>{b} : {c} ({d}%)"
+            },
+            legend: {
+                orient: 'vertical',
+                left: 'left',
+                data: ['注册成功','注册失败','其他','其他1','其他2'],
+                textStyle: {
+                    "fontSize": 14,
+                    color:'#fff'
+                }
+            },
+            grid: {
+                left: '3%',
+                right: '5%',
+                bottom: '3%',
+                containLabel: true
+            },
+            series : [
+                {
+                    name: '访问来源',
+                    type: 'pie',
+                    radius : '55%',
+                    center: ['50%', '60%'],
+                    data:[
+                        {value:335, name:'注册成功'},
+                        {value:310, name:'注册失败'},
+                        {value:234, name:'其他'},
+                        {value:234, name:'其他1'},
+                        {value:234, name:'其他2'},
+                    ],
+                    label: {
+                        textStyle: {
+                            "fontSize": 14,//饼图上文字
+                            color:'#fff'
+                        }
+                    },
+                    itemStyle: {
+                        emphasis: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }
+            ]
+        };
+
+        myChart6.setOption(option);
+    });*/
+	/*option = {
+		title: {
+			text: '点击量',
+			textStyle: {
+				fontWeight: 'normal',
+				color: '#fff',//标题颜色
+			},
+
+			x:"left"
+		},
+		tooltip: {
+			trigger: 'axis'
+		},
+		legend: {
+			data:['济南','青岛','临沂','枣庄','淄博'],
+			textStyle: {
+				"fontSize": 14,
+				color:'#fff',
+			}
+		},
+		grid: {
+			left: '3%',
+			right: '5%',
+			bottom: '3%',
+			containLabel: true
+		},
+		toolbox: {
+			feature: {
+				saveAsImage: {}
+			}
+		},
+		xAxis: {
+			type: 'category',
+			boundaryGap: false,
+			data: ['2012年','2013年','2014年','2015年','2016年','2017年','2018年'],
+			axisLabel: {
+				//formatter: '{value} ml',//单位
+				textStyle: {
+					fontSize : 14 ,
+					color:'#fff'
+				},
+			}
+		},
+		yAxis: {
+			type: 'value',
+			axisLabel: {
+				//formatter: '{value} ml',//单位
+				textStyle: {
+					fontSize : 14,
+					color:'#fff'
+				},
+			}
+		},
+		series: [
+			{
+				name:'济南',
+				type:'line',
+				stack: '总量',
+				data:[120, 132, 101, 134, 90, 230, 210]
+			},
+			{
+				name:'青岛',
+				type:'line',
+				stack: '总量',
+				data:[220, 182, 191, 234, 290, 330, 310]
+			},
+			{
+				name:'临沂',
+				type:'line',
+				stack: '总量',
+				data:[150, 232, 201, 154, 190, 330, 410]
+			},
+			{
+				name:'枣庄',
+				type:'line',
+				stack: '总量',
+				data:[320, 332, 301, 334, 390, 330, 320]
+			},
+			{
+				name:'淄博',
+				type:'line',
+				stack: '总量',
+				data:[820, 932, 901, 934, 1290, 1330, 1320]
+			}
+		]
+	};
+
+	myChart1.setOption(option);*/
+</script>
+-->
+
+

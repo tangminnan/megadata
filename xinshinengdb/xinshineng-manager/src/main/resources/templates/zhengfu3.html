@@ -1,0 +1,483 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>政府3</title>
+    <link rel="stylesheet" href="css/index.css" />
+</head>
+
+<body style="background-color: #06164A;">
+    <header>
+        <h1>山东省儿童青少年近视防控预警大数据平台</h1>
+        <div class="showTime">当前时间：2020年12月<span></span></div>
+    </header>
+    <section class="mainbox">
+        <div class="column">
+        	<div class="panel pie">
+                <h2>男女比例</h2>
+                <div class="chart"></div>
+                <div class="panel-footer"></div>
+            </div>
+            <div class="panel bar">
+                <h2>患病/正常人数</h2>
+                <div class="chart"></div>
+                <div class="panel-footer"></div>
+            </div>  
+        </div>
+        <div class="column">
+            <div class="no">
+                <div class="no-hd">
+                    <ul>
+                        <li>125811</li>
+                        <li>1245</li>
+                        <li>1645</li>
+                        <li>4563</li>
+                        <li>1043</li>
+                    </ul>
+                </div>
+                <div class="no-bd">
+                    <ul>
+                        <li>总体</li>
+                        <li>筛查</li>
+                        <li>流调</li>
+                        <li>视光门诊</li>
+                        <li>用眼行为</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="map">
+                <div class="chart">
+                	<!--表格-->
+                	<div class="m-demo">
+						<table cellpadding="0" cellspacing="0">
+							<thead>
+							   <tr>
+									<th>学校名称</th>
+									<th>总人数</th>
+									<th>实际筛查人数</th>
+									<th>临床前期</th>
+									<th>假性近视</th>
+									<th>真性近视</th>
+								</tr>
+							</thead>
+						</table>
+						<div class="scroll">
+							<table cellpadding="0" cellspacing="0">
+								<tbody>
+									<tr>
+									<td>某某小学</td>
+									<td>45698</td>
+									<td>35896</td>
+									<td>2568</td>
+									<td>1256</td>
+									<td>2256</td>
+									</tr>
+									<tr>
+										<td>某某小学</td>
+										<td>45698</td>
+										<td>35896</td>
+										<td>2568</td>
+										<td>1256</td>
+										<td>2256</td>
+									</tr>
+									<tr>
+										<td>某某小学</td>
+										<td>45698</td>
+										<td>35896</td>
+										<td>2568</td>
+										<td>1256</td>
+										<td>2256</td>
+									</tr>
+									<tr>
+										<td>某某小学</td>
+										<td>45698</td>
+										<td>35896</td>
+										<td>2568</td>
+										<td>1256</td>
+										<td>2256</td>
+									</tr>
+									<tr>
+										<td>某某小学</td>
+										<td>45698</td>
+										<td>35896</td>
+										<td>2568</td>
+										<td>1256</td>
+										<td>2256</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+
+                	
+                </div>
+                <div class="map1"></div>
+                <div class="map2"></div>
+                <div class="map3"></div>
+                <div class="tiaozuan">
+                	<p><span>进入子系统</span></p>
+                	<ul>
+						<li><a href="">筛查</a></li>
+						<li><a href="">流调</a></li>
+						<li><a href="">视光门诊</a></li>
+						<li><a href="">用眼行为</a></li>
+						<li><a href="">社区</a></li>
+						<li><a href="">3D扫描</a></li>
+						<li><a href="">Eye-TEAS</a></li>
+						<li><a href="">科研</a></li>
+					</ul>
+                </div>
+            </div>
+        </div>
+        <div class="column">
+            <div class="panel line1">
+                <h2 class="lookat"><span>查看</span></h2>
+                <div class="chart"></div>
+                <div class="panel-footer"></div>
+            </div>
+            <div class="panel bar1">
+                <h2>历年受检者总数</h2>
+                <div class="chart"></div>
+                <div class="panel-footer"></div>
+            </div>
+        </div>
+        <!--=========折现弹框===========-->
+        <div class="popTk">
+        	<div class="popBlack"></div>
+        	<div class="panel line" id="popLine">
+                <div class="chart"></div>
+                <div class="panel-footer"></div>
+            </div>
+        </div>
+        
+    </section>
+	<script src="js/jquery-3.5.1.min.js"></script>
+    <script src="js/flexible.js"></script>
+    <script src="js/echarts.min.js"></script>
+    <script src="js/index.js"></script>
+    <script type="text/javascript" src="js/shandong.js"></script>
+
+    <script>
+        (function (fn) {
+            fn();
+            setInterval(fn, 1000);
+        })(function () {
+            var dt = new Date();
+            document.querySelector(".showTime span").innerHTML =
+              dt.getDate() + "日-" +
+              dt.getHours() + "时" +
+              dt.getMinutes() + "分" +
+              dt.getSeconds() + "秒";
+        });
+		
+		
+		//山东省地图
+		var chart = echarts.init(document.getElementById('mainMap'));
+        chart.setOption({
+            series: [{
+				//name: '山东',
+				type: 'map',
+				mapType: '山东', // 自定义扩展图表类型
+				selectedMode: false,//single 表示单选;multiple表示多选 默认flase不选
+				itemStyle: {
+					normal: {//未选中状态
+						borderWidth:1,//边框大小
+						borderColor:'#0a718a',
+						areaColor: '#142957',//背景颜色
+						label: {
+							show: true,//显示市名称
+							color:'#3ed4ff'
+						}
+					},
+					emphasis: {// 选中样式
+						borderWidth:1,
+						borderColor:'#0a718a',
+						areaColor: '#0b1c2d',
+						label: {
+							show: true,
+							textStyle: {
+								color: '#ffa022'
+							}
+						}
+					 }    
+                },
+				layoutCenter: ['50%', '50%'],//距离左右，上下距离的百分比
+				layoutSize:'135%',//map百分比大小
+		}]
+		 
+    });
+	
+	//====================弹框里的折线图========================
+  $(".lookat").click(function(){
+		$("#popLine").show();
+		$(".popBlack").show();
+	  // 基于准备好的dom，初始化echarts实例
+	  var myChart = echarts.init(document.querySelector(".line .chart"));
+	  option = {
+		tooltip: {
+		  trigger: "axis",
+		  axisPointer: {
+			lineStyle: {
+			  color: "#dddc6b"
+			}
+		  }
+		},
+		legend: {
+		  top: "2%",
+		  textStyle: {
+			color: "rgba(255,255,255,.5)",
+			fontSize: "15"
+		  }
+		},
+		grid: {
+		  left: "10",
+		  top: "50",
+		  right: "25",
+		  bottom: "0",
+		  containLabel: true
+		},
+	
+		xAxis: [
+		  {
+			type: "category",
+			boundaryGap: false,
+			axisLabel: {
+			  textStyle: {
+				color: "rgba(255,255,255,.6)",
+				fontSize: 15
+			  }
+			},
+			axisLine: {
+			  lineStyle: {
+				color: "rgba(255,255,255,.2)"
+			  }
+			},
+	
+			data: [
+			  "2012年",
+			  "2013年",
+			  "2014年",
+			  "2015年",
+			  "2016年",
+			  "2017年",
+			  "2018年",
+			  "2019年",
+			  "2020年"
+			]
+		  },
+		  {
+			axisPointer: { show: false },
+			axisLine: { show: false },
+			position: "bottom",
+			offset: 20
+		  }
+		],
+	
+		yAxis: [
+		  {
+			type: "value",
+			name:"单位：人",
+			nameTextStyle:{//y轴上方单位的颜色
+						  color:'#9dcfe2' ,
+						  fontSize:15
+						},
+			axisTick: { show: false },
+			axisLine: {
+			  lineStyle: {
+				color: "rgba(255,255,255,.1)"
+			  }
+			},
+			axisLabel: {
+			  textStyle: {
+				color: "rgba(255,255,255,.6)",
+				fontSize: 15
+			  }
+			},
+	
+			splitLine: {
+			  lineStyle: {
+				color: "rgba(255,255,255,.1)"
+			  }
+			}
+		  }
+		],
+		series: [
+		  {
+			name: "临床前期",
+			type: "line",
+			smooth: true,
+			symbol: "circle",
+			symbolSize: 5,
+			showSymbol: false,
+			lineStyle: {
+			  normal: {
+				color: "#0184d5",
+				width: 2
+			  }
+			},
+			areaStyle: {
+			  normal: {
+				color: new echarts.graphic.LinearGradient(
+				  0,
+				  0,
+				  0,
+				  1,
+				  [
+					{
+					  offset: 0,
+					  color: "rgba(1, 132, 213, 0.4)"
+					},
+					{
+					  offset: 0.8,
+					  color: "rgba(1, 132, 213, 0.1)"
+					}
+				  ],
+				  false
+				),
+				shadowColor: "rgba(0, 0, 0, 0.1)"
+			  }
+			},
+			itemStyle: {
+			  normal: {
+				color: "#0184d5",
+				borderColor: "rgba(221, 220, 107, .1)",
+				borderWidth: 12
+			  }
+			},
+			data: [
+			  30,
+			  40,
+			  30,
+			  40,
+			  30,
+			  40,
+			  30,
+			  60,
+			  20
+			]
+		  },{
+			name: "假性近视",
+			type: "line",
+			smooth: true,
+			symbol: "circle",
+			symbolSize: 5,
+			showSymbol: false,
+			lineStyle: {
+			  normal: {
+				color: "#00d887",
+				width: 2
+			  }
+			},
+			areaStyle: {
+			  normal: {
+				color: new echarts.graphic.LinearGradient(
+				  0,
+				  0,
+				  0,
+				  1,
+				  [
+					{
+					  offset: 0,
+					  color: "rgba(0, 216, 135, 0.4)"
+					},
+					{
+					  offset: 0.8,
+					  color: "rgba(0, 216, 135, 0.1)"
+					}
+				  ],
+				  false
+				),
+				shadowColor: "rgba(0, 0, 0, 0.1)"
+			  }
+			},
+			itemStyle: {
+			  normal: {
+				color: "#00d887",
+				borderColor: "rgba(221, 220, 107, .1)",
+				borderWidth: 12
+			  }
+			},
+			data: [
+			  50,
+			  30,
+			  50,
+			  60,
+			  10,
+			  50,
+			  30,
+			  50,
+			  60
+			]
+		  },{
+			name: "真性近视",
+			type: "line",
+			smooth: true,
+			symbol: "circle",
+			symbolSize: 5,
+			showSymbol: false,
+			lineStyle: {
+			  normal: {
+				color: "#ffeb7b",
+				width: 2
+			  }
+			},
+			areaStyle: {
+			  normal: {
+				color: new echarts.graphic.LinearGradient(
+				  0,
+				  0,
+				  0,
+				  1,
+				  [
+					{
+					  offset: 0,
+					  color: "rgba(255, 235, 123, 0.4)"
+					},
+					{
+					  offset: 0.8,
+					  color: "rgba(255, 235, 123, 0.1)"
+					}
+				  ],
+				  false
+				),
+				shadowColor: "rgba(0, 0, 0, 0.1)"
+			  }
+			},
+			itemStyle: {
+			  normal: {
+				color: "#ffeb7b",
+				borderColor: "rgba(221, 220, 107, .1)",
+				borderWidth: 12
+			  }
+			},
+			data: [
+			  10,
+			  30,
+			  70,
+			  20,
+			  60,
+			  40,
+			  20,
+			  40,
+			  70
+			]
+		  }
+		]
+	  };
+	
+	  // 使用刚指定的配置项和数据显示图表。
+	  myChart.setOption(option);
+	  window.addEventListener("resize", function () {
+		myChart.resize();
+	  });
+	
+	});
+	  $(".popBlack").click(function(){
+			$("#popLine").hide();
+			$(".popBlack").hide();
+		})
+    </script>
+</body>
+
+</html>

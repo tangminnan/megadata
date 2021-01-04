@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xinshineng.information.dao.shaicha.ShaichaResultCornealDao">
+	<resultMap id="domainMap" type="com.xinshineng.information.domain.shaicha.ShaichaResultCornealDO">
+		<id column="t_corneal_id" property="tCornealId"/>
+		<result column="t_optometry_id" property="tOptometryId"/>
+		<result column="corneal_mm" property="cornealMm"/>
+		<result column="corneal_d" property="cornealD"/>
+		<result column="corneal_deg" property="cornealDeg"/>
+		<result column="type" property="type"/>
+		<result column="ifRL" property="ifrl"/>
+		<result column="check_date" property="checkDate"/>
+		<result column="first_second" property="firstSecond"/>
+		<result column="identity_card" property="identityCard"/>
+	</resultMap>
+	<select id="get" resultMap="domainMap">
+		select `t_corneal_id`,`t_optometry_id`,`corneal_mm`,`corneal_d`,`corneal_deg`,`type`,`ifRL`,first_second,`identity_card`
+		from s_result_corneal where t_corneal_id = #{value}
+	</select>
+	
+	<select id="queryByToptometryTd" resultMap="domainMap">
+		select `t_corneal_id`,`t_optometry_id`,`corneal_mm`,`corneal_d`,`corneal_deg`,`type`,`ifRL`,check_date,first_second,`identity_card`
+		from s_result_corneal where t_optometry_id = #{value}
+	</select>
+
+	<select id="list" resultMap="domainMap">
+		select `t_corneal_id`,`t_optometry_id`,`corneal_mm`,`corneal_d`,`corneal_deg`,`type`,`ifRL`,first_second,check_date,`identity_card`
+		from s_result_corneal
+        <where>  
+		  		  <if test="tCornealId != null and tCornealId != ''"> and t_corneal_id = #{tCornealId} </if>
+		  		  <if test="tOptometryId != null and tOptometryId != ''"> and t_optometry_id = #{tOptometryId} </if>
+		  		  <if test="cornealMm != null and cornealMm != ''"> and corneal_mm = #{cornealMm} </if>
+		  		  <if test="cornealD != null and cornealD != ''"> and corneal_d = #{cornealD} </if>
+		  		  <if test="cornealDeg != null and cornealDeg != ''"> and corneal_deg = #{cornealDeg} </if>
+		  		  <if test="type != null and type != ''"> and type = #{type} </if>
+		  		  <if test="ifrl != null and ifrl != ''"> and ifRL = #{ifrl} </if>
+		  		   <if test="firstSecond != null and firstSecond != ''"> and first_second = #{firstSecond} </if>
+		  		   <if test="identityCard != null and identityCard != ''"> and identity_card = #{identityCard} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by t_corneal_id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from s_result_corneal
+		 <where>  
+		  		  <if test="tCornealId != null and tCornealId != ''"> and t_corneal_id = #{tCornealId} </if>
+		  		  <if test="tOptometryId != null and tOptometryId != ''"> and t_optometry_id = #{tOptometryId} </if>
+		  		  <if test="cornealMm != null and cornealMm != ''"> and corneal_mm = #{cornealMm} </if>
+		  		  <if test="cornealD != null and cornealD != ''"> and corneal_d = #{cornealD} </if>
+		  		  <if test="cornealDeg != null and cornealDeg != ''"> and corneal_deg = #{cornealDeg} </if>
+		  		  <if test="type != null and type != ''"> and type = #{type} </if>
+		  		  <if test="ifrl != null and ifrl != ''"> and ifRL = #{ifrl} </if>
+		  		  <if test="firstSecond != null and firstSecond != ''"> and first_second = #{firstSecond} </if>
+		  		  <if test="identityCard != null and identityCard != ''"> and identity_card = #{identityCard} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.xinshineng.information.domain.shaicha.ShaichaResultCornealDO" useGeneratedKeys="true" keyProperty="tCornealId">
+		insert into s_result_corneal
+		(
+			`t_optometry_id`, 
+			`corneal_mm`, 
+			`corneal_d`, 
+			`corneal_deg`, 
+			`type`, 
+			`ifRL`,
+			first_second
+		)
+		values
+		(
+			#{tOptometryId}, 
+			#{cornealMm}, 
+			#{cornealD}, 
+			#{cornealDeg}, 
+			#{type}, 
+			#{ifrl},
+			#{firstSecond}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.xinshineng.information.domain.shaicha.ShaichaResultCornealDO">
+		update s_result_corneal
+		<set>
+			<if test="tOptometryId != null">`t_optometry_id` = #{tOptometryId}, </if>
+			<if test="cornealMm != null">`corneal_mm` = #{cornealMm}, </if>
+			<if test="cornealD != null">`corneal_d` = #{cornealD}, </if>
+			<if test="cornealDeg != null">`corneal_deg` = #{cornealDeg}, </if>
+			<if test="type != null">`type` = #{type}, </if>
+			<if test="ifrl != null">`ifRL` = #{ifrl},</if>
+			<if test="firstSecond != null">`first_second` = #{firstSecond}</if>
+		</set>
+		where t_corneal_id = #{tCornealId}
+	</update>
+	
+	<delete id="remove">
+		delete from s_result_corneal where t_corneal_id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from s_result_corneal where t_corneal_id in
+		<foreach item="tCornealId" collection="array" open="(" separator="," close=")">
+			#{tCornealId}
+		</foreach>
+	</delete>
+	
+	<select id="getCornealMm" resultMap="domainMap">
+		select corneal_mm from s_result_corneal where first_second = 'FIRST_CHECK'
+		and ifRL = #{ifRL} and identity_card = #{identityCard} and type = #{type} 
+		and check_date between #{start} and #{end}
+	</select>
+
+</mapper>

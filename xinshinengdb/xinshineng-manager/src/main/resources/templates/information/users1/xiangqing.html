@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content ">
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="ibox float-e-margins">
+					<div class="ibox-content">
+						<form class="form-horizontal m-t" id="signupForm">
+												
+							<input id="id" name="id" th:value="${checkData.id}"  type="hidden">
+							
+							<div style="height: 30px;"></div>
+							<div class="form-group">
+								 <label class="col-md-2 control-label" style="text-align: center;"></label>	
+			                	 <label class="col-sm-2 control-label" style="text-align: center;">OD</label>
+			                	 <label class="col-sm-2 control-label" style="text-align: center;">OS</label>
+			                	 <label class="col-sm-1 control-label" style="text-align: center;"></label>
+			                	 <label class="col-sm-2 control-label" style="text-align: center;">OD</label>
+								 <label class="col-sm-2 control-label" style="text-align: center;">OS</label>
+				            </div>
+				            
+				            <div class="form-group">
+				                	<label class="col-md-2 control-label" >裸眼视力</label>	
+									<div class="col-sm-2">
+										<input id="nakedEyeOd" name="nakedEyeOd" class="form-control" type="text" th:value="${checkData.nakedEyeOd}" readonly="readonly">
+									</div>	
+									<div class="col-sm-2">
+										<input id="nakedEyeOs" name="nakedEyeOs" class="form-control" type="text" th:value="${checkData.nakedEyeOs}" readonly="readonly">
+									</div>	
+									<label class="col-md-1 control-label" >眼压</label>		
+									<div class="col-sm-2">
+										<input id="eyePressureOd" name="eyePressureOd" class="form-control" type="text" th:value="${checkData.eyePressureOd}" readonly="readonly">
+									</div>	
+									<div class="col-sm-2">
+										<input id="eyePressureOs" name="eyePressureOs" class="form-control" type="text" th:value="${checkData.eyePressureOs}" readonly="readonly">
+									</div>	
+				            </div>
+				            
+				            <div class="form-group">
+				                	<label class="col-md-2 control-label" >原镜视力</label>	
+									<div class="col-sm-2">
+										<input id="formerEyeOd" name="formerEyeOd" class="form-control" type="text" th:value="${checkData.formerEyeOd}" readonly="readonly">
+									</div>	
+									<div class="col-sm-2">
+										<input id="formerEyeOs" name="formerEyeOs" class="form-control" type="text" th:value="${checkData.formerEyeOs}" readonly="readonly">
+									</div>	
+									<label class="col-md-1 control-label" >近距眼位</label>
+									<div class="col-sm-4">		
+										<label class="radio-inline"> <input type="radio" th:field="*{checkData.checkEyePositionNear}"
+											disabled="disabled" name="checkEyePositionNear" value="1" /> 正位
+										</label> 
+										<label class="radio-inline"> <input type="radio" th:field="*{checkData.checkEyePositionNear}"
+											disabled="disabled" name="checkEyePositionNear" value="2" /> 内隐斜
+										</label>
+										<label class="radio-inline"> <input type="radio" th:field="*{checkData.checkEyePositionNear}"
+											disabled="disabled" name="checkEyePositionNear" value="3" /> 外隐斜
+										</label>
+									</div>
+				            </div>
+				            
+				            <div class="form-group">
+				                	<label class="col-md-2 control-label" >矫正视力</label>	
+									<div class="col-sm-2">
+										<input id="correctSightOd" name="correctSightOd" class="form-control" type="text" th:value="${checkData.correctSightOd}" readonly="readonly">
+									</div>	
+									<div class="col-sm-2">
+										<input id="correctSightOs" name="correctSightOs" class="form-control" type="text" th:value="${checkData.correctSightOs}" readonly="readonly">
+									</div>	
+									<label class="col-md-1 control-label" >远距眼位</label>
+									<div class="col-sm-4">		
+										<label class="radio-inline"> <input type="radio" th:field="*{checkData.checkEyePositionFar}"
+											disabled="disabled" name="checkEyePositionFar" value="1" /> 正位
+										</label> 
+										<label class="radio-inline"> <input type="radio" th:field="*{checkData.checkEyePositionFar}"
+											disabled="disabled" name="checkEyePositionFar" value="2" /> 内隐斜
+										</label>
+										<label class="radio-inline"> <input type="radio" th:field="*{checkData.checkEyePositionFar}"
+											disabled="disabled" name="checkEyePositionFar" value="3" /> 外隐斜
+										</label>
+									</div>
+				            </div>
+				            
+				            <div class="form-group">
+								 <label class="col-md-2 control-label" style="text-align: center;"></label>	
+			                	 <label class="col-sm-2 control-label" style="text-align: center;">S</label>
+			                	 <label class="col-sm-2 control-label" style="text-align: center;">C</label>
+			                	 <label class="col-sm-2 control-label" style="text-align: center;">A</label>
+			                	
+				            </div>
+							
+							<div class="form-group">
+				                	<label class="col-md-2 control-label" >电脑验光OD</label>	
+									<div class="col-sm-2">
+										<input id="sAutorefractionOd" name="sAutorefractionOd" class="form-control" type="text" th:value="${checkData.sAutorefractionOd}" readonly="readonly">
+									</div>	
+									<div class="col-sm-2">
+										<input id="cAutorefractionOd" name="cAutorefractionOd" class="form-control" type="text" th:value="${checkData.cAutorefractionOd}" readonly="readonly">
+									</div>	
+										
+									<div class="col-sm-2">
+										<input id="aAutorefractionOd" name="aAutorefractionOd" class="form-control" type="text" th:value="${checkData.aAutorefractionOd}" readonly="readonly">
+									</div>	
+				            </div>
+				            
+							<div class="form-group">
+				                	<label class="col-md-2 control-label" >电脑验光OS</label>	
+									<div class="col-sm-2">
+										<input id="sAutorefractionOs" name="sAutorefractionOs" class="form-control" type="text" th:value="${checkData.sAutorefractionOs}" readonly="readonly">
+									</div>	
+									<div class="col-sm-2">
+										<input id="cAutorefractionOs" name="cAutorefractionOs" class="form-control" type="text" th:value="${checkData.cAutorefractionOs}" readonly="readonly">
+									</div>	
+										
+									<div class="col-sm-2">
+										<input id="aAutorefractionOs" name="aAutorefractionOs" class="form-control" type="text" th:value="${checkData.aAutorefractionOs}" readonly="readonly">
+									</div>	
+				            </div>
+				            
+				            
+				            <div class="form-group">
+				                	<label class="col-md-2 control-label" >综合验光OD</label>	
+									<div class="col-sm-2">
+										<input id="sComprehensiveOptometryOd" name="sComprehensiveOptometryOd" class="form-control" type="text" th:value="${checkData.sComprehensiveOptometryOd}" readonly="readonly">
+									</div>	
+									<div class="col-sm-2">
+										<input id="cComprehensiveOptometryOd" name="cComprehensiveOptometryOd" class="form-control" type="text" th:value="${checkData.cComprehensiveOptometryOd}" readonly="readonly">
+									</div>	
+										
+									<div class="col-sm-2">
+										<input id="aComprehensiveOptometryOd" name="aComprehensiveOptometryOd" class="form-control" type="text" th:value="${checkData.aComprehensiveOptometryOd}" readonly="readonly">
+									</div>	
+				            </div>
+				            
+				            <div class="form-group">
+				                	<label class="col-md-2 control-label" >综合验光OS</label>	
+									<div class="col-sm-2">
+										<input id="sComprehensiveOptometryOs" name="sComprehensiveOptometryOs" class="form-control" type="text" th:value="${checkData.sComprehensiveOptometryOs}" readonly="readonly">
+									</div>	
+									<div class="col-sm-2">
+										<input id="cComprehensiveOptometryOs" name="cComprehensiveOptometryOs" class="form-control" type="text" th:value="${checkData.cComprehensiveOptometryOs}" readonly="readonly">
+									</div>	
+										
+									<div class="col-sm-2">
+										<input id="aComprehensiveOptometryOs" name="aComprehensiveOptometryOs" class="form-control" type="text" th:value="${checkData.aComprehensiveOptometryOs}" readonly="readonly">
+									</div>	
+				            </div>
+							
+							 <div class="form-group">
+								 <label class="col-md-2 control-label" >WORTH四点</label>
+									<div class="col-sm-4">		
+										<label class="radio-inline"> <input type="radio" th:field="*{checkData.worthFour}"
+											disabled="disabled" name="worthFour" value="1" /> 2个(红)
+										</label> 
+										<label class="radio-inline"> <input type="radio" th:field="*{checkData.worthFour}"
+											disabled="disabled" name="worthFour" value="2" /> 3个(绿)
+										</label>
+										<label class="radio-inline"> <input type="radio" th:field="*{checkData.worthFour}"
+											disabled="disabled" name="worthFour" value="3" /> 4个
+										</label>
+										<label class="radio-inline"> <input type="radio" th:field="*{checkData.worthFour}"
+											disabled="disabled" name="worthFour" value="4" /> 5个(2红3绿)
+										</label>
+									</div>
+							 
+				                	<label class="col-md-1 control-label" >立体视</label>	
+									<div class="col-sm-2">
+										<input id="stereopsis" name="stereopsis" class="form-control" type="text" th:value="${checkData.stereopsis}" readonly="readonly">
+									</div>	
+									
+				            </div>
+							
+							<div class="form-group">
+				                	<label class="col-md-2 control-label" >NRA</label>	
+									<div class="col-sm-1">
+										<input id="eyeNra" name="eyeNra" class="form-control" type="text" th:value="${checkData.eyeNra}" readonly="readonly">
+									</div>	
+									<label class="col-md-1 control-label" >PRA</label>	
+									<div class="col-sm-1">
+										<input id="eyePra" name="eyePra" class="form-control" type="text" th:value="${checkData.eyePra}" readonly="readonly">
+									</div>
+									<label class="col-md-1 control-label" >BCC</label>	
+									<div class="col-sm-1">
+										<input id="eyeBcc" name="eyeBcc" class="form-control" type="text" th:value="${checkData.eyeBcc}" readonly="readonly">
+									</div>
+									<label class="col-md-1 control-label" >AC/A</label>	
+									<div class="col-sm-1">
+										<input id="eyeAca" name="eyeAca" class="form-control" type="text" th:value="${checkData.eyeAca}" readonly="readonly">
+									</div>
+									<label class="col-md-1 control-label" >NPC</label>	
+									<div class="col-sm-1">
+										<input id="eyeNpc" name="eyeNpc" class="form-control" type="text" th:value="${checkData.eyeNpc}" readonly="readonly">
+									</div>
+									
+				            </div>
+							
+							
+							<div class="form-group">
+								 <label class="col-md-2 control-label" style="text-align: center;"></label>	
+			                	 <label class="col-sm-2 control-label" style="text-align: center;">OD</label>
+			                	 <label class="col-sm-2 control-label" style="text-align: center;">OS</label>
+			                	 <label class="col-sm-2 control-label" style="text-align: center;">OU</label>
+			                	
+				            </div>
+							
+							<div class="form-group">
+				                	<label class="col-md-2 control-label" >AMP</label>	
+									<div class="col-sm-2">
+										<input id="ampOd" name="ampOd" class="form-control" type="text" th:value="${checkData.ampOd}" readonly="readonly">
+									</div>	
+									<div class="col-sm-2">
+										<input id="ampOs" name="ampOs" class="form-control" type="text" th:value="${checkData.ampOs}" readonly="readonly">
+									</div>	
+										
+									<div class="col-sm-2">
+										<input id="ampOu" name="ampOu" class="form-control" type="text" th:value="${checkData.ampOu}" readonly="readonly">
+									</div>	
+				            </div>
+				            
+				            <div class="form-group">
+				                	<label class="col-md-2 control-label" >AF</label>	
+									<div class="col-sm-2">
+										<input id="afOd" name="afOd" class="form-control" type="text" th:value="${checkData.afOd}" readonly="readonly">
+									</div>	
+									<div class="col-sm-2">
+										<input id="afOs" name="afOs" class="form-control" type="text" th:value="${checkData.afOs}" readonly="readonly">
+									</div>	
+										
+									<div class="col-sm-2">
+										<input id="afOu" name="afOu" class="form-control" type="text" th:value="${checkData.afOu}" readonly="readonly">
+									</div>	
+				            </div>
+				            
+				            <div class="form-group">
+								<label class="col-md-2 control-label">验光师签名：</label>
+								<div class="col-sm-8">
+									<input id="refractionist" name="refractionist" class="form-control" th:value="${checkData.refractionist}" readonly="readonly"
+										type="text">
+								</div>
+							</div>
+				            
+				            <div class="form-group">
+								 <label class="col-md-2 control-label"></label>	
+			                	 <label class="col-sm-1 control-label" style="text-align: center;">眼轴长度</label>
+			                	 <label class="col-sm-2 control-label" style="text-align: center;">角膜曲率</label>
+			                	 <label class="col-sm-1 control-label" style="text-align: center;">角膜直径</label>
+			                	 <label class="col-sm-2 control-label" style="text-align: center;">前房深度</label>
+			                	 <label class="col-sm-1 control-label" style="text-align: center;">晶体厚度</label>
+			                	 <label class="col-sm-2 control-label" style="text-align: center;">玻璃体腔长度</label>
+				            </div>
+				            
+				             <div class="form-group">
+				                	<label class="col-md-2 control-label" >OD</label>	
+									<div class="col-sm-1">
+										<input id="axialLengthOd" name="axialLengthOd" class="form-control" type="text" th:value="${checkData.axialLengthOd}" readonly="readonly">
+									</div>	
+									
+									<div class="col-sm-2" style="padding-left: 5%;">
+										<input id="kchmFirstOd" name="kchmFirstOd" class="form-control" style="width: 30%;float: left;" type="text" th:value="${checkData.kchmFirstOd}" readonly="readonly">
+										<input id="kchmSecondOd" name="kchmSecondOd" class="form-control" style="width: 30%;float: left;" type="text" th:value="${checkData.kchmSecondOd}" readonly="readonly">
+									</div>	
+									
+									<div class="col-sm-1">
+										<input id="cornealDiameterOd" name="cornealDiameterOd" class="form-control" type="text" th:value="${checkData.cornealDiameterOd}" readonly="readonly">
+									</div>	
+									
+									<div class="col-sm-2" style="padding-left: 5%;">
+										<input id="anteriorChamberDepthOd" name="anteriorChamberDepthOd" class="form-control" style="width: 60%;" type="text" th:value="${checkData.anteriorChamberDepthOd}" readonly="readonly">
+									</div>	
+										
+									<div class="col-sm-1">
+										<input id="crystalThicknessOd" name="crystalThicknessOd" class="form-control" type="text" th:value="${checkData.crystalThicknessOd}" readonly="readonly">
+									</div>	
+										
+									<div class="col-sm-2" style="padding-left: 5%;">
+										<input id="vitreousCavityOd" name="vitreousCavityOd" class="form-control" style="width: 60%;" type="text" th:value="${checkData.vitreousCavityOd}" readonly="readonly">
+									</div>	
+				            </div>
+				            
+				            <div class="form-group">
+				                	<label class="col-md-2 control-label" >OS</label>	
+									<div class="col-sm-1">
+										<input id="axialLengthOs" name="axialLengthOs" class="form-control" type="text" th:value="${checkData.axialLengthOs}" readonly="readonly">
+									</div>	
+									
+									<div class="col-sm-2" style="padding-left: 5%;">
+										<input id="kchmFirstOs" name="kchmFirstOs" class="form-control" style="width: 30%;float: left;" type="text" th:value="${checkData.kchmFirstOs}" readonly="readonly">
+										<input id="kchmSecondOs" name="kchmSecondOs" class="form-control" style="width: 30%;float: left;" type="text" th:value="${checkData.kchmSecondOs}" readonly="readonly">
+									</div>	
+									
+									<div class="col-sm-1">
+										<input id="cornealDiameterOs" name="cornealDiameterOs" class="form-control" type="text" th:value="${checkData.cornealDiameterOs}" readonly="readonly">
+									</div>	
+									
+									<div class="col-sm-2" style="padding-left: 5%;">
+										<input id="anteriorChamberDepthOs" name="anteriorChamberDepthOs" class="form-control" style="width: 60%;" type="text" th:value="${checkData.anteriorChamberDepthOs}" readonly="readonly">
+									</div>	
+										
+									<div class="col-sm-1">
+										<input id="crystalThicknessOs" name="crystalThicknessOs" class="form-control" type="text" th:value="${checkData.crystalThicknessOs}" readonly="readonly">
+									</div>	
+										
+									<div class="col-sm-2" style="padding-left: 5%;">
+										<input id="vitreousCavityOs" name="vitreousCavityOs" class="form-control" style="width: 60%;" type="text" th:value="${checkData.vitreousCavityOs}" readonly="readonly">
+									</div>	
+				            </div>
+				            
+				             <div class="form-group">
+								<label class="col-md-2 control-label">检查者签名：</label>
+								<div class="col-sm-8">
+									<input id="checkor" name="checkor" class="form-control" th:value="${checkData.checkor}" readonly="readonly"
+										type="text">
+								</div>
+							</div>
+				            
+							<div class="form-group">
+								<label class="col-md-2 control-label">检查人单位：</label>
+								<div class="col-sm-8">
+									<input id="checkorCompany" name="checkorCompany" th:value="${checkData.checkorCompany}" readonly="readonly"
+										class="form-control" type="text">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-2 control-label">电脑验光日期：</label>
+								<div class="col-sm-8">
+									<input id="checkDate" name="checkDate" class="form-control" th:value="${#dates.format(checkData.checkDate, 'yyyy-MM-dd HH:mm:ss')}"
+										type="text" readonly="readonly">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-2 control-label">第几次检查：</label>
+								<div class="col-sm-8">
+									<input id="firstSecond" name="firstSecond" class="form-control" th:value="${checkData.firstSecond}"
+										type="text" readonly="readonly">
+								</div>
+							</div>
+																			
+							 <!-- <div class="form-group">
+								<div class="col-sm-8 col-sm-offset-3">
+									<button type="submit" class="btn btn-primary">提交</button>
+								</div>
+							</div> -->
+						</form>
+					</div>
+				</div>
+			</div>
+	</div>
+	</div>
+	<div th:include="include::footer"></div>
+<!-- 	<script type="text/javascript" src="/js/appjs/information/users1/edit.js"></script>
+ --></body>
+</html>

@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xinshineng.information.dao.zhenjiu.DataDao">
+
+	<select id="get" resultType="com.xinshineng.information.domain.zhenjiu.DataDO">
+		select `id`,`treat_time`,`adddate`,`userid`,`treat_strength`,`treat_frequency`,`treat_waveform`,`treat_workmethod`,`treat_electrode`,`update_time`,`name`,`count`
+		from treat_data where id = #{value}
+	</select>
+	<resultMap id="domainMap" type="com.xinshineng.information.domain.zhenjiu.DataDO">
+		<id column="id" property="id"/>
+		<result column="treat_time" property="treatTime"/>
+		<result column="adddate" property="adddate"/>
+		<result column="userid" property="userid"/>
+		<result column="treat_strength" property="treatStrength"/>
+		<result column="treat_frequency" property="treatFrequency"/>
+		<result column="treat_waveform" property="treatWaveform"/>
+		<result column="treat_workmethod" property="treatWorkmethod"/>
+		<result column="treat_electrode" property="treatElectrode"/>
+		<result column="update_time" property="updateTime"/>
+		<result column="name" property="name"/>
+	</resultMap>
+
+	<select id="list" resultMap="domainMap">
+		select  u.name as name,d.id,d.treat_time,d.adddate,d.userid,d.treat_strength,d.treat_frequency,d.treat_waveform,d.treat_workmethod,d.treat_electrode,d.update_time
+		from z_user u,treat_data d
+		<where>  
+		  		  <if test="id != null and id != ''"> and u.id = #{id} </if>
+		  		  <if test="treatTime != null and treatTime != ''"> and treat_time = #{treatTime} </if>
+		  		  <if test="adddate != null and adddate != ''"> and adddate = #{adddate} </if>
+		  		  <if test="treatStrength != null and treatStrength != ''"> and treat_strength = #{treatStrength} </if>
+		  		  <if test="treatGears != null and treatGears != ''"> and treat_gears = #{treatGears} </if>
+		  		  <if test="treatFrequency != null and treatFrequency != ''"> and treat_frequency = #{treatFrequency} </if>
+		  		  <if test="treatWaveform != null and treatWaveform != ''"> and treat_waveform = #{treatWaveform} </if>
+		  		  <if test="treatWorkmethod != null and treatWorkmethod != ''"> and treat_workmethod = #{treatWorkmethod} </if>
+		  		  <if test="treatElectrode != null and treatElectrode != ''"> and treat_electrode = #{treatElectrode} </if>
+		  		  <if test="updateTime != null and updateTime != ''"> and update_time = #{updateTime} </if>
+		  		  <if test="name != null and name != ''"> and u.name like CONCAT('%', #{name}, '%')  </if>
+		  		  <if test="count != null and count != ''"> and count = #{count} </if>
+		  		  
+		  		  <if test="month != null and month != ''">and DATE_FORMAT(adddate, '%Y%m' ) = DATE_FORMAT( CURDATE(),'%Y%m')</if>
+		  		  <if test="week != null and week != ''">and YEARWEEK(date_format(adddate,'%Y-%m-%d')) = YEARWEEK(now())</if>
+		  		  <if test="day != null and day != ''">and to_days(adddate) = to_days(now())</if>
+		  			and	u.id = d.userid
+		  </where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by d.id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+	<select id="count" resultType="int">
+		select count(*)  from z_user u,treat_data d
+		 <where>  
+		  		  <if test="id != null and id != ''"> and u.id = #{id} </if>
+		  		  <if test="treatTime != null and treatTime != ''"> and treat_time = #{treatTime} </if>
+		  		  <if test="adddate != null and adddate != ''"> and adddate = #{adddate} </if>
+		  		  <if test="userid != null and userid != ''"> and userid = #{userid} </if>
+		  		  <if test="treatStrength != null and treatStrength != ''"> and treat_strength = #{treatStrength} </if>
+		  		  <if test="treatGears != null and treatGears != ''"> and treat_gears = #{treatGears} </if>
+		  		  <if test="treatFrequency != null and treatFrequency != ''"> and treat_frequency = #{treatFrequency} </if>
+		  		  <if test="treatWaveform != null and treatWaveform != ''"> and treat_waveform = #{treatWaveform} </if>
+		  		  <if test="treatWorkmethod != null and treatWorkmethod != ''"> and treat_workmethod = #{treatWorkmethod} </if>
+		  		  <if test="treatElectrode != null and treatElectrode != ''"> and treat_electrode = #{treatElectrode} </if>
+		  		  <if test="updateTime != null and updateTime != ''"> and update_time = #{updateTime} </if>
+		  		  <if test="name != null and name != ''"> and u.name like CONCAT('%', #{name}, '%') </if>
+		  		  <if test="count != null and count != ''"> and count = #{count} </if>
+		  		  
+		  		  <if test="month != null and month != ''">and DATE_FORMAT(adddate, '%Y%m' ) = DATE_FORMAT( CURDATE(),'%Y%m')</if>
+		  		  <if test="week != null and week != ''">and YEARWEEK(date_format(adddate,'%Y-%m-%d')) = YEARWEEK(now())</if>
+		  		  <if test="day != null and day != ''">and to_days(adddate) = to_days(now())</if>
+		  		  <if test="startTime != null and startTime != '' and endTime != null and endTime != ''"> and d.adddate between #{startTime} and #{endTime} </if>
+		  		   and u.id = d.userid
+		  </where>
+	</select>
+	
+	
+	<select id="lists" parameterType="com.xinshineng.information.domain.zhenjiu.DataDO" resultType="com.xinshineng.information.domain.zhenjiu.DataDO">
+		select u.phone phone,u.name as name,d.id,d.treat_time,d.adddate,d.userid,d.treat_strength,d.treat_frequency,d.treat_waveform,d.treat_workmethod,d.treat_electrode,d.update_time,d.name    
+		from z_user u,treat_data d
+		<where>u.user_id = d.userid and u.id = #{id}</where>
+        
+	</select>
+	
+	
+	<!-- 导出列表 -->
+	<select id="exeList" resultType="java.util.Map">
+		<!-- 
+		SELECT
+			name,
+			nickname,
+			,
+			DATE_FORMAT(`register_time`,'%Y-%m-%d %h:%m:%s') as registerTime,
+			pay_num,
+			serve_num,
+			balance,
+			DATE_FORMAT(`pay_time`,'%Y-%m-%d %h:%m:%s') as payTime,
+			DATE_FORMAT(`login_time`,'%Y-%m-%d %h:%m:%s') as loginTime
+		FROM t_user
+		 -->
+		
+		<!-- 		
+		SELECT
+			IFNULL(name,'') as 用户姓名,
+			IFNULL(nickname,'') as 会员昵称,
+			IFNULL(,'') as 注册手机号,
+			IFNULL(DATE_FORMAT(`register_time`,'%Y-%m-%d %h:%m:%s'),'') as 注册时间,
+			IFNULL(pay_num,'') as 消费金额,
+			IFNULL(serve_num,'') as 服务次数,
+			IFNULL(balance,'') as 余额,
+			IFNULL(DATE_FORMAT(`pay_time`,'%Y-%m-%d %h:%m:%s'),'') as 缴费日期,
+			IFNULL(DATE_FORMAT(`login_time`,'%Y-%m-%d %h:%m:%s'),'') as 最后登录时间
+		FROM t_user -->
+		<!-- SELECT IFNULL(u.name,'') as 用户名, d.adddate as 治疗时间, d.treat_time as 治疗时长,d.treat_strength as 治疗强度,d.treat_frequency as 治疗频率,d.treat_waveform as 治疗波形,d.treat_workmethod as 治疗方式,d.treat_electrode as 治疗电极   
+		from t_user u
+		LEFT JOIN treat_data d ON u.user_id = d.userid
+		<where>  
+		  		  <if test="treatTime != null and treatTime != ''"> and treat_time = #{treatTime} </if>
+		  		  <if test="adddate != null and adddate != ''"> and adddate = #{adddate} </if>
+		  		  <if test="userid != null and userid != ''"> and userid = #{userid} </if>
+		  		  <if test="treatStrength != null and treatStrength != ''"> and treat_strength = #{treatStrength} </if>
+		  		  <if test="treatFrequency != null and treatFrequency != ''"> and treat_frequency = #{treatFrequency} </if>
+		  		  <if test="treatWaveform != null and treatWaveform != ''"> and treat_waveform = #{treatWaveform} </if>
+		  		  <if test="treatWorkmethod != null and treatWorkmethod != ''"> and treat_workmethod = #{treatWorkmethod} </if>
+		  		  <if test="treatElectrode != null and treatElectrode != ''"> and treat_electrode = #{treatElectrode} </if>
+		  		<if test="ids != null and ids != ''"> and d.id in (${ids}) </if>
+		  		and d.userid in(u.user_id)
+		</where>
+		 -->
+	select	IFNULL(u.name,'') as 用户名,IFNULL(u.phone,'') as 手机号, d.adddate as 治疗时间, d.treat_time as 治疗时长,d.treat_strength as 治疗强度,d.treat_frequency as 治疗频率,d.treat_waveform as 治疗波形,d.treat_workmethod as 治疗方式,d.treat_electrode as 治疗电极   
+		from z_user u,treat_data d
+		<where>  
+		  		  <if test="id != null and id != ''"> and u.id = #{id} </if>
+		  		  <if test="treatTime != null and treatTime != ''"> and treat_time = #{treatTime} </if>
+		  		  <if test="adddate != null and adddate != ''"> and adddate = #{adddate} </if>
+		  		  <if test="userid != null and userid != ''"> and userid = #{userid} </if>
+		  		  <if test="treatStrength != null and treatStrength != ''"> and treat_strength = #{treatStrength} </if>
+		  		  <if test="treatGears != null and treatGears != ''"> and treat_gears = #{treatGears} </if>
+		  		  <if test="treatFrequency != null and treatFrequency != ''"> and treat_frequency = #{treatFrequency} </if>
+		  		  <if test="treatWaveform != null and treatWaveform != ''"> and treat_waveform = #{treatWaveform} </if>
+		  		  <if test="treatWorkmethod != null and treatWorkmethod != ''"> and treat_workmethod = #{treatWorkmethod} </if>
+		  		  <if test="treatElectrode != null and treatElectrode != ''"> and treat_electrode = #{treatElectrode} </if>
+		  		  <if test="updateTime != null and updateTime != ''"> and update_time = #{updateTime} </if>
+		  		  <if test="name != null and name != ''"> and u.name like CONCAT('%', #{name}, '%')  </if>
+		  		  <if test="count != null and count != ''"> and count = #{count} </if>
+		  		  
+		  		  <if test="month != null and month != ''">and DATE_FORMAT(adddate, '%Y%m' ) = DATE_FORMAT( CURDATE(),'%Y%m')</if>
+		  		  <if test="week != null and week != ''">and YEARWEEK(date_format(adddate,'%Y-%m-%d')) = YEARWEEK(now())</if>
+		  		  <if test="day != null and day != ''">and to_days(adddate) = to_days(now())</if>
+		  		  <if test="ids != null and ids != ''"> and d.id in (${ids}) </if>
+		  		   and d.userid in(u.id)
+		  </where>
+		
+	</select>
+	
+	
+	<!-- <select id="selectByMonth" resultType="com.zhenjiu.information.domain.DataDO">
+		select u.phone as phone , u.name as name,d.id,d.treat_time,d.adddate,d.userid,d.treat_strength,d.treat_frequency,d.treat_waveform,d.treat_workmethod,d.treat_electrode,d.update_time,d.name,d.count    
+		from t_user u,treat_data d 
+		<where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="treatTime != null and treatTime != ''"> and treat_time = #{treatTime} </if>
+		  		  <if test="adddate != null and adddate != ''"> and adddate = #{adddate} </if>
+		  		  <if test="userid != null and userid != ''"> and userid = #{userid} </if>
+		  		  <if test="treatStrength != null and treatStrength != ''"> and treat_strength = #{treatStrength} </if>
+		  		  <if test="treatFrequency != null and treatFrequency != ''"> and treat_frequency = #{treatFrequency} </if>
+		  		  <if test="treatWaveform != null and treatWaveform != ''"> and treat_waveform = #{treatWaveform} </if>
+		  		  <if test="treatWorkmethod != null and treatWorkmethod != ''"> and treat_workmethod = #{treatWorkmethod} </if>
+		  		  <if test="treatElectrode != null and treatElectrode != ''"> and treat_electrode = #{treatElectrode} </if>
+		  		  <if test="updateTime != null and updateTime != ''"> and update_time = #{updateTime} </if>
+		  		  <if test="name != null and name != ''"> and name = #{name} </if>
+		  		  <if test="count != null and count != ''"> and count = #{count} </if>
+		 </where> 
+		 <where>
+		 	u.id = d.userid  and DATE_FORMAT(adddate, '%Y%m' ) = DATE_FORMAT( CURDATE(),'%Y%m')	
+		 </where>  
+		 <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by d.id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select> -->
+	
+	<!-- <select id="selectByWeek" resultType="com.zhenjiu.information.domain.DataDO">
+		select u.phone phone,u.name as name,d.id,d.treat_time,d.adddate,d.userid,d.treat_strength,d.treat_frequency,d.treat_waveform,d.treat_workmethod,d.treat_electrode,d.update_time,d.name,d.count    
+		from t_user u,treat_data d 
+		<where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="treatTime != null and treatTime != ''"> and treat_time = #{treatTime} </if>
+		  		  <if test="adddate != null and adddate != ''"> and adddate = #{adddate} </if>
+		  		  <if test="userid != null and userid != ''"> and userid = #{userid} </if>
+		  		  <if test="treatStrength != null and treatStrength != ''"> and treat_strength = #{treatStrength} </if>
+		  		  <if test="treatFrequency != null and treatFrequency != ''"> and treat_frequency = #{treatFrequency} </if>
+		  		  <if test="treatWaveform != null and treatWaveform != ''"> and treat_waveform = #{treatWaveform} </if>
+		  		  <if test="treatWorkmethod != null and treatWorkmethod != ''"> and treat_workmethod = #{treatWorkmethod} </if>
+		  		  <if test="treatElectrode != null and treatElectrode != ''"> and treat_electrode = #{treatElectrode} </if>
+		  		  <if test="updateTime != null and updateTime != ''"> and update_time = #{updateTime} </if>
+		  		  <if test="name != null and name != ''"> and name = #{name} </if>
+		  		  <if test="count != null and count != ''"> and count = #{count} </if>
+		 </where> 
+		 <where>
+		 	u.id = d.userid  and YEARWEEK(date_format(adddate,'%Y-%m-%d')) = YEARWEEK(now());
+		 </where>
+		 <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by d.id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>  
+	</select> -->
+	
+	<!-- <select id="selectByDay" resultType="com.zhenjiu.information.domain.DataDO">
+		select u.phone phone,u.name as name,d.id,d.treat_time,d.adddate,d.userid,d.treat_strength,d.treat_frequency,d.treat_waveform,d.treat_workmethod,d.treat_electrode,d.update_time,d.name,d.count    
+		from t_user u,treat_data d 
+		<where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="treatTime != null and treatTime != ''"> and treat_time = #{treatTime} </if>
+		  		  <if test="adddate != null and adddate != ''"> and adddate = #{adddate} </if>
+		  		  <if test="userid != null and userid != ''"> and userid = #{userid} </if>
+		  		  <if test="treatStrength != null and treatStrength != ''"> and treat_strength = #{treatStrength} </if>
+		  		  <if test="treatFrequency != null and treatFrequency != ''"> and treat_frequency = #{treatFrequency} </if>
+		  		  <if test="treatWaveform != null and treatWaveform != ''"> and treat_waveform = #{treatWaveform} </if>
+		  		  <if test="treatWorkmethod != null and treatWorkmethod != ''"> and treat_workmethod = #{treatWorkmethod} </if>
+		  		  <if test="treatElectrode != null and treatElectrode != ''"> and treat_electrode = #{treatElectrode} </if>
+		  		  <if test="updateTime != null and updateTime != ''"> and update_time = #{updateTime} </if>
+		  		  <if test="name != null and name != ''"> and name = #{name} </if>
+		  		  <if test="count != null and count != ''"> and count = #{count} </if>
+		 </where> 
+		 <where>
+		 	u.id = d.userid  and to_days(adddate) = to_days(now());
+		 </where>  
+		 <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by d.id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select> -->
+	
+	<select id="selectUsername" resultType="com.xinshineng.information.domain.zhenjiu.DataDO">
+		select u.phone as phone,u.name as name,d.id,d.treat_time,d.adddate,d.userid,d.treat_strength,d.treat_frequency,d.treat_waveform,d.treat_workmethod,d.treat_electrode,d.update_time,d.name,d.count    
+		from z_user u,treat_data d
+		<where>
+				  <if test="id != null and id != ''"> and d.id = #{id} </if>
+		  		  <if test="treatTime != null and treatTime != ''"> and d.treat_time = #{treatTime} </if>
+		  		  <if test="adddate != null and adddate != ''"> and d.adddate = #{adddate} </if>
+		  		  <if test="userid != null and userid != ''"> and d.userid = #{userid} </if>
+		  		  <if test="treatStrength != null and treatStrength != ''"> and d.treat_strength = #{treatStrength} </if>
+		  		  <if test="treatFrequency != null and treatFrequency != ''"> and d.treat_frequency = #{treatFrequency} </if>
+		  		  <if test="treatWaveform != null and treatWaveform != ''"> and d.treat_waveform = #{treatWaveform} </if>
+		  		  <if test="treatWorkmethod != null and treatWorkmethod != ''"> and d.treat_workmethod = #{treatWorkmethod} </if>
+		  		  <if test="treatElectrode != null and treatElectrode != ''"> and d.treat_electrode = #{treatElectrode} </if>
+		  		  <if test="updateTime != null and updateTime != ''"> and d.update_time = #{updateTime} </if>
+		  		  <if test="name != null and name != ''"> and d.name = #{name} </if>
+		  		  <if test="count != null and count != ''"> and d.count = #{count} </if>
+		</where>
+		<where>
+			u.id = d.userid 
+		</where>
+	</select>
+	
+	<select id="selectBytime"  resultType="com.xinshineng.information.domain.zhenjiu.DataDO">
+		select u.phone as phone, u.name as name,d.id,d.treat_time,d.adddate,d.userid,d.treat_strength,d.treat_frequency,d.treat_waveform,d.treat_workmethod,d.treat_electrode,d.update_time,d.name    
+		from z_user u,treat_data d
+		<where>
+			 u.id = d.userid  and u.name like '%${name}%' 
+			 
+	    </where> 
+	</select>
+	
+	<select id="yearlist" resultType="com.xinshineng.information.domain.zhenjiu.DataDO">
+		select `id`,`treat_time`,`adddate`,`userid`,`treat_strength`,`treat_frequency`,`treat_waveform`,`treat_workmethod`,`treat_electrode`,`update_time`,`name`,`count` from treat_data
+		<where>
+				  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="treatTime != null and treatTime != ''"> and treat_time = #{treatTime} </if>
+		  		  <if test="adddate != null and adddate != ''"> and adddate = #{adddate} </if>
+		  		  <if test="userid != null and userid != ''"> and userid = #{userid} </if>
+		  		  <if test="treatStrength != null and treatStrength != ''"> and treat_strength = #{treatStrength} </if>
+		  		  <if test="treatFrequency != null and treatFrequency != ''"> and treat_frequency = #{treatFrequency} </if>
+		  		  <if test="treatWaveform != null and treatWaveform != ''"> and treat_waveform = #{treatWaveform} </if>
+		  		  <if test="treatWorkmethod != null and treatWorkmethod != ''"> and treat_workmethod = #{treatWorkmethod} </if>
+		  		  <if test="treatElectrode != null and treatElectrode != ''"> and treat_electrode = #{treatElectrode} </if>
+		  		  <if test="updateTime != null and updateTime != ''"> and update_time = #{updateTime} </if>
+		  		  <if test="name != null and name != ''"> and name = #{name} </if>
+		  		  <if test="count != null and count != ''"> and count = #{count} </if>
+		</where>
+	
+	</select>
+	
+ 	
+	
+	
+	
+	 
+	<insert id="save" parameterType="com.xinshineng.information.domain.zhenjiu.DataDO" useGeneratedKeys="true" keyProperty="id">
+		insert into treat_data
+		(
+			`treat_time`, 
+			`adddate`, 
+			`userid`, 
+			`treat_strength`, 
+			`treat_frequency`, 
+			`treat_waveform`, 
+			`treat_workmethod`, 
+			`treat_electrode`, 
+			`update_time`, 
+			`name`, 
+			`count`
+		)
+		values
+		(
+			#{treatTime}, 
+			#{adddate}, 
+			#{userid}, 
+			#{treatStrength}, 
+			#{treatFrequency}, 
+			#{treatWaveform}, 
+			#{treatWorkmethod}, 
+			#{treatElectrode}, 
+			#{updateTime}, 
+			#{name}, 
+			#{count}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.xinshineng.information.domain.zhenjiu.DataDO">
+		update treat_data 
+		<set>
+			<if test="treatTime != null">`treat_time` = #{treatTime}, </if>
+			<if test="adddate != null">`adddate` = #{adddate}, </if>
+			<if test="userid != null">`userid` = #{userid}, </if>
+			<if test="treatStrength != null">`treat_strength` = #{treatStrength}, </if>
+			<if test="treatFrequency != null">`treat_frequency` = #{treatFrequency}, </if>
+			<if test="treatWaveform != null">`treat_waveform` = #{treatWaveform}, </if>
+			<if test="treatWorkmethod != null">`treat_workmethod` = #{treatWorkmethod}, </if>
+			<if test="treatElectrode != null">`treat_electrode` = #{treatElectrode}, </if>
+			<if test="updateTime != null">`update_time` = #{updateTime}, </if>
+			<if test="name != null">`name` = #{name}, </if>
+			<if test="count != null">`count` = #{count}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from treat_data where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from treat_data where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

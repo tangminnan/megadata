@@ -1,0 +1,1446 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xinshineng.information.dao.shaicha.ShaichaStudentDao">
+	<resultMap id="domainMap" type="com.xinshineng.information.domain.shaicha.ShaichaStudentDO">
+		<id column="id" property="id"/>
+		<result column="model_type" property="modelType"/>
+		<result column="ideentity_type" property="ideentityType"/>
+		<result column="school_code" property="schoolCode"/>
+		<result column="student_name" property="studentName"/>
+		<result column="student_sex" property="studentSex"/>
+		<result column="nation" property="nation"/>
+		<result column="birthday" property="birthday"/>
+		<result column="identity_card" property="identityCard"/>
+		<result column="school" property="school"/>
+		<result column="grade" property="grade"/>
+		<result column="student_class" property="studentClass"/>
+		<result column="phone" property="phone"/>
+		<result column="address" property="address"/>
+		<result column="height" property="height"/>
+		<result column="weight" property="weight"/>
+		<result column="add_time" property="addTime"/>
+		<result column="status" property="status"/>
+		<result column="q_r_code" property="QRCode"/>
+		<result column="xue_bu" property="xueBu"/>
+		<result column="last_check_time" property="lastCheckTime"/>
+	</resultMap>
+
+	<select id="get" resultMap="domainMap">
+		select `id`,`student_name`,`student_sex`,`nation`,`birthday`,`identity_card`,`school`,`grade`,`student_class`,`phone`,`address`,`height`,`weight`,`add_time`,`status`,q_r_code,last_check_time
+		from s_student where id = #{value}
+	</select>
+	
+	<select id="getList" resultMap="domainMap">
+		select `id`,`student_name`,`student_sex`,`nation`,`birthday`,`identity_card`,`school`,`grade`,`student_class`,`phone`,`address`,`height`,`weight`,`add_time`,`status`,q_r_code,last_check_time
+		from s_student
+		GROUP BY school
+	</select>
+
+	<select id="list" resultMap="domainMap">
+		select `id`,model_type,ideentity_type,school_code,xue_bu,`student_name`,`student_sex`,`nation`,`birthday`,`identity_card`,`school`,`grade`,`student_class`,`phone`,`address`,`height`,`weight`,`add_time`,`status`,q_r_code,last_check_time
+		from s_student
+		  	<where>
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="checkType != null and checkType != ''"> and check_type = #{checkType} </if>
+		  		  <if test="studentName != null and studentName != ''"> and student_name = #{studentName} </if>
+		  		  <if test="studentSex != null and studentSex != ''"> and student_sex = #{studentSex} </if>
+		  		  <if test="nation != null and nation != ''"> and nation = #{nation} </if>
+		  		  <if test="birthday != null and birthday != ''"> and birthday = #{birthday} </if>
+		  		  <if test="identityCard != null and identityCard != ''"> and identity_card = #{identityCard} </if>
+		  		  <if test="school != null and school != ''"> and school = #{school} </if>
+		  		  <if test="grade != null and grade != ''"> and grade = #{grade} </if>
+		  		  <if test="studentClass != null and studentClass != ''"> and student_class = #{studentClass} </if>
+		  		  <if test="phone != null and phone != ''"> and phone = #{phone} </if>
+		  		  <if test="address != null and address != ''"> and address = #{address} </if>
+		  		  <if test="height != null and height != ''"> and height = #{height} </if>
+		  		  <if test="weight != null and weight != ''"> and weight = #{weight} </if>
+		  		  <if test="addTime != null and addTime != ''"> and add_time = #{addTime} </if>
+		  		  <if test="status != null and status != ''"> and status = #{status} </if>
+		  		  <if test="QRCode != null and QRCode != ''"> and q_r_code = #{QRCode} </if>
+		  		  <if test="lastCheckTime != null and lastCheckTime != ''"> and last_check_time = #{lastCheckTime} </if>
+		  	</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from s_student
+		<where>
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="checkType != null and checkType != ''"> and check_type = #{checkType} </if>
+		  		  <if test="studentName != null and studentName != ''"> and student_name = #{studentName} </if>
+		  		  <if test="studentSex != null and studentSex != ''"> and student_sex = #{studentSex} </if>
+		  		  <if test="nation != null and nation != ''"> and nation = #{nation} </if>
+		  		  <if test="birthday != null and birthday != ''"> and birthday = #{birthday} </if>
+		  		  <if test="identityCard != null and identityCard != ''"> and identity_card = #{identityCard} </if>
+		  		  <if test="school != null and school != ''"> and school = #{school} </if>
+		  		  <if test="grade != null and grade != ''"> and grade = #{grade} </if>
+		  		  <if test="studentClass != null and studentClass != ''"> and student_class = #{studentClass} </if>
+		  		  <if test="phone != null and phone != ''"> and phone = #{phone} </if>
+		  		  <if test="address != null and address != ''"> and address = #{address} </if>
+		  		  <if test="height != null and height != ''"> and height = #{height} </if>
+		  		  <if test="weight != null and weight != ''"> and weight = #{weight} </if>
+		  		  <if test="addTime != null and addTime != ''"> and add_time = #{addTime} </if>
+		  		  <if test="status != null and status != ''"> and status = #{status} </if>
+		  		  <if test="QRCode != null and QRCode != ''"> and q_r_code = #{QRCode} </if>
+		  		  <if test="lastCheckTime != null and lastCheckTime != ''"> and last_check_time = #{lastCheckTime} </if>
+		  		</where>
+	</select>
+
+	 
+	<insert id="save" parameterType="com.xinshineng.information.domain.shaicha.ShaichaStudentDO" useGeneratedKeys="true" keyProperty="id">
+		insert into s_student
+		(
+			`student_name`, 
+			`student_sex`, 
+			`nation`, 
+			`birthday`, 
+			`identity_card`, 
+			`school`, 
+			`grade`, 
+			`student_class`, 
+			`phone`, 
+			`address`, 
+			`height`, 
+			`weight`, 
+			`add_time`, 
+			`status`,
+			q_r_code,
+			last_check_time,
+			model_type,
+  			ideentity_type,
+  			school_code,
+  			xue_bu,
+  			check_type,
+  			check_local,
+  			student_number,
+  			name_jianpin
+		)
+		values
+		(
+			#{studentName}, 
+			#{studentSex}, 
+			#{nation}, 
+			#{birthday}, 
+			#{identityCard}, 
+			#{school}, 
+			#{grade}, 
+			#{studentClass}, 
+			#{phone}, 
+			#{address}, 
+			#{height}, 
+			#{weight}, 
+			#{addTime}, 
+			#{status},
+			#{QRCode},
+			#{lastCheckTime},
+			#{modelType},
+  			#{ideentityType},
+  			#{schoolCode},
+  			#{xueBu},
+  			#{checkType},
+  			#{checkLocal},
+  			#{studentNumber},
+  			#{nameJianpin}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.xinshineng.information.domain.shaicha.ShaichaStudentDO">
+		update s_student
+		<set>
+			<if test="studentName != null">`student_name` = #{studentName}, </if>
+			<if test="studentSex != null">`student_sex` = #{studentSex}, </if>
+			<if test="nation != null">`nation` = #{nation}, </if>
+			<if test="birthday != null">`birthday` = #{birthday}, </if>
+			<if test="identityCard != null">`identity_card` = #{identityCard}, </if>
+			<if test="school != null">`school` = #{school}, </if>
+			<if test="grade != null">`grade` = #{grade}, </if>
+			<if test="studentClass != null">`student_class` = #{studentClass}, </if>
+			<if test="phone != null">`phone` = #{phone}, </if>
+			<if test="address != null">`address` = #{address}, </if>
+			<if test="height != null">`height` = #{height}, </if>
+			<if test="weight != null">`weight` = #{weight}, </if>
+			<if test="addTime != null">`add_time` = #{addTime}, </if>
+			<if test="status != null">`status` = #{status},</if>
+			<if test="QRCode != null">`q_r_code` = #{QRCode},</if>
+			<if test="lastCheckTime != null">`last_check_time` = #{lastCheckTime}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from s_student where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from s_student where id in
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+	
+	<insert id="saveAnswer" parameterType="com.xinshineng.information.domain.shaicha.ShaichaAnswerResultDO" useGeneratedKeys="true" keyProperty="answerId">
+		insert into s_answer_result(
+  			`identity_card`,
+  			`add_time`,
+  			`status`,
+  			`file_name`,
+  			`answer_result1`,
+  			`answer_result2`,
+  			`answer_result3`,
+  			`answer_result4`,
+  			`answer_result5`,
+  			`answer_result6`,
+  			`answer_result7`,
+  			`answer_result8`,
+  			`answer_result9`,
+  			`answer_result10`,
+  			`answer_result11`,
+  			`answer_result12`,
+  			`answer_result13`,
+  			`answer_result14`,
+  			`answer_result15`,
+  			`answer_result16`,
+  			`answer_result17`,
+  			`answer_result18`,
+  			`answer_result19`,
+  			`answer_result20`,
+  			`answer_result21`,
+  			`answer_result22`,
+  			`answer_result23`,
+  			`answer_result24`,
+  			`answer_result25`,
+  			`answer_result26`,
+  			`answer_result27`,
+  			`answer_result28`,
+  			`answer_result29`,
+  			`answer_result30`,
+  			`answer_result31`,
+  			`answer_result32`,
+  			`answer_result33`,
+  			`answer_result34`,
+  			`answer_result35`,
+  			`answer_result36`,
+  			`answer_result37`,
+  			`answer_result38`,
+  			`answer_result39`,
+  			`answer_result40`,
+  			`answer_result41`,
+  			`answer_result42`,
+  			`answer_result43`,
+  			`answer_result44`,
+  			`answer_result45`,
+  			`answer_result46`,
+  			`answer_result47`,
+  			`answer_result48`,
+  			`answer_result49`,
+  			`answer_result50`,
+  			`answer_result51`,
+  			`answer_result52`,
+  			`answer_result53`,
+  			`answer_result54`,
+  			`answer_result55`,
+  			`answer_result56`,
+  			`answer_result57`,
+  			`answer_result58`,
+  			`answer_result59`,
+  			`answer_result60`,
+  			`answer_result61`,
+  			`answer_result62`,
+  			`answer_result63`,
+  			`answer_result64`,
+  			`answer_result65`,
+  			`answer_result66`,
+  			`answer_result67`,
+  			`answer_result68`,
+  			`answer_result69`,
+  			`answer_result70`,
+  			`answer_result71`,
+  			`answer_result72`,
+  			`answer_result73`,
+  			`answer_result74`,
+  			`answer_result75`
+  			
+		)
+		values(
+			#{identityCard},
+			#{addTime},
+			#{status},
+			#{fileName},
+			#{answerResult1},
+			#{answerResult2},
+			#{answerResult3},
+			#{answerResult4},
+			#{answerResult5},
+			#{answerResult6},
+			#{answerResult7},
+			#{answerResult8},
+			#{answerResult9},
+			#{answerResult10},
+			#{answerResult11},
+			#{answerResult12},
+			#{answerResult13},
+			#{answerResult14},
+			#{answerResult15},
+			#{answerResult16},
+			#{answerResult17},
+			#{answerResult18},
+			#{answerResult19},
+			#{answerResult20},
+			#{answerResult21},
+			#{answerResult22},
+			#{answerResult23},
+			#{answerResult24},
+			#{answerResult25},
+			#{answerResult26},
+			#{answerResult27},
+			#{answerResult28},
+			#{answerResult29},
+			#{answerResult30},
+			#{answerResult31},
+			#{answerResult32},
+			#{answerResult33},
+			#{answerResult34},
+			#{answerResult35},
+			#{answerResult36},
+			#{answerResult37},
+			#{answerResult38},
+			#{answerResult39},
+			#{answerResult40},
+			#{answerResult41},
+			#{answerResult42},
+			#{answerResult43},
+			#{answerResult44},
+			#{answerResult45},
+			#{answerResult46},
+			#{answerResult47},
+			#{answerResult48},
+			#{answerResult49},
+			#{answerResult50},
+			#{answerResult51},
+			#{answerResult52},
+			#{answerResult53},
+			#{answerResult54},
+			#{answerResult55},
+			#{answerResult56},
+			#{answerResult57},
+			#{answerResult58},
+			#{answerResult59},
+			#{answerResult60},
+			#{answerResult61},
+			#{answerResult62},
+			#{answerResult63},
+			#{answerResult64},
+			#{answerResult65},
+			#{answerResult66},
+			#{answerResult67},
+			#{answerResult68},
+			#{answerResult69},
+			#{answerResult70},
+			#{answerResult71},
+			#{answerResult72},
+			#{answerResult73},
+			#{answerResult74},
+			#{answerResult75}
+		)
+	</insert>
+	
+	<select id="listDati" resultType="com.xinshineng.information.domain.shaicha.ShaichaAnswerResultDO">
+		select * from s_answer_result
+		<where>
+			 <if test="identityCard != null and identityCard != ''"> and identity_card = #{identityCard} </if>
+			 <if test="addTime != null and addTime != ''"> and DATE_FORMAT(add_time,'%Y-%m-%d') = #{addTime} </if>
+		</where>
+		<choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by answer_id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+	<select id="countDati" resultType="int">
+		select count(answer_id) from s_answer_result
+		<where>
+			 <if test="identityCard != null and identityCard != ''"> and identity_card = #{identityCard} </if>
+		</where>
+	</select>
+	
+	<select id="getLatestResultEyesightDO" resultType="com.xinshineng.information.domain.shaicha.ShaichaResultEyesightDO">
+								SELECT
+							t_eyesight_id,
+							student_id,
+							checkor_id,
+							life_farvision_od,
+							life_farvision_os,
+							ifnull(naked_farvision_od,'') nakedFarvisionOd,
+							ifnull(naked_farvision_os,'') nakedFarvisionOs,
+							ifnull(correction_farvision_od,'') correctionFarvisionOd,
+							ifnull(correction_farvision_os,'') correctionFarvisionOs,
+							ifnull(life_nearvision_od,'') lifeNearvisionOd,
+							ifnull(life_nearvision_os,'') lifeNearvisionOs,
+							ifnull(naked_nearvision_od,'') nakedNearvisionOd,
+							ifnull(naked_nearvision_os,'') nakedNearvisionOs,
+							check_date
+						FROM
+							s_result_eyesight
+						WHERE
+							student_id = #{studentId}
+							order by check_date desc limit 1
+					
+	</select>
+	
+	<select id="getLatestResultDiopterDOListL" resultType="com.xinshineng.information.domain.shaicha.ShaichaResultDiopterDO">
+										SELECT
+							ifnull(diopter_s, '') diopterS,
+							ifnull(diopter_c, '') diopterC,
+							ifnull(diopter_a, '') diopterA,
+							ifnull(dengxiaoqiujing,'') dengxiaoqiujing
+						FROM
+							s_result_diopter d,
+							(
+								SELECT
+									`t_optometry_id`,
+									`student_id`
+								FROM
+									s_result_optometry
+								WHERE
+									student_id = #{studentId} order by check_date desc limit 1
+							) o
+						WHERE
+							d.t_optometry_id = o.t_optometry_id
+						AND d.ifRL = #{ifRL} AND type="AVG"
+						ORDER BY
+							d.t_diopter_id DESC
+	</select>
+	
+	<select id="getLatestResultEyepressureDO" resultType="com.xinshineng.information.domain.shaicha.ShaichaResultEyepressureDO">
+		select ifnull(eye_pressure_od,'') eyePressureOd,ifnull(eye_pressure_os,'') eyePressureOs from s_result_eyepressure where student_id=#{studentId} order by  check_date desc limit 1
+	
+	</select>
+	
+	<select id="getLatelestResultEyeaxisDO" resultType="com.xinshineng.information.domain.shaicha.ShaichaResultEyeaxisDO">
+		select ifnull(second_check_od,'') secondCheckOd,ifnull(second_check_os,'') secondCheckOs,ifnull(first_check_od,'') firstCheckOd,ifnull(first_check_os,'') firstCheckOs 
+		from s_result_eyeaxis where student_id=#{studentId} order by check_date desc limit 1
+	</select>
+	
+	<insert id="saveEyePressure" parameterType="com.xinshineng.information.domain.shaicha.ShaichaResultEyepressureDO">
+		insert into s_result_eyepressure
+		(
+			`student_id`, 
+			`checkor_id`, 
+			`eye_pressure_od`, 
+			`eye_pressure_os`, 
+			`check_date`, 
+			`delete_flag`,
+			identity_card
+		)
+		values
+		(
+			#{studentId}, 
+			#{checkorId}, 
+			#{eyePressureOd}, 
+			#{eyePressureOs}, 
+			#{checkDate}, 
+			#{deleteFlag},
+			#{identityCard}
+		)
+	</insert>
+	
+	<insert id="saveResultEyesightDO" parameterType="com.xinshineng.information.domain.shaicha.ShaichaResultEyesightDO">
+		insert into s_result_eyesight
+		(
+			`student_id`, 
+			`checkor_id`, 
+			`life_farvision_od`, 
+			`life_farvision_os`, 
+			`naked_farvision_od`, 
+			`naked_farvision_os`, 
+			`correction_farvision_od`, 
+			`correction_farvision_os`, 
+			`life_nearvision_od`, 
+			`life_nearvision_os`, 
+			`naked_nearvision_od`, 
+			`naked_nearvision_os`, 
+			`check_date`, 
+			`delete_flag`,
+			identity_card,
+			glassvision_od,
+			glassvision_os
+		)
+		values
+		(
+			#{studentId}, 
+			#{checkorId}, 
+			#{lifeFarvisionOd}, 
+			#{lifeFarvisionOs}, 
+			#{nakedFarvisionOd}, 
+			#{nakedFarvisionOs}, 
+			#{correctionFarvisionOd}, 
+			#{correctionFarvisionOs}, 
+			#{lifeNearvisionOd}, 
+			#{lifeNearvisionOs}, 
+			#{nakedNearvisionOd}, 
+			#{nakedNearvisionOs}, 
+			#{checkDate}, 
+			#{deleteFlag},
+			#{identityCard},
+			#{glassvisionOd},
+			#{glassvisionOs}
+		)
+	</insert>
+	
+	<insert id="ResultEyeaxisDO" parameterType="com.xinshineng.information.domain.shaicha.ShaichaResultEyeaxisDO">
+		insert into s_result_eyeaxis
+		(
+			`student_id`, 
+			`checkor_id`, 
+			`first_check_od`, 
+			`first_check_os`, 
+			`check_date`, 
+			`second_check_od`, 
+			`second_check_os`, 
+			`delete_flag`,
+			identity_card
+		)
+		values
+		(
+			#{studentId}, 
+			#{checkorId}, 
+			#{firstCheckOd}, 
+			#{firstCheckOs}, 
+			#{checkDate}, 
+			#{secondCheckOd}, 
+			#{secondCheckOs}, 
+			#{deleteFlag},
+			#{identityCard}
+		)
+	
+	
+	</insert>
+	
+	<insert id="saveResultDiopterDO" parameterType="com.xinshineng.information.domain.shaicha.ShaichaResultDiopterDO">
+		insert into s_result_diopter
+		(
+			`t_optometry_id`, 
+			`diopter_s`, 
+			`diopter_c`, 
+			`diopter_a`, 
+			`believe`, 
+			`num`, 
+			`type`, 
+			`ifRL`,
+			first_second,
+			identity_card,
+			check_date
+		)
+		values
+		(
+			#{tOptometryId}, 
+			#{diopterS}, 
+			#{diopterC}, 
+			#{diopterA}, 
+			#{believe}, 
+			#{num}, 
+			#{type}, 
+			#{ifrl},
+			#{firstSecond},
+			#{identityCard},
+			#{checkDate}
+		)
+	</insert>
+	
+	<select id="getResultCornealDOList" resultType="com.xinshineng.information.domain.shaicha.ShaichaResultCornealDO">
+							SELECT
+						ifnull(corneal_mm, '') cornealMm,
+						ifnull(corneal_d, '') cornealD,
+						ifnull(corneal_deg, '') cornealDeg
+					FROM
+						s_result_corneal d,
+						(
+							SELECT
+								`t_optometry_id`,
+								`student_id`
+							FROM
+								s_result_optometry
+							WHERE
+								student_id = #{studentId} order by check_date desc limit 1
+						) o
+					WHERE
+						d.t_optometry_id = o.t_optometry_id
+					AND d.ifRL = #{ifrl} AND d.type=#{type}
+					ORDER BY
+						d.t_corneal_id DESC
+	</select>
+
+
+<select id="getJInShiLv" resultType="com.xinshineng.information.domain.shaicha.ShaichaResultEyesightDO">
+										<!-- 	SELECT
+						ifnull(d.naked_farvision_od,0.0) nakedFarvisionOd,
+						ifnull(d.naked_farvision_os,0.0) nakedFarvisionOs,
+						d.identity_card,
+						d.check_date,
+						t.school,
+					
+				
+					
+						t.check_type
+					FROM
+						t_result_eyesight d join 
+						t_student t
+			on
+					
+					 d.identity_card = t.identity_card  -->
+					<!--  AND #{startDate}&lt;=d.check_date
+					AND #{endDate}&gt;=d.check_date -->
+						SELECT
+						ifnull(naked_farvision_od,0.0) nakedFarvisionOd,
+						ifnull(naked_farvision_os,0.0) nakedFarvisionOs,
+						identity_card,
+						check_date
+					  
+					
+				
+					
+				
+					FROM
+						s_result_eyesight
+group by identity_card having check_date=max(check_date) limit #{i},#{j}
+</select>
+
+<update id="updateS" parameterType="com.xinshineng.information.domain.shaicha.ShaichaStudentDO">
+	update s_student set dengxiaoqiujingr=#{dengxiaoqiujingr},
+	dengxiaoqiujingl=#{dengxiaoqiujingl},
+	naked_nearvision_od=#{nakedNearvisionOd},
+	naked_nearvision_os=#{nakedNearvisionOs}
+	where identity_card=#{identityCard}
+</update>
+
+
+
+
+<select id="getResultDiopterDO" resultType="com.xinshineng.information.domain.shaicha.ShaichaResultDiopterDO">
+	<!-- select ifnull(dengxiaoqiujing,0.0) dengxiaoqiujing,identity_card,  ifRL,diopter_s,diopter_c,diopter_a from t_result_diopter where type='AVG' -->   <!-- AND #{startDate}&lt;=check_date -->
+					<!-- AND #{endDate}&gt;=check_date -->
+	select ifnull(dengxiaoqiujing,0.0) dengxiaoqiujing,identity_card,check_date from s_result_diopter where ifRL=#{ifRL} AND  type='AVG' GROUP BY  identity_card
+having check_date=max(check_date) limit #{i},#{j}
+</select>
+
+<select id="getStudentDOshou" resultMap="domainMap">
+	SELECT
+	ifnull(identity_card, 0) identityCard,
+	ifnull(birthday,now()) birthday
+FROM
+	s_student
+LIMIT #{i},#{j}
+</select>
+	<select id="querySchoolName" resultMap="domainMap">
+		select id, school from s_student group by school
+	</select>
+	
+	<select id="querySchoolGrade" resultMap="domainMap">
+		select id, school,student_name,grade ,xue_bu from s_student where school = #{school} group by grade
+	</select>	
+	
+	<select id="queryGradeNum" resultMap="domainMap">
+		select id, school,student_name from s_student where grade = #{grade} and school = #{school} group by identity_card
+	</select>
+	
+	<select id="getCheckUserNum" resultMap="domainMap">
+		select ts.id, ts.school,ts.student_name from s_student ts,t_result_diopter trd
+		where trd.identity_card = ts.identity_card and ts.school = #{school}
+		and trd.check_date between #{start} and #{end}
+		<if test="studentSex != null and studentSex != ''"> and ts.student_sex = #{studentSex} </if>
+		<if test="grade != null and grade != ''"> and ts.grade = #{grade} </if>
+		  group by ts.identity_card
+	</select>
+	
+	<select id="getGradeClassCheck" resultMap="domainMap">
+		select ts.id, ts.school,ts.student_name from s_student ts,t_result_diopter trd
+		where trd.identity_card = ts.identity_card and ts.school = #{school}
+		and trd.check_date between #{start} and #{end}
+		and ts.student_class = #{studentClass}
+		and ts.grade = #{grade}
+		  group by ts.identity_card
+	</select>
+	
+	<select id="queryGradeClassCount" resultMap="domainMap">
+		select id ,student_class,school,student_name from s_student
+		 where school = #{school} and grade = #{grade} GROUP BY student_class
+	</select>
+	
+	<select id="getCheckNianjiNum" resultMap="domainMap">
+		select ts.id ,ts.student_class,ts.school,ts.student_name,ts.student_sex from s_result_diopter trd , s_student ts
+		where trd.identity_card = ts.identity_card and ts.grade = #{grade} and ts.school = #{school} and date_format(trd.check_date,'%Y-%m-%d') = #{checkDate}
+		GROUP BY ts.student_class
+	</select>
+	
+	<select id="queryStudentGrade" resultMap="domainMap">
+		select ts.id ,ts.student_class,ts.school,ts.student_name,ts.student_sex,trd.identity_card from s_result_diopter trd , s_student ts
+		where trd.identity_card = ts.identity_card and ts.grade = #{grade} and ts.school = #{school} and trd.check_date between #{start} and #{end}
+		and ts.student_class = #{studentClass}
+		GROUP BY trd.identity_card
+	</select>
+	
+	<select id="getSchool" resultMap="domainMap">
+		select ts.student_class,ts.school,ts.xue_bu from s_student ts , s_result_eyesight tre
+		where ts.identity_card = tre.identity_card and check_date between #{start} and #{end}
+		group by ts.school
+	</select>
+	
+	<select id="getLastCheckStudent" resultMap="domainMap">
+		select school ,student_sex ,identity_card ,last_check_time ,xue_bu from s_student where school =  #{school} and last_check_time between #{start} and #{end}
+	</select>
+	
+	<select id="getCheckAllStudent" resultMap="domainMap">
+		select school ,student_sex ,identity_card ,last_check_time ,xue_bu,student_class,grade 
+		from s_student where last_check_time between #{start} and #{end} and grade = #{grade}
+	</select>
+
+	<select id="jiancharenshu" resultMap="domainMap">
+		select school ,student_sex ,identity_card ,last_check_time ,xue_bu,student_class,grade 
+		from s_student where last_check_time between #{start} and #{end} and school = #{school}
+		<if test="studentSex != null and studentSex != ''"> and student_sex = #{studentSex} </if>
+		<if test="grade != null and grade != ''"> and grade = #{grade} </if>
+		<if test="studentClass != null and studentClass != ''"> and student_class = #{studentClass}</if>
+		  group by identity_card
+	</select>
+
+<select id="getAllCheckStudentDO"  resultMap="domainMap">
+	select ifnull(dengxiaoqiujingr,-10) dengxiaoqiujingr,
+		   ifnull(dengxiaoqiujingl,-10) dengxiaoqiujingl,birthday,
+		   ifnull(naked_farvision_od,"r") nakedFarvisionOd,
+		   ifnull(naked_farvision_os,"r") nakedFarvisionOs
+		   
+		   from s_student  where last_check_time is not null   limit #{i},#{j}
+</select>
+	<select id="getShaiChaTotalnew" resultType="java.util.Map">
+		SELECT
+			sch.`CityName`,COUNT(*) num
+		FROM
+			s_student_new stu,s_school_new sch
+		WHERE
+			stu.school_id = sch.`id`
+		AND
+		 	sch.`ProvinceCode`='370000'
+		GROUP BY
+		 	sch.`CityName`
+	</select>
+	<select id="getShaiChaTotalOld" resultType="java.util.Map">
+		SELECT
+			sch.`CityName`,COUNT(*) num
+		FROM
+		 	s_student stu,s_school sch
+		WHERE
+			stu.`school_code` = sch.`OrgCode`
+		AND
+		 	sch.`ProvinceCode`='370000'
+		GROUP BY
+		 	sch.`CityName`
+	</select>
+
+
+	<select id="getShaiChaNewTotalNum" resultType="java.lang.Long">
+		SELECT
+			COUNT(*)
+		FROM
+			s_student_new stu,s_school_new sch
+		WHERE
+			stu.school_id = sch.`id`
+		AND
+		 	sch.`ProvinceCode`='370000'
+	</select>
+
+	<select id="getShaiChaOldTotalNum" resultType="java.lang.Long">
+		SELECT
+			COUNT(*)
+		FROM
+		 	s_student stu,s_school sch
+		WHERE
+			stu.`school_code` = sch.`OrgCode`
+		AND
+		 	sch.`ProvinceCode`='370000'
+	</select>
+
+	<select id="getShaiChaNewEveryYearCount" resultType="java.lang.Long">
+		SELECT COUNT(*)  FROM s_student_new stu,s_school_new sch WHERE stu.`school_id`=sch.`id` AND sch.`ProvinceCode`=370000 AND last_check_time IS NOT NULL
+	</select>
+
+	<select id="getShaiChaNewEveryYearCountForCity" resultType="java.lang.Long" parameterType="java.lang.String">
+		SELECT COUNT(*)  FROM s_student_new stu,s_school_new sch WHERE stu.`school_id`=sch.`id` AND sch.`ProvinceCode`=370000 AND last_check_time IS NOT NULL AND sch.`CityName` = #{cityName}
+	</select>
+
+	<select id="getShaiChaOldEveryYearCount" resultType="java.util.Map">
+		SELECT DATE_FORMAT(last_check_time,'%Y') `year`,COUNT(*) num FROM s_student stu,s_school sch WHERE stu.`school_code`=sch.`OrgCode` AND sch.`ProvinceCode`=370000 AND last_check_time IS NOT NULL GROUP BY DATE_FORMAT(last_check_time,'%Y')
+	</select>
+
+	<select id="getShaiChaOldEveryYearCountForCity" resultType="java.util.Map" parameterType="java.lang.String">
+		SELECT DATE_FORMAT(last_check_time,'%Y') `year`,COUNT(*) num FROM s_student stu,s_school sch WHERE stu.`school_code`=sch.`OrgCode` AND sch.`ProvinceCode`=370000 AND last_check_time IS NOT NULL AND sch.`CityName` = #{cityName} GROUP BY DATE_FORMAT(last_check_time,'%Y')
+	</select>
+
+	<resultMap id="SexNum" type="java.util.Map">
+		<result column="sex" property="sex" javaType="java.lang.Integer"/>
+		<result column="num" property="num" javaType="java.lang.Long"/>
+	</resultMap>
+	<select id="getNewSexNum" resultMap="SexNum">
+		SELECT stu.`student_sex` sex,COUNT(*) num FROM s_student_new stu,s_school_new sch WHERE stu.`school_id`=sch.`id` AND sch.`ProvinceCode`=370000  AND stu.`student_sex` IS NOT NULL GROUP BY stu.`student_sex`
+	</select>
+	<select id="getNewSexNumForCity" resultMap="SexNum" parameterType="java.lang.String">
+		SELECT stu.`student_sex` sex,COUNT(*) num FROM s_student_new stu,s_school_new sch WHERE stu.`school_id`=sch.`id` AND sch.`ProvinceCode`=370000  AND stu.`student_sex` IS NOT NULL AND sch.`CityName` = #{cityName} GROUP BY stu.`student_sex`
+	</select>
+
+
+	<select id="getOldSexNum" resultMap="SexNum">
+		SELECT stu.`student_sex` sex,COUNT(*) num FROM s_student stu,s_school sch WHERE stu.`school_code`=sch.`OrgCode` and sch.`ProvinceCode`=370000 and stu.`student_sex`!=0 GROUP BY stu.`student_sex`
+	</select>
+
+	<select id="getOldSexNumForCity" resultMap="SexNum" parameterType="java.lang.String">
+		SELECT stu.`student_sex` sex,COUNT(*) num FROM s_student stu,s_school sch WHERE stu.`school_code`=sch.`OrgCode` and sch.`ProvinceCode`=370000 and stu.`student_sex`!=0 AND sch.`CityName` = #{cityName} GROUP BY stu.`student_sex`
+	</select>
+	<select id="getOldCheckData" resultType="java.util.Map">
+		SELECT naked_farvision_od NakeOd,naked_farvision_os NakeOs,dengxiaoqiujingl DL,dengxiaoqiujingr DR FROM s_student stu,s_school sch WHERE stu.`school`=sch.`OrgName` AND sch.`ProvinceCode`='370000' AND stu.last_check_time IS NOT NULL
+
+	</select>
+
+	<select id="getOldCheckDataForCity" resultType="java.util.Map" parameterType="java.lang.String">
+		SELECT naked_farvision_od NakeOd,naked_farvision_os NakeOs,dengxiaoqiujingl DL,dengxiaoqiujingr DR FROM (SELECT
+			stu.*
+		FROM
+			s_student stu,s_school sch
+		WHERE
+			stu.`school`=sch.`OrgName`
+		AND
+			sch.`ProvinceCode`='370000'
+		AND
+			sch.`CityName` = #{cityName} )stu
+
+	</select>
+
+	<select id="getNewCheckData" resultType="java.util.Map">
+		SELECT naked_farvision_od NakeOd,naked_farvision_os NakeOs,dengxiaoqiujingl DL,dengxiaoqiujingr DR FROM s_student_new stu,s_school sch WHERE stu.`school_id`=sch.`id` AND sch.`ProvinceCode`='370000' AND stu.last_check_time IS NOT NULL
+	</select>
+
+	<select id="getNewCheckDataForCity" resultType="java.util.Map" parameterType="java.lang.String">
+		SELECT naked_farvision_od NakeOd,naked_farvision_os NakeOs,dengxiaoqiujingl DL,dengxiaoqiujingr DR
+	FROM (SELECT
+			stu.*
+		FROM
+			s_student_new stu,s_school_new sch
+		WHERE
+			stu.school_id = sch.`id`
+		AND
+			sch.`ProvinceCode`='370000'
+
+		AND
+			sch.`CityName` =#{cityName}) stu
+	</select>
+
+
+	<select id="getNewCount" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			s_student_new stu,s_school_new sch
+		WHERE
+			stu.school_id = sch.`id`
+		AND
+			sch.`ProvinceCode`='370000'
+
+	</select>
+	<select id="getNewCountForCity" resultType="int" parameterType="string">
+		SELECT
+			COUNT(*)
+		FROM
+			s_student_new stu,s_school_new sch
+		WHERE
+			stu.school_id = sch.`id`
+		AND
+			sch.`ProvinceCode`='370000'
+
+		AND
+			sch.`CityName` = #{cityName}
+	</select>
+
+	<select id="getOldCount" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			s_student stu,s_school sch
+		WHERE
+			stu.`school`=sch.`OrgName`
+		AND
+			sch.`ProvinceCode`='370000'
+
+	</select>
+	<select id="getOldCountForCity" resultType="int" parameterType="string">
+		SELECT
+			COUNT(*)
+		FROM
+			s_student stu,s_school sch
+		WHERE
+			stu.`school`=sch.`OrgName`
+		AND
+			sch.`ProvinceCode`='370000'
+		AND
+			sch.`CityName` = #{cityName}
+	</select>
+
+	<select id="getDevelopmentAndWarningDataForNew" resultType="java.util.Map">
+		SELECT DATE_FORMAT(stu.`last_check_time`,'%Y') `year`,naked_farvision_od NakeOd,naked_farvision_os NakeOs,dengxiaoqiujingl DL,dengxiaoqiujingr DR FROM s_student_new stu,s_school sch WHERE stu.`school_id`=sch.`id` AND sch.`ProvinceCode`='370000' AND stu.`last_check_time` IS NOT NULL
+	</select>
+
+	<select id="getDevelopmentAndWarningDataForNewForCity" resultType="java.util.Map" parameterType="java.lang.String">
+		SELECT DATE_FORMAT(stu.`last_check_time`,'%Y') `year`,naked_farvision_od NakeOd,naked_farvision_os NakeOs,dengxiaoqiujingl DL,dengxiaoqiujingr DR FROM s_student_new stu,s_school sch WHERE stu.`school_id`=sch.`id` AND sch.`ProvinceCode`='370000' AND stu.`last_check_time` IS NOT NULL AND sch.`CityName` = #{cityName}
+	</select>
+	<select id="getDevelopmentAndWarningDataForOld" resultType="java.util.Map">
+		SELECT DATE_FORMAT(stu.`last_check_time`,'%Y') `year`,naked_farvision_od NakeOd,naked_farvision_os NakeOs,dengxiaoqiujingl DL,dengxiaoqiujingr DR FROM s_student stu,s_school sch WHERE stu.`school`=sch.`OrgName` AND sch.`ProvinceCode`='370000' AND stu.`last_check_time` IS NOT NULL
+	</select>
+	<select id="getDevelopmentAndWarningDataForOldForCity" resultType="java.util.Map" parameterType="java.lang.String">
+		SELECT DATE_FORMAT(stu.`last_check_time`,'%Y') `year`,naked_farvision_od NakeOd,naked_farvision_os NakeOs,dengxiaoqiujingl DL,dengxiaoqiujingr DR FROM s_student stu,s_school sch WHERE stu.`school`=sch.`OrgName` AND sch.`ProvinceCode`='370000' AND stu.`last_check_time` IS NOT NULL AND sch.`CityName` = #{cityName}
+	</select>
+
+	<select id="getOldAreaCount" resultType="java.util.Map">
+		SELECT sch.`AreaName`,COUNT(*) num
+		FROM s_student stu,s_school sch WHERE stu.`school_code`=sch.`OrgCode`  AND sch.`CityName`=#{checkCity} GROUP BY sch.`AreaName`;
+	</select>
+	<select id="getNewAreaCount" resultType="java.util.Map">
+		SELECT sch.`AreaName`,COUNT(*) num
+		FROM s_student_new stu,s_school_new sch WHERE stu.`school_id`=sch.`id`  AND sch.`CityName`=#{checkCity} GROUP BY sch.`AreaName`;
+	</select>
+	<select id="getOldSchoolNum" resultType="java.util.Map">
+		select  sch.`OrgName`,count(*) num from s_student stu,s_school sch WHERE stu.`school_code`=sch.`OrgCode` AND sch.`CityName`=#{checkCity} AND sch.`AreaName`=#{checkArea} GROUP BY sch.`OrgName`;
+	</select>
+	<select id="getNewSchoolNum" resultType="java.util.Map">
+		SELECT  sch.`OrgName`,COUNT(*) num FROM s_student_new stu,s_school_new sch WHERE stu.`school_id`=sch.`id` AND sch.`CityName`=#{checkCity} AND sch.`AreaName`=#{checkArea} GROUP BY sch.`OrgName`;
+	</select>
+
+	<select id="getSchoolCheckData" resultType="java.util.Map">
+SELECT dengxiaoqiujingl DL,dengxiaoqiujingr DR,naked_farvision_od NakeOd,naked_farvision_os NakeOs FROM s_student_he WHERE identity_card IN (SELECT stu.`identity_card` FROM s_student stu,s_school sch WHERE stu.`school_code`=sch.`OrgCode` AND sch.`CityName`=#{checkCity} AND sch.`AreaName`=#{checkArea} AND sch.`OrgName`=#{orgName})
+	</select>
+	<select id="getSchoolCheckDataForNew" resultType="java.util.Map">
+		SELECT dengxiaoqiujingl DL,dengxiaoqiujingr DR,naked_farvision_od NakeOd,naked_farvision_os NakeOs
+FROM s_student_he
+WHERE identity_card IN
+(SELECT stu.`identity_card` FROM s_student_new stu,s_school_new sch WHERE stu.`school_id`=sch.`id`  AND sch.`CityName`=#{checkCity} AND sch.`AreaName`=#{checkArea} AND sch.`OrgName`=#{orgName} )
+	</select>
+	<select id="getSchoolCheckDataNum" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM s_student_he WHERE identity_card IN (SELECT stu.`identity_card` FROM s_student stu,s_school sch WHERE stu.`school_code`=sch.`OrgCode` AND sch.`CityName`=#{checkCity} AND sch.`AreaName`=#{checkArea} AND sch.`OrgName`=#{orgName})
+	</select>
+	<select id="getSchoolCheckDataNumForNew" resultType="java.lang.Integer">
+				SELECT COUNT(*) FROM s_student_he WHERE identity_card IN (SELECT stu.`identity_card` FROM s_student_new stu,s_school_new sch WHERE stu.`school_id`=sch.`id` AND sch.`CityName`=#{checkCity} AND sch.`AreaName`=#{checkArea} AND sch.`OrgName`=#{orgName})
+	</select>
+
+	<select id="getEveryYearCount" resultType="java.util.Map">
+		SELECT DATE_FORMAT(last_check_time,'%Y') `year`,COUNT(*) num FROM s_student_he WHERE last_check_time IS NOT NULL GROUP BY DATE_FORMAT(last_check_time,'%Y')
+	</select>
+
+	<select id="get2018CheckData" resultType="java.util.Map">
+		SELECT naked_farvision_od NakeOd,naked_farvision_os NakeOs,dengxiaoqiujingl DL,dengxiaoqiujingr DR FROM s_student_he WHERE last_check_time IS NOT NULL AND DATE_FORMAT(last_check_time,'%Y')=2018
+	</select>
+
+	<select id="get2019CheckData" resultType="java.util.Map">
+		SELECT naked_farvision_od NakeOd,naked_farvision_os NakeOs,dengxiaoqiujingl DL,dengxiaoqiujingr DR FROM s_student_he WHERE last_check_time IS NOT NULL AND DATE_FORMAT(last_check_time,'%Y')=2019
+	</select>
+	<select id="get2020CheckData" resultType="java.util.Map">
+		SELECT naked_farvision_od NakeOd,naked_farvision_os NakeOs,dengxiaoqiujingl DL,dengxiaoqiujingr DR FROM s_student_he WHERE last_check_time IS NOT NULL AND DATE_FORMAT(last_check_time,'%Y')=2020
+	</select>
+
+	<select id="getManNum" resultType="int">
+		SELECT
+		COUNT(stu1.`student_new_id`) num
+		FROM s_student_school_he stu1,(SELECT DISTINCT identity_card, student_new_id FROM s_student_school_he WHERE last_check_time IS NOT NULL AND dengxiaoqiujingl IS NOT NULL AND dengxiaoqiujingr IS NOT NULL AND naked_farvision_od IS NOT NULL AND naked_farvision_os IS NOT NULL)
+		stu2
+		WHERE stu1.student_new_id = stu2.student_new_id AND stu1.`student_sex`='1'
+		<if test="checkCity != null and checkCity != '' ">and stu1.CityName = #{checkCity}</if>
+		<if test="checkArea != null and checkArea != '' ">and stu1.AreaName = #{checkArea}</if>
+	</select>
+	<select id="getJinShiManNum" resultType="int">
+		SELECT COUNT(dxqj) num FROM
+		(SELECT
+		LEAST(stu1.`dengxiaoqiujingl`,stu1.`dengxiaoqiujingr`) dxqj,LEAST(stu1.`naked_farvision_od`,stu1.`naked_farvision_os`) naked,stu1.CityName,stu1.AreaName
+		FROM s_student_school_he stu1,(SELECT DISTINCT identity_card, student_new_id FROM s_student_school_he WHERE last_check_time IS NOT NULL AND dengxiaoqiujingl IS NOT NULL AND dengxiaoqiujingr IS NOT NULL AND naked_farvision_od IS NOT NULL AND naked_farvision_os IS NOT NULL)
+		stu2
+		WHERE stu1.`student_new_id`=stu2.student_new_id AND stu1.`student_sex`='1') stu WHERE dxqj &lt; -0.5 AND naked &lt;5.0
+		<if test="checkCity != null and checkCity != '' ">and CityName = #{checkCity}</if>
+		<if test="checkArea != null and checkArea != '' ">and AreaName = #{checkArea}</if>
+	</select>
+
+	<select id="getWomenNum" resultType="int">
+		SELECT
+		COUNT(stu1.`student_new_id`) num
+		FROM s_student_school_he stu1,(SELECT DISTINCT identity_card, student_new_id FROM s_student_school_he WHERE last_check_time IS NOT NULL AND dengxiaoqiujingl IS NOT NULL AND dengxiaoqiujingr IS NOT NULL AND naked_farvision_od IS NOT NULL AND naked_farvision_os IS NOT NULL)
+		stu2
+		WHERE stu1.student_new_id = stu2.student_new_id AND stu1.`student_sex`='2'
+		<if test="checkCity != null and checkCity != '' ">and stu1.CityName = #{checkCity}</if>
+		<if test="checkArea != null and checkArea != '' ">and stu1.AreaName = #{checkArea}</if>
+
+	</select>
+	<select id="getJinShiWomenNum" resultType="int">
+		SELECT COUNT(dxqj) num FROM
+		(SELECT
+		LEAST(stu1.`dengxiaoqiujingl`,stu1.`dengxiaoqiujingr`) dxqj,LEAST(stu1.`naked_farvision_od`,stu1.`naked_farvision_os`) naked,stu1.CityName,stu1.AreaName
+		FROM s_student_school_he stu1,(SELECT DISTINCT identity_card, student_new_id FROM s_student_school_he WHERE last_check_time IS NOT NULL AND dengxiaoqiujingl IS NOT NULL AND dengxiaoqiujingr IS NOT NULL AND naked_farvision_od IS NOT NULL AND naked_farvision_os IS NOT NULL)
+		stu2
+		WHERE stu1.`student_new_id`=stu2.student_new_id AND stu1.`student_sex`='2') stu WHERE dxqj &lt; -0.5 AND naked &lt;5.0
+		<if test="checkCity != null and checkCity != '' ">and CityName = #{checkCity}</if>
+		<if test="checkArea != null and checkArea != '' ">and AreaName = #{checkArea}</if>
+	</select>
+
+	<select id="getEveryXueBuNum" resultType="java.util.Map">
+		SELECT
+		COUNT(stu1.`student_new_id`) num,stu1.`xue_bu`
+		FROM s_student_school_he stu1,(SELECT DISTINCT identity_card, student_new_id FROM s_student_school_he WHERE last_check_time IS NOT NULL AND dengxiaoqiujingl IS NOT NULL AND dengxiaoqiujingr IS NOT NULL AND naked_farvision_od IS NOT NULL AND naked_farvision_os IS NOT NULL)
+		stu2
+		WHERE stu1.student_new_id = stu2.student_new_id
+		<if test="checkCity != null and checkCity != ''">AND stu1.`CityName`=#{checkCity}</if>
+		GROUP BY stu1.`xue_bu`
+
+	</select>
+	<select id="getEveryXueBuHuanBingNum" resultType="java.util.Map">
+		SELECT COUNT(dxqj) num,xue_bu FROM
+		(SELECT
+		LEAST(stu1.`dengxiaoqiujingl`,stu1.`dengxiaoqiujingr`) dxqj,LEAST(stu1.`naked_farvision_od`,stu1.`naked_farvision_os`) naked,stu1.CityName,stu1.`xue_bu`
+		FROM s_student_school_he stu1,(SELECT DISTINCT identity_card, student_new_id FROM s_student_school_he WHERE last_check_time IS NOT NULL AND dengxiaoqiujingl IS NOT NULL AND dengxiaoqiujingr IS NOT NULL AND naked_farvision_od IS NOT NULL AND naked_farvision_os IS NOT NULL)
+		stu2 WHERE stu1.`student_new_id`=stu2.student_new_id) stu
+		WHERE dxqj &lt;-0.5 AND naked &lt;5.0
+		<if test="checkCity !=null and checkCity != ''">and CityName =#{checkCity}</if>
+		GROUP BY xue_bu
+	</select>
+
+	<select id="getNianJiNum" resultType="java.util.Map">
+		SELECT
+		COUNT(stu1.`student_new_id`) num,stu1.`grade`
+		FROM s_student_school_he stu1,(SELECT DISTINCT identity_card, student_new_id FROM s_student_school_he WHERE last_check_time IS NOT NULL AND dengxiaoqiujingl IS NOT NULL AND dengxiaoqiujingr IS NOT NULL AND naked_farvision_od IS NOT NULL AND naked_farvision_os IS NOT NULL)
+		stu2
+		WHERE stu1.student_new_id = stu2.student_new_id AND stu1.`CityName` = #{checkCity} AND stu1.`AreaName`=#{checkArea} AND stu1.`grade` IN ('一年级','二年级','三年级','四年级','五年级','六年级') GROUP BY stu1.`grade`
+
+	</select>
+	<select id="getNianJiHuanBingNum" resultType="java.util.Map">
+		SELECT COUNT(dxqj) num,grade FROM
+		(SELECT
+		LEAST(stu1.`dengxiaoqiujingl`,stu1.`dengxiaoqiujingr`) dxqj,LEAST(stu1.`naked_farvision_od`,stu1.`naked_farvision_os`) naked,stu1.CityName,stu1.`AreaName`,stu1.`grade`
+		FROM s_student_school_he stu1,(SELECT DISTINCT identity_card, student_new_id FROM s_student_school_he WHERE last_check_time IS NOT NULL AND dengxiaoqiujingl IS NOT NULL AND dengxiaoqiujingr IS NOT NULL AND naked_farvision_od IS NOT NULL AND naked_farvision_os IS NOT NULL)
+		stu2
+		WHERE stu1.`student_new_id`=stu2.student_new_id) stu
+
+		WHERE dxqj &lt; -0.5 AND naked &lt;5.0 AND CityName = #{checkCity} AND AreaName = #{checkArea} AND grade IN ('一年级','二年级','三年级','四年级','五年级','六年级') GROUP BY grade
+
+	</select>
+
+	<select id="getSchoolNum" resultType="java.util.Map">
+		SELECT DATE_FORMAT(last_check_time,'%Y-%m') check_time,school,COUNT(student_new_id) num FROM s_student_school_he
+		WHERE last_check_time IS NOT NULL AND dengxiaoqiujingl IS NOT NULL AND dengxiaoqiujingr IS NOT NULL AND naked_farvision_od IS NOT NULL AND naked_farvision_os IS NOT NULL AND xue_bu IS NOT NULL
+		AND CityName = #{checkCity} AND AreaName = #{checkArea} GROUP BY school,DATE_FORMAT(last_check_time,'%Y-%m') HAVING COUNT(student_new_id)>300
+		ORDER BY DATE_FORMAT(last_check_time,'%Y-%m') DESC, COUNT(student_new_id) DESC LIMIT 0,10
+	</select>
+
+	<select id="getSchoolLCNum" resultType="long">
+		SELECT	COUNT(dxqj) num FROM
+		(SELECT
+		LEAST(stu1.`dengxiaoqiujingl`,stu1.`dengxiaoqiujingr`) dxqj,LEAST(stu1.`naked_farvision_od`,stu1.`naked_farvision_os`) naked,stu1.CityName,stu1.`AreaName`,stu1.`school`,DATE_FORMAT(stu1.`last_check_time`,'%Y-%m') check_time
+		FROM s_student_school_he stu1,(SELECT DISTINCT identity_card, student_new_id FROM s_student_school_he)stu2
+		WHERE stu1.`student_new_id`=stu2.student_new_id AND stu1.`dengxiaoqiujingl` IS NOT NULL AND stu1.`dengxiaoqiujingr` IS NOT NULL AND stu1.`naked_farvision_od` IS NOT NULL AND stu1.`naked_farvision_os` IS NOT NULL AND stu1.`last_check_time` IS NOT NULL) stu
+
+		WHERE  CityName = #{checkCity} AND AreaName = #{checkArea}  AND school = #{school} AND check_time =#{check_time} AND  dxqj &gt;=-0.5 AND dxqj &lt;=0.75
+	</select>
+	<select id="getSchoolZXNum" resultType="long">
+		SELECT	COUNT(dxqj) num FROM
+		(SELECT
+		LEAST(stu1.`dengxiaoqiujingl`,stu1.`dengxiaoqiujingr`) dxqj,LEAST(stu1.`naked_farvision_od`,stu1.`naked_farvision_os`) naked,stu1.CityName,stu1.`AreaName`,stu1.`school`,DATE_FORMAT(stu1.`last_check_time`,'%Y-%m') check_time
+		FROM s_student_school_he stu1,(SELECT DISTINCT identity_card, student_new_id FROM s_student_school_he)stu2
+		WHERE stu1.`student_new_id`=stu2.student_new_id AND stu1.`dengxiaoqiujingl` IS NOT NULL AND stu1.`dengxiaoqiujingr` IS NOT NULL AND stu1.`naked_farvision_od` IS NOT NULL AND stu1.`naked_farvision_os` IS NOT NULL AND stu1.`last_check_time` IS NOT NULL) stu
+
+		WHERE  CityName = #{checkCity} AND AreaName = #{checkArea}  AND school = #{school} AND check_time =#{check_time} AND  naked &gt;=5.0 AND dxqj &lt;-0.5
+	</select>
+	<select id="getSchoolJXNum" resultType="long">
+		SELECT	COUNT(dxqj) num FROM
+		(SELECT
+		LEAST(stu1.`dengxiaoqiujingl`,stu1.`dengxiaoqiujingr`) dxqj,LEAST(stu1.`naked_farvision_od`,stu1.`naked_farvision_os`) naked,stu1.CityName,stu1.`AreaName`,stu1.`school`,DATE_FORMAT(stu1.`last_check_time`,'%Y-%m') check_time
+		FROM s_student_school_he stu1,(SELECT DISTINCT identity_card, student_new_id FROM s_student_school_he)stu2
+		WHERE stu1.`student_new_id`=stu2.student_new_id AND stu1.`dengxiaoqiujingl` IS NOT NULL AND stu1.`dengxiaoqiujingr` IS NOT NULL AND stu1.`naked_farvision_od` IS NOT NULL AND stu1.`naked_farvision_os` IS NOT NULL AND stu1.`last_check_time` IS NOT NULL) stu
+
+		WHERE CityName = #{checkCity} AND AreaName = #{checkArea}  AND school = #{school} AND check_time =#{check_time} AND   naked &lt;5.0 AND dxqj &lt;-0.5
+	</select>
+
+	<select id="getCityOrAreaNum" resultType="long">
+		SELECT
+		COUNT(stu1.`student_new_id`) num
+		FROM s_student_school_he stu1,(SELECT DISTINCT identity_card, student_new_id FROM s_student_school_he)
+		stu2
+		WHERE stu1.student_new_id = stu2.student_new_id AND last_check_time IS NOT NULL AND dengxiaoqiujingl IS NOT NULL AND dengxiaoqiujingr IS NOT NULL AND naked_farvision_od IS NOT NULL AND naked_farvision_os IS NOT NULL
+		AND stu1.`CityName` = #{checkCity}
+		<if test="checkArea != null and checkArea != ''">AND stu1.`AreaName` = #{checkArea}</if>
+	</select>
+	<select id="getCityOrAreaSLDXNum" resultType="long">
+		SELECT COUNT(dxqj) num FROM
+		(SELECT
+		LEAST(stu1.`dengxiaoqiujingl`,stu1.`dengxiaoqiujingr`) dxqj,LEAST(stu1.`naked_farvision_od`,stu1.`naked_farvision_os`) naked,stu1.CityName,stu1.`AreaName`
+		FROM s_student_school_he stu1,(SELECT DISTINCT identity_card, student_new_id FROM s_student_school_he )stu2
+		WHERE stu1.`student_new_id`=stu2.student_new_id AND last_check_time IS NOT NULL AND dengxiaoqiujingl IS NOT NULL AND dengxiaoqiujingr IS NOT NULL AND naked_farvision_od IS NOT NULL AND naked_farvision_os IS NOT NULL) stu
+		WHERE  naked &lt;5.0  AND CityName = #{checkCity}
+		<if test="checkArea != null and checkArea != ''">AND AreaName = #{checkArea}</if>
+	</select>
+	<select id="getCityOrAreaYSNum" resultType="long">
+		SELECT COUNT(dxqj) num FROM
+		(SELECT
+		LEAST(stu1.`dengxiaoqiujingl`,stu1.`dengxiaoqiujingr`) dxqj,LEAST(stu1.`naked_farvision_od`,stu1.`naked_farvision_os`) naked,stu1.CityName,stu1.`AreaName`
+		FROM s_student_school_he stu1,(SELECT DISTINCT identity_card, student_new_id FROM s_student_school_he )stu2
+		WHERE stu1.`student_new_id`=stu2.student_new_id AND last_check_time IS NOT NULL AND dengxiaoqiujingl IS NOT NULL AND dengxiaoqiujingr IS NOT NULL AND naked_farvision_od IS NOT NULL AND naked_farvision_os IS NOT NULL) stu
+		WHERE dxqj &gt;0.75 AND CityName = #{checkCity}
+		<if test="checkArea != null and checkArea != ''">AND AreaName = #{checkArea}</if>
+	</select>
+	<select id="getCityOrAreaLCQQNum" resultType="long">
+		SELECT COUNT(dxqj) num FROM
+		(SELECT
+		LEAST(stu1.`dengxiaoqiujingl`,stu1.`dengxiaoqiujingr`) dxqj,LEAST(stu1.`naked_farvision_od`,stu1.`naked_farvision_os`) naked,stu1.CityName,stu1.`AreaName`
+		FROM s_student_school_he stu1,(SELECT DISTINCT identity_card, student_new_id FROM s_student_school_he )stu2
+		WHERE stu1.`student_new_id`=stu2.student_new_id AND last_check_time IS NOT NULL AND dengxiaoqiujingl IS NOT NULL AND dengxiaoqiujingr IS NOT NULL AND naked_farvision_od IS NOT NULL AND naked_farvision_os IS NOT NULL) stu
+		WHERE dxqj &gt;=-0.5 and dxqj &lt;=0.75 AND CityName = #{checkCity}
+		<if test="checkArea != null and checkArea != ''">AND AreaName = #{checkArea}</if>
+	</select>
+	<select id="getCityOrAreaJXJSNum" resultType="long">
+		SELECT COUNT(dxqj) num FROM
+		(SELECT
+		LEAST(stu1.`dengxiaoqiujingl`,stu1.`dengxiaoqiujingr`) dxqj,LEAST(stu1.`naked_farvision_od`,stu1.`naked_farvision_os`) naked,stu1.CityName,stu1.`AreaName`
+		FROM s_student_school_he stu1,(SELECT DISTINCT identity_card, student_new_id FROM s_student_school_he )stu2
+		WHERE stu1.`student_new_id`=stu2.student_new_id AND last_check_time IS NOT NULL AND dengxiaoqiujingl IS NOT NULL AND dengxiaoqiujingr IS NOT NULL AND naked_farvision_od IS NOT NULL AND naked_farvision_os IS NOT NULL) stu
+		WHERE  naked &lt;5.0 AND dxqj &lt;-0.5 AND CityName = #{checkCity}
+		<if test="checkArea != null and checkArea != ''">AND AreaName = #{checkArea}</if>
+	</select>
+	<select id="getCityOrAreaZXJSNum" resultType="long">
+		SELECT COUNT(dxqj) num FROM
+		(SELECT
+		LEAST(stu1.`dengxiaoqiujingl`,stu1.`dengxiaoqiujingr`) dxqj,LEAST(stu1.`naked_farvision_od`,stu1.`naked_farvision_os`) naked,stu1.CityName,stu1.`AreaName`
+		FROM s_student_school_he stu1,(SELECT DISTINCT identity_card, student_new_id FROM s_student_school_he )stu2
+		WHERE stu1.`student_new_id`=stu2.student_new_id AND last_check_time IS NOT NULL AND dengxiaoqiujingl IS NOT NULL AND dengxiaoqiujingr IS NOT NULL AND naked_farvision_od IS NOT NULL AND naked_farvision_os IS NOT NULL) stu
+		WHERE  naked &gt;=5.0 AND dxqj &lt;-0.5 AND CityName = #{checkCity}
+		<if test="checkArea != null and checkArea != ''">AND AreaName = #{checkArea}</if>
+	</select>
+
+
+	<select id="getShiFanXiaoNumList" resultType="java.util.Map">
+		SELECT
+		COUNT(stu1.`student_new_id`) num,school
+		FROM s_student_school_he stu1,(SELECT DISTINCT identity_card, student_new_id FROM s_student_school_he)
+		stu2
+		WHERE stu1.student_new_id = stu2.student_new_id AND last_check_time IS NOT NULL AND dengxiaoqiujingl IS NOT NULL AND dengxiaoqiujingr IS NOT NULL AND naked_farvision_od IS NOT NULL AND naked_farvision_os IS NOT NULL
+		AND stu1.`CityName` = #{checkCity} AND stu1.`check_type`='SHI_FANXIAO' GROUP BY school HAVING num > 100 ORDER BY num DESC LIMIT 0,20;
+	</select>
+	<select id="getSchoolHuanBingNum" resultType="long">
+		SELECT COUNT(dxqj) num FROM
+		(SELECT
+		LEAST(stu1.`dengxiaoqiujingl`,stu1.`dengxiaoqiujingr`) dxqj,LEAST(stu1.`naked_farvision_od`,stu1.`naked_farvision_os`) naked,stu1.CityName,stu1.`check_type`,stu1.`school`
+		FROM s_student_school_he stu1,(SELECT DISTINCT identity_card, student_new_id FROM s_student_school_he )stu2
+		WHERE stu1.`student_new_id`=stu2.student_new_id AND last_check_time IS NOT NULL AND dengxiaoqiujingl IS NOT NULL AND dengxiaoqiujingr IS NOT NULL AND naked_farvision_od IS NOT NULL AND naked_farvision_os IS NOT NULL) stu
+		WHERE  naked &lt;5.0 AND dxqj &lt;-0.5 AND CityName =#{checkCity} AND check_type = 'SHI_FANXIAO' AND school = #{school}
+	</select>
+	<select id="schoolAllNumber" resultType="int">
+		SELECT COUNT(*) FROM s_student_school_he where	school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and last_check_time is not null
+	</select>
+	<select id="schoolThisNumber" resultType="int">
+		SELECT COUNT(*) FROM s_student_school_he where	school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate}
+	</select>
+	<select id="illNumber" resultType="int" >
+		SELECT
+		COUNT(dengxiaoqiujing) num
+		FROM
+		(
+		SELECT
+		LEAST(
+		dengxiaoqiujingl,
+		dengxiaoqiujingr
+		) AS dengxiaoqiujing,
+		LEAST(
+		naked_farvision_od,
+		naked_farvision_os
+		) AS naked_farvision
+		FROM
+		s_student_school_he
+		WHERE
+		`school` = #{school} AND`AreaName` = #{AreaName} AND `CityName` = #{CityName} and
+		DATE_FORMAT(`last_check_time`,'%Y-%m') = #{checkdate} and dengxiaoqiujingl is not NULL and dengxiaoqiujingr is not NULL and naked_farvision_od is not NULL and naked_farvision_os is not NULL
+		) AS one
+		WHERE
+		dengxiaoqiujing &lt; '-0.5'
+		AND naked_farvision &lt; '5.0'
+	</select>
+	<select id="sexThisNumber" resultType="int">
+		SELECT COUNT(*) FROM s_student_school_he where	school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate} and student_sex = #{sex}
+	</select>
+	<select id="getXueBu" resultType="string">
+		SELECT DISTINCT xue_bu FROM s_student_school_he
+        WHERE school = #{school}
+        AND AreaName = #{AreaName}
+        AND CityName = #{CityName}
+        AND DATE_FORMAT(last_check_time, '%Y-%m') = #{checkdate}
+	</select>
+	<select id="everyCheck" resultType="map">
+		SELECT  DISTINCT
+	DATE_FORMAT(last_check_time, '%Y-%m') checkTime,
+	COUNT(
+		DATE_FORMAT(last_check_time, '%Y-%m')
+	) checkNumber
+    FROM
+    	s_student_school_he
+    WHERE
+    	school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName}
+    AND DATE_FORMAT(last_check_time, '%Y') >= '2019'
+    GROUP BY
+    	DATE_FORMAT(last_check_time, '%Y-%m')
+	</select>
+	<select id="mildNumber" resultType="int">
+		SELECT
+		COUNT(dengxiaoqiujing) num
+		FROM
+		(
+		SELECT
+		LEAST(
+		dengxiaoqiujingl,
+		dengxiaoqiujingr
+		) AS dengxiaoqiujing,
+		LEAST(
+		naked_farvision_od,
+		naked_farvision_os
+		) AS naked_farvision
+		FROM
+		s_student_school_he
+		WHERE
+		school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and
+		DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate} and dengxiaoqiujingl is not NULL and dengxiaoqiujingr is not NULL and naked_farvision_od is not NULL and naked_farvision_os is not NULL
+		) AS one
+		WHERE
+		dengxiaoqiujing &lt; '-0.5'
+		AND naked_farvision &lt; '5.0'
+		AND dengxiaoqiujing >= '-3.0'
+	</select>
+	<select id="moderateNumber" resultType="int">
+		SELECT
+		COUNT(dengxiaoqiujing) num
+		FROM
+		(
+		SELECT
+		LEAST(
+		dengxiaoqiujingl,
+		dengxiaoqiujingr
+		) AS dengxiaoqiujing,
+		LEAST(
+		naked_farvision_od,
+		naked_farvision_os
+		) AS naked_farvision
+		FROM
+		s_student_school_he
+		WHERE
+		school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and
+		DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate} and dengxiaoqiujingl is not NULL and dengxiaoqiujingr is not NULL and naked_farvision_od is not NULL and naked_farvision_os is not NULL
+		) AS one
+		WHERE
+		dengxiaoqiujing &lt; '-3.0'
+		AND naked_farvision &lt; '5.0'
+		AND dengxiaoqiujing >= '-6.0'
+	</select>
+	<select id="highlyNumber" resultType="int">
+		SELECT
+		COUNT(dengxiaoqiujing) num
+		FROM
+		(
+		SELECT
+		LEAST(
+		dengxiaoqiujingl,
+		dengxiaoqiujingr
+		) AS dengxiaoqiujing,
+		LEAST(
+		naked_farvision_od,
+		naked_farvision_os
+		) AS naked_farvision
+		FROM
+		s_student_school_he
+		WHERE
+		school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and
+		DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate} and dengxiaoqiujingl is not NULL and dengxiaoqiujingr is not NULL and naked_farvision_od is not NULL and naked_farvision_os is not NULL
+		) AS one
+		WHERE
+		dengxiaoqiujing &lt; '-6.0'
+		AND naked_farvision &lt; '5.0'
+	</select>
+	<select id="lcqqNumber" resultType="int">
+		SELECT
+		COUNT(dengxiaoqiujing) num
+		FROM
+		(
+		SELECT
+		LEAST(
+		dengxiaoqiujingl,
+		dengxiaoqiujingr
+		) AS dengxiaoqiujing,
+		LEAST(
+		naked_farvision_od,
+		naked_farvision_os
+		) AS naked_farvision
+		FROM
+		s_student_school_he
+		WHERE
+		school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and
+		DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate} and dengxiaoqiujingl is not NULL and dengxiaoqiujingr is not NULL and naked_farvision_od is not NULL and naked_farvision_os is not NULL
+		) AS one
+		WHERE
+		dengxiaoqiujing >= '-0.5'
+		AND dengxiaoqiujing &lt;= '0.75'
+	</select>
+	<select id="jxjsNumber" resultType="int">
+		SELECT
+		COUNT(dengxiaoqiujing) num
+		FROM
+		(
+		SELECT
+		LEAST(
+		dengxiaoqiujingl,
+		dengxiaoqiujingr
+		) AS dengxiaoqiujing,
+		LEAST(
+		naked_farvision_od,
+		naked_farvision_os
+		) AS naked_farvision
+		FROM
+		s_student_school_he
+		WHERE
+		school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and
+		DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate} and dengxiaoqiujingl is not NULL and dengxiaoqiujingr is not NULL and naked_farvision_od is not NULL and naked_farvision_os is not NULL
+		) AS one
+		WHERE
+		naked_farvision >= '5.0'
+		AND dengxiaoqiujing &lt; '-0.5'
+	</select>
+	<select id="studentList" resultType="map">
+		SELECT
+	student_name,
+	grade,
+	concat((DATE_FORMAT(last_check_time, '%Y') - SUBSTRING(identity_card, 7, 4)) , '') AS age,
+	naked_farvision_od,
+	naked_farvision_os
+    FROM
+    	s_student_school_he
+    WHERE
+    	school = #{school}
+    AND AreaName = #{AreaName}
+    AND CityName = #{CityName}
+    AND DATE_FORMAT(last_check_time, '%Y-%m') = #{checkdate} and dengxiaoqiujingl is not NULL and dengxiaoqiujingr is not NULL and naked_farvision_od is not NULL and naked_farvision_os is not NULL
+	</select>
+	<select id="gradeNumber" resultType="map">
+		SELECT DISTINCT
+	grade,
+	COUNT(grade) num
+    FROM
+    	s_student_school_he
+    WHERE
+    	school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and
+    	DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate}
+    GROUP BY
+    	grade;
+	</select>
+	<select id="paiMing" resultType="map">
+		SELECT
+		bb.grade 年级,bb.student_class 班级 ,
+		Round((bb.d / aa.b)*100,1) lv
+		FROM
+		(
+		SELECT
+		grade, student_class,
+		COUNT(student_class) b
+		FROM
+		s_student_school_he
+		WHERE
+		school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and
+		DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate} and dengxiaoqiujingl is not NULL and dengxiaoqiujingr is not NULL and naked_farvision_od is not NULL and naked_farvision_os is not NULL
+		GROUP BY
+		grade,
+		student_class
+		) AS aa,
+		(
+		SELECT
+		grade, student_class,
+		COUNT(student_class) d
+		FROM
+		(
+		SELECT
+		LEAST(
+		naked_farvision_od,
+		naked_farvision_os
+		) AS naked_farvision,
+		LEAST(
+		dengxiaoqiujingr,
+		dengxiaoqiujingl
+		) AS dengxiaoqiujing,
+		grade,
+		student_class
+		FROM
+		s_student_school_he
+		WHERE
+		school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and
+		DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate} and dengxiaoqiujingl is not NULL and dengxiaoqiujingr is not NULL and naked_farvision_od is not NULL and naked_farvision_os is not NULL
+		) AS two
+		WHERE
+		naked_farvision &lt; '5.0'
+		AND dengxiaoqiujing &lt; '-0.5'
+		GROUP BY
+		grade,
+		student_class
+		) AS bb
+		WHERE
+		aa.grade = bb.grade and aa.student_class = bb.student_class GROUP BY lv DESC LIMIT 1,6
+	</select>
+	<select id="gradeLv" resultType="map">
+		SELECT bb.grade , Round((aa.num / bb.num)*100,1) lv FROM
+		(SELECT DISTINCT
+		grade,
+		COUNT(grade) num
+		FROM
+		(
+		SELECT
+		LEAST(
+		naked_farvision_od,
+		naked_farvision_os
+		) AS naked_farvision,
+		LEAST(
+		dengxiaoqiujingr,
+		dengxiaoqiujingl
+		) AS dengxiaoqiujing,
+		grade
+		FROM
+		s_student_school_he
+		WHERE
+		school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and
+		DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate} and dengxiaoqiujingl is not NULL and dengxiaoqiujingr is not NULL and naked_farvision_od is not NULL and naked_farvision_os is not NULL
+		) AS one
+		WHERE
+		naked_farvision &lt; '5.0'
+		AND dengxiaoqiujing &lt; '-0.5'
+		GROUP BY
+		grade) as aa,
+		(SELECT DISTINCT
+		grade,
+		COUNT(grade) num
+		FROM
+		s_student_school_he
+		WHERE
+		school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and
+		DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate} and dengxiaoqiujingl is not NULL and dengxiaoqiujingr is not NULL and naked_farvision_od is not NULL and naked_farvision_os is not NULL
+		GROUP BY
+		grade) as bb
+		WHERE bb.grade = aa.grade GROUP BY lv desc
+	</select>
+</mapper>

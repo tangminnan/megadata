@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xinshineng.information.dao.zhenjiu.CheckDataDao">
+	<resultMap id="domainMap" type="com.xinshineng.information.domain.zhenjiu.CheckDataDO">
+		<id column="id" property="id"/>
+		<result column="student_id" property="studentId"/>
+		<result column="delete_flag" property="deleteFlag"/>
+		<result column="naked_eye_od" property="nakedEyeOd"/>
+		<result column="naked_eye_os" property="nakedEyeOs"/>
+		<result column="eye_pressure_od" property="eyePressureOd"/>
+		<result column="eye_pressure_os" property="eyePressureOs"/>
+		<result column="former_eye_od" property="formerEyeOd"/>
+		<result column="former_eye_os" property="formerEyeOs"/>
+		<result column="correct_sight_od" property="correctSightOd"/>
+		<result column="correct_sight_os" property="correctSightOs"/>
+		<result column="check_eye_position_near" property="checkEyePositionNear"/>
+		<result column="check_eye_position_far" property="checkEyePositionFar"/>
+		<result column="s_autorefraction_od" property="sAutorefractionOd"/>
+		<result column="c_autorefraction_od" property="cAutorefractionOd"/>
+		<result column="a_autorefraction_od" property="aAutorefractionOd"/>
+		<result column="s_autorefraction_os" property="sAutorefractionOs"/>
+		<result column="c_autorefraction_os" property="cAutorefractionOs"/>
+		<result column="a_autorefraction_os" property="aAutorefractionOs"/>
+		<result column="s_comprehensive_optometry_od" property="sComprehensiveOptometryOd"/>
+		<result column="c_comprehensive_optometry_od" property="cComprehensiveOptometryOd"/>
+		<result column="a_comprehensive_optometry_od" property="aComprehensiveOptometryOd"/>
+		<result column="s_comprehensive_optometry_os" property="sComprehensiveOptometryOs"/>
+		<result column="c_comprehensive_optometry_os" property="cComprehensiveOptometryOs"/>
+		<result column="a_comprehensive_optometry_os" property="aComprehensiveOptometryOs"/>
+		<result column="worth_four" property="worthFour"/>
+		<result column="stereopsis" property="stereopsis"/>
+		<result column="eye_nra" property="eyeNra"/>
+		<result column="eye_pra" property="eyePra"/>
+		<result column="eye_bcc" property="eyeBcc"/>
+		<result column="eye_aca" property="eyeAca"/>
+		<result column="eye_npc" property="eyeNpc"/>
+		<result column="amp_od" property="ampOd"/>
+		<result column="amp_os" property="ampOs"/>
+		<result column="amp_ou" property="ampOu"/>
+		<result column="af_od" property="afOd"/>
+		<result column="af_os" property="afOs"/>
+		<result column="af_ou" property="afOu"/>
+		<result column="refractionist" property="refractionist"/>
+		<result column="axial_length_od" property="axialLengthOd"/>
+		<result column="kchm_first_od" property="kchmFirstOd"/>
+		<result column="kchm_second_od" property="kchmSecondOd"/>
+		<result column="corneal_diameter_od" property="cornealDiameterOd"/>
+		<result column="anterior_chamber_depth_od" property="anteriorChamberDepthOd"/>
+		<result column="crystal_thickness_od" property="crystalThicknessOd"/>
+		<result column="vitreous_cavity_od" property="vitreousCavityOd"/>
+		<result column="axial_length_os" property="axialLengthOs"/>
+		<result column="kchm_first_os" property="kchmFirstOs"/>
+		<result column="kchm_second_os" property="kchmSecondOs"/>
+		<result column="corneal_diameter_os" property="cornealDiameterOs"/>
+		<result column="anterior_chamber_depth_os" property="anteriorChamberDepthOs"/>
+		<result column="crystal_thickness_os" property="crystalThicknessOs"/>
+		<result column="vitreous_cavity_os" property="vitreousCavityOs"/>
+		<result column="checkor" property="checkor"/>
+		<result column="checkor_company" property="checkorCompany"/>
+		<result column="check_date" property="checkDate"/>
+		<result column="first_second" property="firstSecond"/>
+	</resultMap>
+
+	<select id="get" resultMap="domainMap">
+		select `id`,`student_id`,`delete_flag`,`naked_eye_od`,`naked_eye_os`,`eye_pressure_od`,`eye_pressure_os`,`former_eye_od`,`former_eye_os`,`correct_sight_od`,`correct_sight_os`,`check_eye_position_near`,`check_eye_position_far`,`s_autorefraction_od`,`c_autorefraction_od`,`a_autorefraction_od`,`s_autorefraction_os`,`c_autorefraction_os`,`a_autorefraction_os`,`s_comprehensive_optometry_od`,`c_comprehensive_optometry_od`,`a_comprehensive_optometry_od`,`s_comprehensive_optometry_os`,`c_comprehensive_optometry_os`,`a_comprehensive_optometry_os`,`worth_four`,`stereopsis`,`eye_nra`,`eye_pra`,`eye_bcc`,`eye_aca`,`eye_npc`,`amp_od`,`amp_os`,`amp_ou`,`af_od`,`af_os`,`af_ou`,`refractionist`,`axial_length_od`,`kchm_first_od`,`kchm_second_od`,`corneal_diameter_od`,`anterior_chamber_depth_od`,`crystal_thickness_od`,`vitreous_cavity_od`,`axial_length_os`,`kchm_first_os`,`kchm_second_os`,`corneal_diameter_os`,`anterior_chamber_depth_os`,`crystal_thickness_os`,`vitreous_cavity_os`,`checkor`,`checkor_company`,`check_date`,`first_second`
+		from z_check_data where id = #{value}
+	</select>
+	
+	<select id="getStudentId" resultType="com.xinshineng.information.domain.zhenjiu.CheckDataDO">
+		select `id`,`student_id`,`delete_flag`,`naked_eye_od`,`naked_eye_os`,`eye_pressure_od`,`eye_pressure_os`,`former_eye_od`,`former_eye_os`,`correct_sight_od`,`correct_sight_os`,`check_eye_position_near`,`check_eye_position_far`,`s_autorefraction_od`,`c_autorefraction_od`,`a_autorefraction_od`,`s_autorefraction_os`,`c_autorefraction_os`,`a_autorefraction_os`,`s_comprehensive_optometry_od`,`c_comprehensive_optometry_od`,`a_comprehensive_optometry_od`,`s_comprehensive_optometry_os`,`c_comprehensive_optometry_os`,`a_comprehensive_optometry_os`,`worth_four`,`stereopsis`,`eye_nra`,`eye_pra`,`eye_bcc`,`eye_aca`,`eye_npc`,`amp_od`,`amp_os`,`amp_ou`,`af_od`,`af_os`,`af_ou`,`refractionist`,`axial_length_od`,`kchm_first_od`,`kchm_second_od`,`corneal_diameter_od`,`anterior_chamber_depth_od`,`crystal_thickness_od`,`vitreous_cavity_od`,`axial_length_os`,`kchm_first_os`,`kchm_second_os`,`corneal_diameter_os`,`anterior_chamber_depth_os`,`crystal_thickness_os`,`vitreous_cavity_os`,`checkor`,`checkor_company`,`check_date`,`first_second`
+		from z_check_data where student_id = #{studentId}
+	</select>
+
+	<select id="list" resultMap="domainMap">
+		select
+			id,student_id,refractionist,checkor,checkor_company,check_date,first_second
+		from z_check_data
+		<where>
+			<if test="studentId != null and studentId.length>0">and student_id = #{studentId}</if>
+		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from z_check_data
+		 <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="studentId != null and studentId != ''"> and student_id = #{studentId} </if>
+		  		  <if test="deleteFlag != null and deleteFlag != ''"> and delete_flag = #{deleteFlag} </if>
+		  		  <if test="nakedEyeOd != null and nakedEyeOd != ''"> and naked_eye_od = #{nakedEyeOd} </if>
+		  		  <if test="nakedEyeOs != null and nakedEyeOs != ''"> and naked_eye_os = #{nakedEyeOs} </if>
+		  		  <if test="eyePressureOd != null and eyePressureOd != ''"> and eye_pressure_od = #{eyePressureOd} </if>
+		  		  <if test="eyePressureOs != null and eyePressureOs != ''"> and eye_pressure_os = #{eyePressureOs} </if>
+		  		  <if test="formerEyeOd != null and formerEyeOd != ''"> and former_eye_od = #{formerEyeOd} </if>
+		  		  <if test="formerEyeOs != null and formerEyeOs != ''"> and former_eye_os = #{formerEyeOs} </if>
+		  		  <if test="correctSightOd != null and correctSightOd != ''"> and correct_sight_od = #{correctSightOd} </if>
+		  		  <if test="correctSightOs != null and correctSightOs != ''"> and correct_sight_os = #{correctSightOs} </if>
+		  		  <if test="checkEyePositionNear != null and checkEyePositionNear != ''"> and check_eye_position_near = #{checkEyePositionNear} </if>
+		  		  <if test="checkEyePositionFar != null and checkEyePositionFar != ''"> and check_eye_position_far = #{checkEyePositionFar} </if>
+		  		  <if test="sAutorefractionOd != null and sAutorefractionOd != ''"> and s_autorefraction_od = #{sAutorefractionOd} </if>
+		  		  <if test="cAutorefractionOd != null and cAutorefractionOd != ''"> and c_autorefraction_od = #{cAutorefractionOd} </if>
+		  		  <if test="aAutorefractionOd != null and aAutorefractionOd != ''"> and a_autorefraction_od = #{aAutorefractionOd} </if>
+		  		  <if test="sAutorefractionOs != null and sAutorefractionOs != ''"> and s_autorefraction_os = #{sAutorefractionOs} </if>
+		  		  <if test="cAutorefractionOs != null and cAutorefractionOs != ''"> and c_autorefraction_os = #{cAutorefractionOs} </if>
+		  		  <if test="aAutorefractionOs != null and aAutorefractionOs != ''"> and a_autorefraction_os = #{aAutorefractionOs} </if>
+		  		  <if test="sComprehensiveOptometryOd != null and sComprehensiveOptometryOd != ''"> and s_comprehensive_optometry_od = #{sComprehensiveOptometryOd} </if>
+		  		  <if test="cComprehensiveOptometryOd != null and cComprehensiveOptometryOd != ''"> and c_comprehensive_optometry_od = #{cComprehensiveOptometryOd} </if>
+		  		  <if test="aComprehensiveOptometryOd != null and aComprehensiveOptometryOd != ''"> and a_comprehensive_optometry_od = #{aComprehensiveOptometryOd} </if>
+		  		  <if test="sComprehensiveOptometryOs != null and sComprehensiveOptometryOs != ''"> and s_comprehensive_optometry_os = #{sComprehensiveOptometryOs} </if>
+		  		  <if test="cComprehensiveOptometryOs != null and cComprehensiveOptometryOs != ''"> and c_comprehensive_optometry_os = #{cComprehensiveOptometryOs} </if>
+		  		  <if test="aComprehensiveOptometryOs != null and aComprehensiveOptometryOs != ''"> and a_comprehensive_optometry_os = #{aComprehensiveOptometryOs} </if>
+		  		  <if test="worthFour != null and worthFour != ''"> and worth_four = #{worthFour} </if>
+		  		  <if test="stereopsis != null and stereopsis != ''"> and stereopsis = #{stereopsis} </if>
+		  		  <if test="eyeNra != null and eyeNra != ''"> and eye_nra = #{eyeNra} </if>
+		  		  <if test="eyePra != null and eyePra != ''"> and eye_pra = #{eyePra} </if>
+		  		  <if test="eyeBcc != null and eyeBcc != ''"> and eye_bcc = #{eyeBcc} </if>
+		  		  <if test="eyeAca != null and eyeAca != ''"> and eye_aca = #{eyeAca} </if>
+		  		  <if test="eyeNpc != null and eyeNpc != ''"> and eye_npc = #{eyeNpc} </if>
+		  		  <if test="ampOd != null and ampOd != ''"> and amp_od = #{ampOd} </if>
+		  		  <if test="ampOs != null and ampOs != ''"> and amp_os = #{ampOs} </if>
+		  		  <if test="ampOu != null and ampOu != ''"> and amp_ou = #{ampOu} </if>
+		  		  <if test="afOd != null and afOd != ''"> and af_od = #{afOd} </if>
+		  		  <if test="afOs != null and afOs != ''"> and af_os = #{afOs} </if>
+		  		  <if test="afOu != null and afOu != ''"> and af_ou = #{afOu} </if>
+		  		  <if test="refractionist != null and refractionist != ''"> and refractionist = #{refractionist} </if>
+		  		  <if test="axialLengthOd != null and axialLengthOd != ''"> and axial_length_od = #{axialLengthOd} </if>
+		  		  <if test="kchmFirstOd != null and kchmFirstOd != ''"> and kchm_first_od = #{kchmFirstOd} </if>
+		  		  <if test="kchmSecondOd != null and kchmSecondOd != ''"> and kchm_second_od = #{kchmSecondOd} </if>
+		  		  <if test="cornealDiameterOd != null and cornealDiameterOd != ''"> and corneal_diameter_od = #{cornealDiameterOd} </if>
+		  		  <if test="anteriorChamberDepthOd != null and anteriorChamberDepthOd != ''"> and anterior_chamber_depth_od = #{anteriorChamberDepthOd} </if>
+		  		  <if test="crystalThicknessOd != null and crystalThicknessOd != ''"> and crystal_thickness_od = #{crystalThicknessOd} </if>
+		  		  <if test="vitreousCavityOd != null and vitreousCavityOd != ''"> and vitreous_cavity_od = #{vitreousCavityOd} </if>
+		  		  <if test="axialLengthOs != null and axialLengthOs != ''"> and axial_length_os = #{axialLengthOs} </if>
+		  		  <if test="kchmFirstOs != null and kchmFirstOs != ''"> and kchm_first_os = #{kchmFirstOs} </if>
+		  		  <if test="kchmSecondOs != null and kchmSecondOs != ''"> and kchm_second_os = #{kchmSecondOs} </if>
+		  		  <if test="cornealDiameterOs != null and cornealDiameterOs != ''"> and corneal_diameter_os = #{cornealDiameterOs} </if>
+		  		  <if test="anteriorChamberDepthOs != null and anteriorChamberDepthOs != ''"> and anterior_chamber_depth_os = #{anteriorChamberDepthOs} </if>
+		  		  <if test="crystalThicknessOs != null and crystalThicknessOs != ''"> and crystal_thickness_os = #{crystalThicknessOs} </if>
+		  		  <if test="vitreousCavityOs != null and vitreousCavityOs != ''"> and vitreous_cavity_os = #{vitreousCavityOs} </if>
+		  		  <if test="checkor != null and checkor != ''"> and checkor = #{checkor} </if>
+		  		  <if test="checkorCompany != null and checkorCompany != ''"> and checkor_company = #{checkorCompany} </if>
+		  		  <if test="checkDate != null and checkDate != ''"> and check_date = #{checkDate} </if>
+		  		  <if test="firstSecond != null and firstSecond != ''"> and first_second = #{firstSecond} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.xinshineng.information.domain.zhenjiu.CheckDataDO" useGeneratedKeys="true" keyProperty="id">
+		insert into z_check_data
+		(
+			`student_id`, 
+			`delete_flag`, 
+			`naked_eye_od`, 
+			`naked_eye_os`, 
+			`eye_pressure_od`, 
+			`eye_pressure_os`, 
+			`former_eye_od`, 
+			`former_eye_os`, 
+			`correct_sight_od`, 
+			`correct_sight_os`, 
+			`check_eye_position_near`, 
+			`check_eye_position_far`, 
+			`s_autorefraction_od`, 
+			`c_autorefraction_od`, 
+			`a_autorefraction_od`, 
+			`s_autorefraction_os`, 
+			`c_autorefraction_os`, 
+			`a_autorefraction_os`, 
+			`s_comprehensive_optometry_od`, 
+			`c_comprehensive_optometry_od`, 
+			`a_comprehensive_optometry_od`, 
+			`s_comprehensive_optometry_os`, 
+			`c_comprehensive_optometry_os`, 
+			`a_comprehensive_optometry_os`, 
+			`worth_four`, 
+			`stereopsis`, 
+			`eye_nra`, 
+			`eye_pra`, 
+			`eye_bcc`, 
+			`eye_aca`, 
+			`eye_npc`, 
+			`amp_od`, 
+			`amp_os`, 
+			`amp_ou`, 
+			`af_od`, 
+			`af_os`, 
+			`af_ou`, 
+			`refractionist`, 
+			`axial_length_od`, 
+			`kchm_first_od`, 
+			`kchm_second_od`, 
+			`corneal_diameter_od`, 
+			`anterior_chamber_depth_od`, 
+			`crystal_thickness_od`, 
+			`vitreous_cavity_od`, 
+			`axial_length_os`, 
+			`kchm_first_os`, 
+			`kchm_second_os`, 
+			`corneal_diameter_os`, 
+			`anterior_chamber_depth_os`, 
+			`crystal_thickness_os`, 
+			`vitreous_cavity_os`, 
+			`checkor`, 
+			`checkor_company`, 
+			`check_date`, 
+			`first_second`
+		)
+		values
+		(
+			#{studentId}, 
+			#{deleteFlag}, 
+			#{nakedEyeOd}, 
+			#{nakedEyeOs}, 
+			#{eyePressureOd}, 
+			#{eyePressureOs}, 
+			#{formerEyeOd}, 
+			#{formerEyeOs}, 
+			#{correctSightOd}, 
+			#{correctSightOs}, 
+			#{checkEyePositionNear}, 
+			#{checkEyePositionFar}, 
+			#{sAutorefractionOd}, 
+			#{cAutorefractionOd}, 
+			#{aAutorefractionOd}, 
+			#{sAutorefractionOs}, 
+			#{cAutorefractionOs}, 
+			#{aAutorefractionOs}, 
+			#{sComprehensiveOptometryOd}, 
+			#{cComprehensiveOptometryOd}, 
+			#{aComprehensiveOptometryOd}, 
+			#{sComprehensiveOptometryOs}, 
+			#{cComprehensiveOptometryOs}, 
+			#{aComprehensiveOptometryOs}, 
+			#{worthFour}, 
+			#{stereopsis}, 
+			#{eyeNra}, 
+			#{eyePra}, 
+			#{eyeBcc}, 
+			#{eyeAca}, 
+			#{eyeNpc}, 
+			#{ampOd}, 
+			#{ampOs}, 
+			#{ampOu}, 
+			#{afOd}, 
+			#{afOs}, 
+			#{afOu}, 
+			#{refractionist}, 
+			#{axialLengthOd}, 
+			#{kchmFirstOd}, 
+			#{kchmSecondOd}, 
+			#{cornealDiameterOd}, 
+			#{anteriorChamberDepthOd}, 
+			#{crystalThicknessOd}, 
+			#{vitreousCavityOd}, 
+			#{axialLengthOs}, 
+			#{kchmFirstOs}, 
+			#{kchmSecondOs}, 
+			#{cornealDiameterOs}, 
+			#{anteriorChamberDepthOs}, 
+			#{crystalThicknessOs}, 
+			#{vitreousCavityOs}, 
+			#{checkor}, 
+			#{checkorCompany}, 
+			#{checkDate}, 
+			#{firstSecond}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.xinshineng.information.domain.zhenjiu.CheckDataDO">
+		update z_check_data
+		<set>
+			<if test="studentId != null">`student_id` = #{studentId}, </if>
+			<if test="deleteFlag != null">`delete_flag` = #{deleteFlag}, </if>
+			<if test="nakedEyeOd != null">`naked_eye_od` = #{nakedEyeOd}, </if>
+			<if test="nakedEyeOs != null">`naked_eye_os` = #{nakedEyeOs}, </if>
+			<if test="eyePressureOd != null">`eye_pressure_od` = #{eyePressureOd}, </if>
+			<if test="eyePressureOs != null">`eye_pressure_os` = #{eyePressureOs}, </if>
+			<if test="formerEyeOd != null">`former_eye_od` = #{formerEyeOd}, </if>
+			<if test="formerEyeOs != null">`former_eye_os` = #{formerEyeOs}, </if>
+			<if test="correctSightOd != null">`correct_sight_od` = #{correctSightOd}, </if>
+			<if test="correctSightOs != null">`correct_sight_os` = #{correctSightOs}, </if>
+			<if test="checkEyePositionNear != null">`check_eye_position_near` = #{checkEyePositionNear}, </if>
+			<if test="checkEyePositionFar != null">`check_eye_position_far` = #{checkEyePositionFar}, </if>
+			<if test="sAutorefractionOd != null">`s_autorefraction_od` = #{sAutorefractionOd}, </if>
+			<if test="cAutorefractionOd != null">`c_autorefraction_od` = #{cAutorefractionOd}, </if>
+			<if test="aAutorefractionOd != null">`a_autorefraction_od` = #{aAutorefractionOd}, </if>
+			<if test="sAutorefractionOs != null">`s_autorefraction_os` = #{sAutorefractionOs}, </if>
+			<if test="cAutorefractionOs != null">`c_autorefraction_os` = #{cAutorefractionOs}, </if>
+			<if test="aAutorefractionOs != null">`a_autorefraction_os` = #{aAutorefractionOs}, </if>
+			<if test="sComprehensiveOptometryOd != null">`s_comprehensive_optometry_od` = #{sComprehensiveOptometryOd}, </if>
+			<if test="cComprehensiveOptometryOd != null">`c_comprehensive_optometry_od` = #{cComprehensiveOptometryOd}, </if>
+			<if test="aComprehensiveOptometryOd != null">`a_comprehensive_optometry_od` = #{aComprehensiveOptometryOd}, </if>
+			<if test="sComprehensiveOptometryOs != null">`s_comprehensive_optometry_os` = #{sComprehensiveOptometryOs}, </if>
+			<if test="cComprehensiveOptometryOs != null">`c_comprehensive_optometry_os` = #{cComprehensiveOptometryOs}, </if>
+			<if test="aComprehensiveOptometryOs != null">`a_comprehensive_optometry_os` = #{aComprehensiveOptometryOs}, </if>
+			<if test="worthFour != null">`worth_four` = #{worthFour}, </if>
+			<if test="stereopsis != null">`stereopsis` = #{stereopsis}, </if>
+			<if test="eyeNra != null">`eye_nra` = #{eyeNra}, </if>
+			<if test="eyePra != null">`eye_pra` = #{eyePra}, </if>
+			<if test="eyeBcc != null">`eye_bcc` = #{eyeBcc}, </if>
+			<if test="eyeAca != null">`eye_aca` = #{eyeAca}, </if>
+			<if test="eyeNpc != null">`eye_npc` = #{eyeNpc}, </if>
+			<if test="ampOd != null">`amp_od` = #{ampOd}, </if>
+			<if test="ampOs != null">`amp_os` = #{ampOs}, </if>
+			<if test="ampOu != null">`amp_ou` = #{ampOu}, </if>
+			<if test="afOd != null">`af_od` = #{afOd}, </if>
+			<if test="afOs != null">`af_os` = #{afOs}, </if>
+			<if test="afOu != null">`af_ou` = #{afOu}, </if>
+			<if test="refractionist != null">`refractionist` = #{refractionist}, </if>
+			<if test="axialLengthOd != null">`axial_length_od` = #{axialLengthOd}, </if>
+			<if test="kchmFirstOd != null">`kchm_first_od` = #{kchmFirstOd}, </if>
+			<if test="kchmSecondOd != null">`kchm_second_od` = #{kchmSecondOd}, </if>
+			<if test="cornealDiameterOd != null">`corneal_diameter_od` = #{cornealDiameterOd}, </if>
+			<if test="anteriorChamberDepthOd != null">`anterior_chamber_depth_od` = #{anteriorChamberDepthOd}, </if>
+			<if test="crystalThicknessOd != null">`crystal_thickness_od` = #{crystalThicknessOd}, </if>
+			<if test="vitreousCavityOd != null">`vitreous_cavity_od` = #{vitreousCavityOd}, </if>
+			<if test="axialLengthOs != null">`axial_length_os` = #{axialLengthOs}, </if>
+			<if test="kchmFirstOs != null">`kchm_first_os` = #{kchmFirstOs}, </if>
+			<if test="kchmSecondOs != null">`kchm_second_os` = #{kchmSecondOs}, </if>
+			<if test="cornealDiameterOs != null">`corneal_diameter_os` = #{cornealDiameterOs}, </if>
+			<if test="anteriorChamberDepthOs != null">`anterior_chamber_depth_os` = #{anteriorChamberDepthOs}, </if>
+			<if test="crystalThicknessOs != null">`crystal_thickness_os` = #{crystalThicknessOs}, </if>
+			<if test="vitreousCavityOs != null">`vitreous_cavity_os` = #{vitreousCavityOs}, </if>
+			<if test="checkor != null">`checkor` = #{checkor}, </if>
+			<if test="checkorCompany != null">`checkor_company` = #{checkorCompany}, </if>
+			<if test="checkDate != null">`check_date` = #{checkDate}, </if>
+			<if test="firstSecond != null">`first_second` = #{firstSecond}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from z_check_data where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from z_check_data where id in
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

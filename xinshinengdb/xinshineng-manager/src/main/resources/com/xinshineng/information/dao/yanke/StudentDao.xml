@@ -1,0 +1,692 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xinshineng.information.dao.yanke.StudentDao">
+	<resultMap id="domainMap" type="com.xinshineng.information.domain.yanke.StudentDO">
+		<id column="id" property="id"/>
+		<result column="student_name" property="studentName"/>
+		<result column="student_sex" property="studentSex"/>
+		<result column="nation" property="nation"/>
+		<result column="birthday" property="birthday"/>
+		<result column="identity_card" property="identityCard"/>
+		<result column="school" property="school"/>
+		<result column="grade" property="grade"/>
+		<result column="student_class" property="studentClass"/>
+		<result column="phone" property="phone"/>
+		<result column="address" property="address"/>
+		<result column="height" property="height"/>
+		<result column="weight" property="weight"/>
+		<result column="add_time" property="addTime"/>
+		<result column="status" property="status"/>
+		<result column="q_r_code" property="QRCode"/>
+		<result column="last_check_time" property="lastCheckTime"/>
+	</resultMap>
+
+	<select id="get" resultMap="domainMap">
+		select `id`,`student_name`,`student_sex`,`nation`,`birthday`,`identity_card`,`school`,`grade`,`student_class`,`phone`,`address`,`height`,`weight`,`add_time`,`status`,q_r_code,last_check_time
+		from y_student where id = #{value}
+	</select>
+	
+	<select id="getList" resultMap="domainMap">
+		select `id`,`student_name`,`student_sex`,`nation`,`birthday`,`identity_card`,`school`,`grade`,`student_class`,`phone`,`address`,`height`,`weight`,`add_time`,`status`,q_r_code,last_check_time
+		from y_student
+		GROUP BY school
+	</select>
+
+	<select id="list" resultMap="domainMap">
+		select `id`,`student_name`,`student_sex`,`nation`,`birthday`,`identity_card`,`school`,`grade`,`student_class`,`phone`,`address`,`height`,`weight`,`add_time`,`status`,q_r_code,last_check_time
+		from y_student
+        <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="studentName != null and studentName != ''"> and student_name = #{studentName} </if>
+		  		  <if test="studentSex != null and studentSex != ''"> and student_sex = #{studentSex} </if>
+		  		  <if test="nation != null and nation != ''"> and nation = #{nation} </if>
+		  		  <if test="birthday != null and birthday != ''"> and birthday = #{birthday} </if>
+		  		  <if test="identityCard != null and identityCard != ''"> and identity_card = #{identityCard} </if>
+		  		  <if test="identityCard != null and identityCard != ''"> or phone = #{identityCard} </if>
+		  		  <if test="school != null and school != ''"> and school = #{school} </if>
+		  		  <if test="grade != null and grade != ''"> and grade = #{grade} </if>
+		  		  <if test="studentClass != null and studentClass != ''"> and student_class = #{studentClass} </if>
+		  		  
+		  		  <if test="address != null and address != ''"> and address = #{address} </if>
+		  		  <if test="height != null and height != ''"> and height = #{height} </if>
+		  		  <if test="weight != null and weight != ''"> and weight = #{weight} </if>
+		  		  <if test="addTime != null and addTime != ''"> and add_time = #{addTime} </if>
+		  		  <if test="status != null and status != ''"> and status = #{status} </if>
+		  		  <if test="QRCode != null and QRCode != ''"> and q_r_code = #{QRCode} </if>
+		  		  <if test="lastCheckTime != null and lastCheckTime != ''"> and last_check_time = #{lastCheckTime} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from y_student
+		 <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="studentName != null and studentName != ''"> and student_name = #{studentName} </if>
+		  		  <if test="studentSex != null and studentSex != ''"> and student_sex = #{studentSex} </if>
+		  		  <if test="nation != null and nation != ''"> and nation = #{nation} </if>
+		  		  <if test="birthday != null and birthday != ''"> and birthday = #{birthday} </if>
+		  		  <if test="identityCard != null and identityCard != ''"> and identity_card = #{identityCard} </if>
+		  		  <if test="school != null and school != ''"> and school = #{school} </if>
+		  		  <if test="grade != null and grade != ''"> and grade = #{grade} </if>
+		  		  <if test="studentClass != null and studentClass != ''"> and student_class = #{studentClass} </if>
+		  		  <if test="phone != null and phone != ''"> and phone = #{phone} </if>
+		  		  <if test="address != null and address != ''"> and address = #{address} </if>
+		  		  <if test="height != null and height != ''"> and height = #{height} </if>
+		  		  <if test="weight != null and weight != ''"> and weight = #{weight} </if>
+		  		  <if test="addTime != null and addTime != ''"> and add_time = #{addTime} </if>
+		  		  <if test="status != null and status != ''"> and status = #{status} </if>
+		  		  <if test="QRCode != null and QRCode != ''"> and q_r_code = #{QRCode} </if>
+		  		  <if test="lastCheckTime != null and lastCheckTime != ''"> and last_check_time = #{lastCheckTime} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.xinshineng.information.domain.yanke.StudentDO" useGeneratedKeys="true" keyProperty="id">
+		insert into y_student
+		(
+			`student_name`, 
+			`student_sex`, 
+			`nation`, 
+			`birthday`, 
+			`identity_card`, 
+			`school`, 
+			`grade`, 
+			`student_class`, 
+			`phone`, 
+			`address`, 
+			`height`, 
+			`weight`, 
+			`add_time`, 
+			`status`,
+			q_r_code,
+			last_check_time
+		)
+		values
+		(
+			#{studentName}, 
+			#{studentSex}, 
+			#{nation}, 
+			#{birthday}, 
+			#{identityCard}, 
+			#{school}, 
+			#{grade}, 
+			#{studentClass}, 
+			#{phone}, 
+			#{address}, 
+			#{height}, 
+			#{weight}, 
+			#{addTime}, 
+			#{status},
+			#{QRCode},
+			#{lastCheckTime}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.xinshineng.information.domain.yanke.StudentDO">
+		update y_student
+		<set>
+			<if test="studentName != null">`student_name` = #{studentName}, </if>
+			<if test="studentSex != null">`student_sex` = #{studentSex}, </if>
+			<if test="nation != null">`nation` = #{nation}, </if>
+			<if test="birthday != null">`birthday` = #{birthday}, </if>
+			<if test="identityCard != null">`identity_card` = #{identityCard}, </if>
+			<if test="school != null">`school` = #{school}, </if>
+			<if test="grade != null">`grade` = #{grade}, </if>
+			<if test="studentClass != null">`student_class` = #{studentClass}, </if>
+			<if test="phone != null">`phone` = #{phone}, </if>
+			<if test="address != null">`address` = #{address}, </if>
+			<if test="height != null">`height` = #{height}, </if>
+			<if test="weight != null">`weight` = #{weight}, </if>
+			<if test="addTime != null">`add_time` = #{addTime}, </if>
+			<if test="status != null">`status` = #{status},</if>
+			<if test="QRCode != null">`q_r_code` = #{QRCode},</if>
+			<if test="lastCheckTime != null">`last_check_time` = #{lastCheckTime}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from y_student where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from y_student where id in
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+	
+	<insert id="saveAnswer" parameterType="com.xinshineng.information.domain.yanke.AnswerResultDO" useGeneratedKeys="true" keyProperty="answerId">
+		insert into y_answer_result(
+  			`identity_card`,
+  			`add_time`,
+  			`status`,
+  			`file_name`,
+  			`answer_result1`,
+  			`answer_result2`,
+  			`answer_result3`,
+  			`answer_result4`,
+  			`answer_result5`,
+  			`answer_result6`,
+  			`answer_result7`,
+  			`answer_result8`,
+  			`answer_result9`,
+  			`answer_result10`,
+  			`answer_result11`,
+  			`answer_result12`,
+  			`answer_result13`,
+  			`answer_result14`,
+  			`answer_result15`,
+  			`answer_result16`,
+  			`answer_result17`,
+  			`answer_result18`,
+  			`answer_result19`,
+  			`answer_result20`,
+  			`answer_result21`,
+  			`answer_result22`,
+  			`answer_result23`,
+  			`answer_result24`,
+  			`answer_result25`,
+  			`answer_result26`,
+  			`answer_result27`,
+  			`answer_result28`,
+  			`answer_result29`,
+  			`answer_result30`,
+  			`answer_result31`,
+  			`answer_result32`,
+  			`answer_result33`,
+  			`answer_result34`,
+  			`answer_result35`,
+  			`answer_result36`,
+  			`answer_result37`,
+  			`answer_result38`,
+  			`answer_result39`,
+  			`answer_result40`,
+  			`answer_result41`,
+  			`answer_result42`,
+  			`answer_result43`,
+  			`answer_result44`,
+  			`answer_result45`,
+  			`answer_result46`,
+  			`answer_result47`,
+  			`answer_result48`,
+  			`answer_result49`,
+  			`answer_result50`,
+  			`answer_result51`,
+  			`answer_result52`,
+  			`answer_result53`,
+  			`answer_result54`,
+  			`answer_result55`,
+  			`answer_result56`,
+  			`answer_result57`,
+  			`answer_result58`,
+  			`answer_result59`,
+  			`answer_result60`,
+  			`answer_result61`,
+  			`answer_result62`,
+  			`answer_result63`,
+  			`answer_result64`,
+  			`answer_result65`,
+  			`answer_result66`,
+  			`answer_result67`,
+  			`answer_result68`,
+  			`answer_result69`,
+  			`answer_result70`,
+  			`answer_result71`,
+  			`answer_result72`,
+  			`answer_result73`,
+  			`answer_result74`,
+  			`answer_result75`
+  			
+		)
+		values(
+			#{identityCard},
+			#{addTime},
+			#{status},
+			#{fileName},
+			#{answerResult1},
+			#{answerResult2},
+			#{answerResult3},
+			#{answerResult4},
+			#{answerResult5},
+			#{answerResult6},
+			#{answerResult7},
+			#{answerResult8},
+			#{answerResult9},
+			#{answerResult10},
+			#{answerResult11},
+			#{answerResult12},
+			#{answerResult13},
+			#{answerResult14},
+			#{answerResult15},
+			#{answerResult16},
+			#{answerResult17},
+			#{answerResult18},
+			#{answerResult19},
+			#{answerResult20},
+			#{answerResult21},
+			#{answerResult22},
+			#{answerResult23},
+			#{answerResult24},
+			#{answerResult25},
+			#{answerResult26},
+			#{answerResult27},
+			#{answerResult28},
+			#{answerResult29},
+			#{answerResult30},
+			#{answerResult31},
+			#{answerResult32},
+			#{answerResult33},
+			#{answerResult34},
+			#{answerResult35},
+			#{answerResult36},
+			#{answerResult37},
+			#{answerResult38},
+			#{answerResult39},
+			#{answerResult40},
+			#{answerResult41},
+			#{answerResult42},
+			#{answerResult43},
+			#{answerResult44},
+			#{answerResult45},
+			#{answerResult46},
+			#{answerResult47},
+			#{answerResult48},
+			#{answerResult49},
+			#{answerResult50},
+			#{answerResult51},
+			#{answerResult52},
+			#{answerResult53},
+			#{answerResult54},
+			#{answerResult55},
+			#{answerResult56},
+			#{answerResult57},
+			#{answerResult58},
+			#{answerResult59},
+			#{answerResult60},
+			#{answerResult61},
+			#{answerResult62},
+			#{answerResult63},
+			#{answerResult64},
+			#{answerResult65},
+			#{answerResult66},
+			#{answerResult67},
+			#{answerResult68},
+			#{answerResult69},
+			#{answerResult70},
+			#{answerResult71},
+			#{answerResult72},
+			#{answerResult73},
+			#{answerResult74},
+			#{answerResult75}
+		)
+	</insert>
+	
+	<select id="listDati" resultType="com.xinshineng.information.domain.yanke.AnswerResultDO">
+		select * from y_answer_result
+		<where>
+			 <if test="identityCard != null and identityCard != ''"> and identity_card = #{identityCard} </if>
+			 <if test="addTime != null and addTime != ''"> and DATE_FORMAT(add_time,'%Y-%m-%d') = #{addTime} </if>
+		</where>
+		<choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by answer_id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+	<select id="countDati" resultType="int">
+		select count(answer_id) from y_answer_result
+		<where>
+			 <if test="identityCard != null and identityCard != ''"> and identity_card = #{identityCard} </if>
+		</where>
+	</select>
+
+	<select id="getLiuDiaoTotalOld" resultType="java.util.Map">
+		SELECT sch.`CityName`,COUNT(*) num FROM y_student stu,y_school_new sch WHERE stu.school_id = sch.`id` AND sch.`ProvinceCode`='370000' AND stu.`last_check_time` is not null  GROUP BY sch.`CityName`;
+	</select>
+
+	<select id="getLiuDiaoTotalNew" resultType="java.util.Map">
+		SELECT sch.`CityName`,COUNT(*) num FROM y_student_old stu,y_school_new sch WHERE stu.`school`=sch.`OrgName` AND sch.`ProvinceCode`='370000' AND stu.`last_check_time` is not null GROUP BY sch.`CityName`;
+	</select>
+
+	<select id="getLiuDiaoNewTotalNum" resultType="java.lang.Long">
+		SELECT COUNT(*) num FROM y_student
+	</select>
+
+	<select id="getLiuDiaoOldTotalNum" resultType="java.lang.Long">
+		SELECT COUNT(*) num FROM y_student_old
+	</select>
+
+	<select id="getLiuDiaoNewEveryYearCount" resultType="java.lang.Long">
+		SELECT COUNT(*) FROM y_student stu,y_school_new sch WHERE stu.`school_id`=sch.`id` AND sch.`ProvinceCode`=370000 AND last_check_time IS NOT NULL
+	</select>
+	<select id="getLiuDiaoNewEveryYearCountForCity" resultType="java.lang.Long" parameterType="java.lang.String">
+		SELECT COUNT(*) FROM y_student stu,y_school_new sch WHERE stu.`school_id`=sch.`id` AND sch.`ProvinceCode`=370000 AND last_check_time IS NOT NULL AND sch.`CityName` = #{cityName}
+	</select>
+	<select id="getLiuDiaoOldEveryYearCount" resultType="java.util.Map">
+		SELECT DATE_FORMAT(last_check_time,'%Y') `year`,COUNT(*) num FROM y_student_old stu,y_school_new sch WHERE stu.`last_check_time` IS NOT NULL AND sch.`ProvinceCode`=370000 AND stu.`school`=sch.`OrgName` AND DATE_FORMAT(stu.`last_check_time`,'%Y')!=1905 GROUP BY DATE_FORMAT(stu.`last_check_time`,'%Y')
+
+	</select>
+
+	<select id="getLiuDiaoOldEveryYearCountForCity" resultType="java.util.Map" parameterType="java.lang.String">
+		SELECT DATE_FORMAT(last_check_time,'%Y') `year`,COUNT(*) num FROM y_student_old stu,y_school_new sch WHERE stu.`last_check_time` IS NOT NULL AND sch.`ProvinceCode`=370000 AND stu.`school`=sch.`OrgName` AND DATE_FORMAT(stu.`last_check_time`,'%Y')!=1905 AND sch.`CityName` = #{cityName} GROUP BY DATE_FORMAT(stu.`last_check_time`,'%Y')
+
+	</select>
+
+	<resultMap id="SexNum" type="java.util.Map">
+		<result column="sex" property="sex" javaType="java.lang.Integer"/>
+		<result column="num" property="num" javaType="java.lang.Long"/>
+	</resultMap>
+	<select id="getNewSexNum" resultMap="SexNum">
+		SELECT stu.`student_sex` sex,COUNT(*) num FROM y_student stu,y_school_new sch WHERE stu.`school_id` = sch.`id` AND sch.`ProvinceCode`=370000 AND stu.`student_sex` IS NOT NULL GROUP BY stu.`student_sex`
+	</select>
+	<select id="getNewSexNumForCity" resultMap="SexNum" parameterType="java.lang.String">
+		SELECT stu.`student_sex` sex,COUNT(*) num FROM y_student stu,y_school_new sch WHERE stu.`school_id` = sch.`id` AND sch.`ProvinceCode`=370000 AND stu.`student_sex` IS NOT NULL AND sch.`CityName` = #{cityName} GROUP BY stu.`student_sex`
+	</select>
+
+	<select id="getOldSexNum" resultMap="SexNum">
+		SELECT stu.`student_sex` sex,COUNT(*) num FROM y_student_old stu,y_school_new sch WHERE stu.`school` = sch.`OrgName` AND sch.`ProvinceCode`=370000 AND stu.`student_sex` IS NOT NULL GROUP BY stu.`student_sex`
+	</select>
+	<select id="getOldSexNumForCity" resultMap="SexNum" parameterType="java.lang.String">
+		SELECT stu.`student_sex` sex,COUNT(*) num FROM y_student_old stu,y_school_new sch WHERE stu.`school` = sch.`OrgName` AND sch.`ProvinceCode`=370000 AND stu.`student_sex` IS NOT NULL AND sch.`CityName` = #{cityName} GROUP BY stu.`student_sex`
+	</select>
+
+
+
+
+
+
+
+
+
+
+
+
+	<select id="getNewCheckData" resultType="java.util.Map">
+		SELECT
+	stu.`student_name` stuName,yre.`naked_farvision_od` NakeOd,yre.`naked_farvision_os` NakeOs,yrd.`dengxiaoqiujing` DXQJ,yrd.`ifRL` ,yrd.`first_second` isSecond
+	FROM
+	y_student stu,y_result_optometry yro,y_result_diopter yrd,y_result_eyesight yre,y_school_new sch
+ 	WHERE
+	stu.`id`=yro.`student_id` AND stu.`id`=yre.`student_id` AND yrd.`t_optometry_id`=yro.`t_optometry_id` AND stu.`school_id`=sch.`id` AND sch.`ProvinceCode`='370000' AND stu.`last_check_time` IS NOT NULL AND yrd.`type`='AVG'
+
+	</select>
+	<select id="getNewCheckDataForCity" resultType="java.util.Map" parameterType="java.lang.String">
+		SELECT
+	stu.`student_name` stuName,yre.`naked_farvision_od` NakeOd,yre.`naked_farvision_os` NakeOs,yrd.`dengxiaoqiujing` DXQJ,yrd.`ifRL` ,yrd.`first_second` isSecond
+	FROM
+	y_student stu,y_result_optometry yro,y_result_diopter yrd,y_result_eyesight yre,y_school_new sch
+ 	WHERE
+	stu.`id`=yro.`student_id` AND stu.`id`=yre.`student_id` AND yrd.`t_optometry_id`=yro.`t_optometry_id` AND stu.`school_id`=sch.`id` AND sch.`ProvinceCode`='370000' AND stu.`last_check_time` IS NOT NULL AND yrd.`type`='AVG' AND sch.`CityName` = #{cityName}
+
+	</select>
+
+	<select id="getOldCheckData" resultType="java.util.Map">
+		SELECT
+		stu.`student_name` stuName,yre.`naked_farvision_od` NakeOd,yre.`naked_farvision_os` NakeOs,yrd.`dengxiaoqiujing` DXQJ,yrd.`ifRL` ,yrd.`first_second` isSecond
+	FROM
+		y_student_old stu,y_result_optometry_old yro,y_result_diopter_old yrd,y_result_eyesight_old yre,y_school_new sch
+ 	WHERE
+	stu.`id`=yro.`student_id` AND stu.`id`=yre.`student_id` AND yrd.`t_optometry_id`=yro.`t_optometry_id` AND stu.`school`=sch.`OrgName` AND sch.`ProvinceCode`='370000' AND stu.`last_check_time` IS NOT NULL AND yrd.`type`='AVG'
+
+	</select>
+	<select id="getOldCheckDataForCity" resultType="java.util.Map" parameterType="java.lang.String" >
+		SELECT
+		stu.`student_name` stuName,yre.`naked_farvision_od` NakeOd,yre.`naked_farvision_os` NakeOs,yrd.`dengxiaoqiujing` DXQJ,yrd.`ifRL` ,yrd.`first_second` isSecond
+	FROM
+		y_student_old stu,y_result_optometry_old yro,y_result_diopter_old yrd,y_result_eyesight_old yre,y_school_new sch
+ 	WHERE
+	stu.`id`=yro.`student_id` AND stu.`id`=yre.`student_id` AND yrd.`t_optometry_id`=yro.`t_optometry_id` AND stu.`school`=sch.`OrgName` AND sch.`ProvinceCode`='370000' AND stu.`last_check_time` IS NOT NULL AND yrd.`type`='AVG' AND sch.`CityName` = #{cityName}
+
+	</select>
+
+	<select id="getNewCount" resultType="int">
+		SELECT COUNT(*) FROM y_student stu,y_school_new sch WHERE stu.`school_id`=sch.`id` AND sch.`ProvinceCode`=370000
+	</select>
+	<select id="getNewCountForCity" resultType="int" parameterType="string">
+		SELECT COUNT(*) FROM y_student stu,y_school_new sch WHERE stu.`school_id`=sch.`id` AND sch.`ProvinceCode`=370000  AND sch.`CityName` = #{cityName}
+	</select>
+	<select id="getOldCount" resultType="int">
+		SELECT COUNT(*) FROM y_student_old stu,y_school_new sch WHERE sch.`ProvinceCode`=370000 AND stu.`school`=sch.`OrgName`
+	</select>
+	<select id="getOldCountForCity" resultType="int" parameterType="string">
+		SELECT COUNT(*) FROM y_student_old stu,y_school_new sch WHERE  sch.`ProvinceCode`=370000 AND stu.`school`=sch.`OrgName` AND sch.`CityName` = #{cityName}
+	</select>
+
+	<select id="getDevelopmentAndWarningDataForNew" resultType="java.util.Map">
+		SELECT
+			DATE_FORMAT(stu.`last_check_time`,'%Y') `year`,stu.`student_name` stuName,yrd.`dengxiaoqiujing` DXQJ,yrd.`ifRL` ,yrd.`first_second` isSecond
+		FROM
+			y_student stu,y_result_optometry yro,y_result_diopter yrd,y_school_new sch
+		WHERE
+			stu.`id`=yro.`student_id` AND yrd.`t_optometry_id`=yro.`t_optometry_id` AND stu.`school_id`=sch.`id` AND sch.`ProvinceCode`='370000' AND yrd.`type`='AVG'
+		AND stu.`last_check_time` IS NOT NULL
+	</select>
+	<select id="getDevelopmentAndWarningDataForNewForCity" resultType="java.util.Map" parameterType="java.lang.String">
+		SELECT
+			DATE_FORMAT(stu.`last_check_time`,'%Y') `year`,stu.`student_name` stuName,yrd.`dengxiaoqiujing` DXQJ,yrd.`ifRL` ,yrd.`first_second` isSecond
+		FROM
+			y_student stu,y_result_optometry yro,y_result_diopter yrd,y_school_new sch
+		WHERE
+			stu.`id`=yro.`student_id` AND yrd.`t_optometry_id`=yro.`t_optometry_id` AND stu.`school_id`=sch.`id` AND sch.`ProvinceCode`='370000' AND yrd.`type`='AVG'
+		AND stu.`last_check_time` IS NOT NULL AND sch.`CityName` = #{cityName}
+	</select>
+
+	<select id="getDevelopmentAndWarningDataForOld" resultType="java.util.Map">
+		SELECT
+			DATE_FORMAT(stu.`last_check_time`,'%Y') `year`,stu.`student_name` stuName,yrd.`dengxiaoqiujing` DXQJ,yrd.`ifRL` ,yrd.`first_second` isSecond
+		FROM
+			y_student_old stu,y_result_optometry_old yro,y_result_diopter_old yrd,y_school_new sch
+		WHERE
+			stu.`id`=yro.`student_id`  AND yrd.`t_optometry_id`=yro.`t_optometry_id` AND stu.`school`=sch.`OrgName` AND sch.`ProvinceCode`='370000' AND yrd.`type`='AVG'
+		and stu.`last_check_time` is not null
+
+	</select>
+	<select id="getDevelopmentAndWarningDataForOldForCity" resultType="java.util.Map" parameterType="java.lang.String">
+		SELECT
+			DATE_FORMAT(stu.`last_check_time`,'%Y') `year`,stu.`student_name` stuName,yrd.`dengxiaoqiujing` DXQJ,yrd.`ifRL` ,yrd.`first_second` isSecond
+		FROM
+			y_student_old stu,y_result_optometry_old yro,y_result_diopter_old yrd,y_school_new sch
+		WHERE
+			stu.`id`=yro.`student_id`  AND yrd.`t_optometry_id`=yro.`t_optometry_id` AND stu.`school`=sch.`OrgName` AND sch.`ProvinceCode`='370000' AND yrd.`type`='AVG'
+		and stu.`last_check_time` is not null AND sch.`CityName` = #{cityName}
+
+	</select>
+
+	<select id="getOldAreaCount" resultType="java.util.Map">
+		SELECT sch.`AreaName`,COUNT(*) num
+		FROM y_student_old stu,y_school_new sch WHERE stu.`school`=sch.`OrgName` AND sch.`CityName`= #{checkCity} GROUP BY sch.`AreaName`;
+	</select>
+	<select id="getNewAreaCount" resultType="java.util.Map">
+		SELECT sch.`AreaName`,COUNT(*) num
+		FROM y_student stu,y_school_new sch WHERE stu.`school_id`=sch.`id` AND sch.`CityName`= #{checkCity} GROUP BY sch.`AreaName`;
+	</select>
+
+	<select id="getOldSchoolNum" resultType="java.util.Map">
+		SELECT sch.`OrgName`,COUNT(*) num
+		FROM y_student_old stu,y_school_new sch WHERE stu.`school`=sch.`OrgName` AND sch.`CityName`=#{checkCity} AND sch.`AreaName`=#{checkArea} GROUP BY sch.`OrgName`
+	</select>
+	<select id="getNewSchoolNum" resultType="java.util.Map">
+		SELECT sch.`OrgName`,COUNT(*) num
+		FROM y_student stu,y_school_new sch WHERE stu.`school_id`=sch.`id` AND sch.`CityName`=#{checkCity} AND sch.`AreaName`=#{checkArea} GROUP BY sch.`OrgName`
+
+	</select>
+	<select id="getOldSchoolCheckDataForLF" resultType="java.util.Map">
+		SELECT student_new_id id,dengxiaoqiujing DXQJ FROM y_result_diopter_he WHERE first_second = 'FIRST_CHECK' AND ifRL='L' AND  student_new_id IN (SELECT new_id FROM y_student_he stu,y_result_diopter_he dio WHERE stu.`new_id`=dio.`student_new_id` AND stu.identity_card IN (SELECT stu.`identity_card` FROM y_student_old stu,y_school_new sch WHERE stu.`school`=sch.`OrgName` AND sch.`CityName`=#{checkCity} AND sch.`AreaName`=#{checkArea} AND sch.`OrgName`= #{orgName}) AND dio.`type`='AVG' AND dio.first_second = 'SECOND_CHECK')
+	</select>
+	<select id="getOldSchoolCheckDataForRF" resultType="java.util.Map">
+		SELECT student_new_id id,dengxiaoqiujing DXQJ FROM y_result_diopter_he WHERE first_second = 'FIRST_CHECK' AND ifRL='R' AND  student_new_id IN (SELECT new_id FROM y_student_he stu,y_result_diopter_he dio WHERE stu.`new_id`=dio.`student_new_id` AND stu.identity_card IN (SELECT stu.`identity_card` FROM y_student_old stu,y_school_new sch WHERE stu.`school`=sch.`OrgName` AND sch.`CityName`=#{checkCity} AND sch.`AreaName`=#{checkArea} AND sch.`OrgName`= #{orgName}) AND dio.`type`='AVG' AND dio.first_second = 'SECOND_CHECK')
+	</select>
+
+	<select id="getNewSchoolCheckDataForLF" resultType="java.util.Map">
+		SELECT student_new_id id,dengxiaoqiujing DXQJ FROM y_result_diopter_he WHERE first_second = 'FIRST_CHECK' AND ifRL='L' AND  student_new_id IN (SELECT new_id FROM y_student_he stu,y_result_diopter_he dio WHERE stu.`new_id`=dio.`student_new_id` AND stu.identity_card IN (SELECT stu.`identity_card` FROM y_student stu,y_school_new sch WHERE stu.`school_id`=sch.`id` AND sch.`CityName`=#{checkCity} AND sch.`AreaName`=#{checkArea} AND sch.`OrgName`= #{orgName}) AND dio.`type`='AVG' AND dio.first_second = 'SECOND_CHECK')
+	</select>
+	<select id="getNewSchoolCheckDataForRF" resultType="java.util.Map">
+		SELECT student_new_id id,dengxiaoqiujing DXQJ FROM y_result_diopter_he WHERE first_second = 'FIRST_CHECK' AND ifRL='R' AND  student_new_id IN (SELECT new_id FROM y_student_he stu,y_result_diopter_he dio WHERE stu.`new_id`=dio.`student_new_id` AND stu.identity_card IN (SELECT stu.`identity_card` FROM y_student stu,y_school_new sch WHERE stu.`school_id`=sch.`id` AND sch.`CityName`=#{checkCity} AND sch.`AreaName`=#{checkArea} AND sch.`OrgName`= #{orgName}) AND dio.`type`='AVG' AND dio.first_second = 'SECOND_CHECK')
+	</select>
+
+	<select id="getOldSchoolCheckDataForLS" resultType="java.util.Map">
+		SELECT student_new_id id,dengxiaoqiujing DXQJ FROM y_result_diopter_he WHERE first_second = 'SECOND_CHECK' AND ifRL='L' AND  student_new_id IN (SELECT new_id FROM y_student_he stu,y_result_diopter_he dio WHERE stu.`new_id`=dio.`student_new_id` AND stu.identity_card IN (SELECT stu.`identity_card` FROM y_student_old stu,y_school_new sch WHERE stu.`school`=sch.`OrgName` AND sch.`CityName`=#{checkCity} AND sch.`AreaName`=#{checkArea} AND sch.`OrgName`= #{orgName}) AND dio.`type`='AVG' AND dio.first_second = 'SECOND_CHECK')
+	</select>
+	<select id="getOldSchoolCheckDataForRS" resultType="java.util.Map">
+		SELECT student_new_id id,dengxiaoqiujing DXQJ FROM y_result_diopter_he WHERE first_second = 'SECOND_CHECK' AND ifRL='R' AND  student_new_id IN (SELECT new_id FROM y_student_he stu,y_result_diopter_he dio WHERE stu.`new_id`=dio.`student_new_id` AND stu.identity_card IN (SELECT stu.`identity_card` FROM y_student_old stu,y_school_new sch WHERE stu.`school`=sch.`OrgName` AND sch.`CityName`=#{checkCity} AND sch.`AreaName`=#{checkArea} AND sch.`OrgName`= #{orgName}) AND dio.`type`='AVG' AND dio.first_second = 'SECOND_CHECK')
+	</select>
+
+	<select id="getNewSchoolCheckDataForLS" resultType="java.util.Map">
+		SELECT student_new_id id,dengxiaoqiujing DXQJ FROM y_result_diopter_he WHERE first_second = 'SECOND_CHECK' AND ifRL='L' AND  student_new_id IN (SELECT new_id FROM y_student_he stu,y_result_diopter_he dio WHERE stu.`new_id`=dio.`student_new_id` AND stu.identity_card IN (SELECT stu.`identity_card` FROM y_student stu,y_school_new sch WHERE stu.`school_id`=sch.`id` AND sch.`CityName`=#{checkCity} AND sch.`AreaName`=#{checkArea} AND sch.`OrgName`= #{orgName}) AND dio.`type`='AVG' AND dio.first_second = 'SECOND_CHECK')
+	</select>
+	<select id="getNewSchoolCheckDataForRS" resultType="java.util.Map">
+		SELECT student_new_id id,dengxiaoqiujing DXQJ FROM y_result_diopter_he WHERE first_second = 'SECOND_CHECK' AND ifRL='R' AND  student_new_id IN (SELECT new_id FROM y_student_he stu,y_result_diopter_he dio WHERE stu.`new_id`=dio.`student_new_id` AND stu.identity_card IN (SELECT stu.`identity_card` FROM y_student stu,y_school_new sch WHERE stu.`school_id`=sch.`id` AND sch.`CityName`=#{checkCity} AND sch.`AreaName`=#{checkArea} AND sch.`OrgName`= #{orgName}) AND dio.`type`='AVG' AND dio.first_second = 'SECOND_CHECK')
+	</select>
+
+	<select id="getEveryYearCount" resultType="java.util.Map">
+	SELECT DATE_FORMAT(last_check_time,'%Y') `year`,COUNT(*) num FROM y_student_he WHERE last_check_time IS NOT NULL GROUP BY DATE_FORMAT(last_check_time,'%Y')
+	</select>
+
+	<select id="get2012CheckDataFL" resultType="java.util.Map">
+		SELECT student_new_id id,dengxiaoqiujing DXQJ FROM y_result_diopter_he WHERE ifRL = 'L' AND first_second ='FIRST_CHECK'  AND  student_new_id IN(SELECT DISTINCT stu.`new_id` FROM y_student_he stu,y_result_diopter_he dio WHERE stu.`new_id`=dio.`student_new_id` AND stu.last_check_time IS NOT NULL AND dio.`first_second`='SECOND_CHECK' AND dio.`type`='AVG' AND DATE_FORMAT(stu.`last_check_time`,'%Y')=2012)
+	</select>
+	<select id="get2012CheckDataFR" resultType="java.util.Map">
+		SELECT student_new_id id,dengxiaoqiujing DXQJ FROM y_result_diopter_he WHERE ifRL = 'R' AND first_second ='FIRST_CHECK'  AND  student_new_id IN(SELECT DISTINCT stu.`new_id` FROM y_student_he stu,y_result_diopter_he dio WHERE stu.`new_id`=dio.`student_new_id` AND stu.last_check_time IS NOT NULL AND dio.`first_second`='SECOND_CHECK' AND dio.`type`='AVG' AND DATE_FORMAT(stu.`last_check_time`,'%Y')=2012)
+	</select>
+	<select id="get2012CheckDataSL" resultType="java.util.Map">
+		SELECT student_new_id id,dengxiaoqiujing DXQJ FROM y_result_diopter_he WHERE ifRL = 'L' AND first_second ='SECOND_CHECK'  AND  student_new_id IN(SELECT DISTINCT stu.`new_id` FROM y_student_he stu,y_result_diopter_he dio WHERE stu.`new_id`=dio.`student_new_id` AND stu.last_check_time IS NOT NULL AND dio.`first_second`='SECOND_CHECK' AND dio.`type`='AVG' AND DATE_FORMAT(stu.`last_check_time`,'%Y')=2012)
+	</select>
+	<select id="get2012CheckDataSR" resultType="java.util.Map">
+		SELECT student_new_id id,dengxiaoqiujing DXQJ FROM y_result_diopter_he WHERE ifRL = 'R' AND first_second ='SECOND_CHECK'  AND  student_new_id IN(SELECT DISTINCT stu.`new_id` FROM y_student_he stu,y_result_diopter_he dio WHERE stu.`new_id`=dio.`student_new_id` AND stu.last_check_time IS NOT NULL AND dio.`first_second`='SECOND_CHECK' AND dio.`type`='AVG' AND DATE_FORMAT(stu.`last_check_time`,'%Y')=2012)
+	</select>
+	<select id="get2013CheckDataFL" resultType="java.util.Map">
+		SELECT student_new_id id,dengxiaoqiujing DXQJ FROM y_result_diopter_he WHERE ifRL = 'L' AND first_second ='FIRST_CHECK'  AND  student_new_id IN(SELECT DISTINCT stu.`new_id` FROM y_student_he stu,y_result_diopter_he dio WHERE stu.`new_id`=dio.`student_new_id` AND stu.last_check_time IS NOT NULL AND dio.`first_second`='SECOND_CHECK' AND dio.`type`='AVG' AND DATE_FORMAT(stu.`last_check_time`,'%Y')=2013)
+	</select>
+	<select id="get2013CheckDataFR" resultType="java.util.Map">
+		SELECT student_new_id id,dengxiaoqiujing DXQJ FROM y_result_diopter_he WHERE ifRL = 'R' AND first_second ='FIRST_CHECK'  AND  student_new_id IN(SELECT DISTINCT stu.`new_id` FROM y_student_he stu,y_result_diopter_he dio WHERE stu.`new_id`=dio.`student_new_id` AND stu.last_check_time IS NOT NULL AND dio.`first_second`='SECOND_CHECK' AND dio.`type`='AVG' AND DATE_FORMAT(stu.`last_check_time`,'%Y')=2013)
+	</select>
+	<select id="get2013CheckDataSL" resultType="java.util.Map">
+		SELECT student_new_id id,dengxiaoqiujing DXQJ FROM y_result_diopter_he WHERE ifRL = 'L' AND first_second ='SECOND_CHECK'  AND  student_new_id IN(SELECT DISTINCT stu.`new_id` FROM y_student_he stu,y_result_diopter_he dio WHERE stu.`new_id`=dio.`student_new_id` AND stu.last_check_time IS NOT NULL AND dio.`first_second`='SECOND_CHECK' AND dio.`type`='AVG' AND DATE_FORMAT(stu.`last_check_time`,'%Y')=2013)
+	</select>
+	<select id="get2013CheckDataSR" resultType="java.util.Map">
+		SELECT student_new_id id,dengxiaoqiujing DXQJ FROM y_result_diopter_he WHERE ifRL = 'R' AND first_second ='SECOND_CHECK'  AND  student_new_id IN(SELECT DISTINCT stu.`new_id` FROM y_student_he stu,y_result_diopter_he dio WHERE stu.`new_id`=dio.`student_new_id` AND stu.last_check_time IS NOT NULL AND dio.`first_second`='SECOND_CHECK' AND dio.`type`='AVG' AND DATE_FORMAT(stu.`last_check_time`,'%Y')=2013)
+	</select>
+
+	<select id="get2014CheckDataFL" resultType="java.util.Map">
+		SELECT student_new_id id,dengxiaoqiujing DXQJ FROM y_result_diopter_he WHERE ifRL = 'L' AND first_second ='FIRST_CHECK'  AND  student_new_id IN(SELECT DISTINCT stu.`new_id` FROM y_student_he stu,y_result_diopter_he dio WHERE stu.`new_id`=dio.`student_new_id` AND stu.last_check_time IS NOT NULL AND dio.`first_second`='SECOND_CHECK' AND dio.`type`='AVG' AND DATE_FORMAT(stu.`last_check_time`,'%Y')=2014)
+	</select>
+	<select id="get2014CheckDataFR" resultType="java.util.Map">
+
+		SELECT student_new_id id,dengxiaoqiujing DXQJ FROM y_result_diopter_he WHERE ifRL = 'R' AND first_second ='FIRST_CHECK'  AND  student_new_id IN(SELECT DISTINCT stu.`new_id` FROM y_student_he stu,y_result_diopter_he dio WHERE stu.`new_id`=dio.`student_new_id` AND stu.last_check_time IS NOT NULL AND dio.`first_second`='SECOND_CHECK' AND dio.`type`='AVG' AND DATE_FORMAT(stu.`last_check_time`,'%Y')=2014)
+	</select>
+	<select id="get2014CheckDataSL" resultType="java.util.Map">
+		SELECT student_new_id id,dengxiaoqiujing DXQJ FROM y_result_diopter_he WHERE ifRL = 'L' AND first_second ='SECOND_CHECK'  AND  student_new_id IN(SELECT DISTINCT stu.`new_id` FROM y_student_he stu,y_result_diopter_he dio WHERE stu.`new_id`=dio.`student_new_id` AND stu.last_check_time IS NOT NULL AND dio.`first_second`='SECOND_CHECK' AND dio.`type`='AVG' AND DATE_FORMAT(stu.`last_check_time`,'%Y')=2014)
+	</select>
+	<select id="get2014CheckDataSR" resultType="java.util.Map">
+
+		SELECT student_new_id id,dengxiaoqiujing DXQJ FROM y_result_diopter_he WHERE ifRL = 'R' AND first_second ='SECOND_CHECK'  AND  student_new_id IN(SELECT DISTINCT stu.`new_id` FROM y_student_he stu,y_result_diopter_he dio WHERE stu.`new_id`=dio.`student_new_id` AND stu.last_check_time IS NOT NULL AND dio.`first_second`='SECOND_CHECK' AND dio.`type`='AVG' AND DATE_FORMAT(stu.`last_check_time`,'%Y')=2014)
+	</select>
+
+	<select id="get2015CheckDataFL" resultType="java.util.Map">
+		SELECT student_new_id id,dengxiaoqiujing DXQJ FROM y_result_diopter_he WHERE ifRL = 'L' AND first_second ='FIRST_CHECK'  AND  student_new_id IN(SELECT DISTINCT stu.`new_id` FROM y_student_he stu,y_result_diopter_he dio WHERE stu.`new_id`=dio.`student_new_id` AND stu.last_check_time IS NOT NULL AND dio.`first_second`='SECOND_CHECK' AND dio.`type`='AVG' AND DATE_FORMAT(stu.`last_check_time`,'%Y')=2015)
+</select>
+
+	<select id="get2015CheckDataFR" resultType="java.util.Map">
+		SELECT student_new_id id,dengxiaoqiujing DXQJ FROM y_result_diopter_he WHERE ifRL = 'R' AND first_second ='FIRST_CHECK'  AND  student_new_id IN(SELECT DISTINCT stu.`new_id` FROM y_student_he stu,y_result_diopter_he dio WHERE stu.`new_id`=dio.`student_new_id` AND stu.last_check_time IS NOT NULL AND dio.`first_second`='SECOND_CHECK' AND dio.`type`='AVG' AND DATE_FORMAT(stu.`last_check_time`,'%Y')=2015)
+</select>
+
+	<select id="get2015CheckDataSL" resultType="java.util.Map">
+		SELECT student_new_id id,dengxiaoqiujing DXQJ FROM y_result_diopter_he WHERE ifRL = 'L' AND first_second ='SECOND_CHECK'  AND  student_new_id IN(SELECT DISTINCT stu.`new_id` FROM y_student_he stu,y_result_diopter_he dio WHERE stu.`new_id`=dio.`student_new_id` AND stu.last_check_time IS NOT NULL AND dio.`first_second`='SECOND_CHECK' AND dio.`type`='AVG' AND DATE_FORMAT(stu.`last_check_time`,'%Y')=2015)
+</select>
+
+	<select id="get2015CheckDataSR" resultType="java.util.Map">
+		SELECT student_new_id id,dengxiaoqiujing DXQJ FROM y_result_diopter_he WHERE ifRL = 'R' AND first_second ='SECOND_CHECK'  AND  student_new_id IN(SELECT DISTINCT stu.`new_id` FROM y_student_he stu,y_result_diopter_he dio WHERE stu.`new_id`=dio.`student_new_id` AND stu.last_check_time IS NOT NULL AND dio.`first_second`='SECOND_CHECK' AND dio.`type`='AVG' AND DATE_FORMAT(stu.`last_check_time`,'%Y')=2015)
+</select>
+
+	<select id="get2018CheckDataFL" resultType="java.util.Map">
+		SELECT student_new_id id,dengxiaoqiujing DXQJ FROM y_result_diopter_he WHERE ifRL = 'L' AND first_second ='FIRST_CHECK'  AND  student_new_id IN(SELECT DISTINCT stu.`new_id` FROM y_student_he stu,y_result_diopter_he dio WHERE stu.`new_id`=dio.`student_new_id` AND stu.last_check_time IS NOT NULL AND dio.`first_second`='SECOND_CHECK' AND dio.`type`='AVG' AND DATE_FORMAT(stu.`last_check_time`,'%Y')=2018)
+</select>
+
+	<select id="get2018CheckDataFR" resultType="java.util.Map">
+		SELECT student_new_id id,dengxiaoqiujing DXQJ FROM y_result_diopter_he WHERE ifRL = 'R' AND first_second ='FIRST_CHECK'  AND  student_new_id IN(SELECT DISTINCT stu.`new_id` FROM y_student_he stu,y_result_diopter_he dio WHERE stu.`new_id`=dio.`student_new_id` AND stu.last_check_time IS NOT NULL AND dio.`first_second`='SECOND_CHECK' AND dio.`type`='AVG' AND DATE_FORMAT(stu.`last_check_time`,'%Y')=2018)
+</select>
+
+	<select id="get2018CheckDataSL" resultType="java.util.Map">
+		SELECT student_new_id id,dengxiaoqiujing DXQJ FROM y_result_diopter_he WHERE ifRL = 'L' AND first_second ='SECOND_CHECK'  AND  student_new_id IN(SELECT DISTINCT stu.`new_id` FROM y_student_he stu,y_result_diopter_he dio WHERE stu.`new_id`=dio.`student_new_id` AND stu.last_check_time IS NOT NULL AND dio.`first_second`='SECOND_CHECK' AND dio.`type`='AVG' AND DATE_FORMAT(stu.`last_check_time`,'%Y')=2018)
+</select>
+
+	<select id="get2018CheckDataSR" resultType="java.util.Map">
+		SELECT student_new_id id,dengxiaoqiujing DXQJ FROM y_result_diopter_he WHERE ifRL = 'R' AND first_second ='SECOND_CHECK'  AND  student_new_id IN(SELECT DISTINCT stu.`new_id` FROM y_student_he stu,y_result_diopter_he dio WHERE stu.`new_id`=dio.`student_new_id` AND stu.last_check_time IS NOT NULL AND dio.`first_second`='SECOND_CHECK' AND dio.`type`='AVG' AND DATE_FORMAT(stu.`last_check_time`,'%Y')=2018)
+</select>
+
+	<select id="get2019CheckDataFL" resultType="java.util.Map">
+		SELECT student_new_id id,dengxiaoqiujing DXQJ FROM y_result_diopter_he WHERE ifRL = 'L' AND first_second ='FIRST_CHECK'  AND  student_new_id IN(SELECT DISTINCT stu.`new_id` FROM y_student_he stu,y_result_diopter_he dio WHERE stu.`new_id`=dio.`student_new_id` AND stu.last_check_time IS NOT NULL AND dio.`first_second`='SECOND_CHECK' AND dio.`type`='AVG' AND DATE_FORMAT(stu.`last_check_time`,'%Y')=2019)
+</select>
+
+	<select id="get2019CheckDataFR" resultType="java.util.Map">
+		SELECT student_new_id id,dengxiaoqiujing DXQJ FROM y_result_diopter_he WHERE ifRL = 'R' AND first_second ='FIRST_CHECK'  AND  student_new_id IN(SELECT DISTINCT stu.`new_id` FROM y_student_he stu,y_result_diopter_he dio WHERE stu.`new_id`=dio.`student_new_id` AND stu.last_check_time IS NOT NULL AND dio.`first_second`='SECOND_CHECK' AND dio.`type`='AVG' AND DATE_FORMAT(stu.`last_check_time`,'%Y')=2019)
+</select>
+
+	<select id="get2019CheckDataSL" resultType="java.util.Map">
+		SELECT student_new_id id,dengxiaoqiujing DXQJ FROM y_result_diopter_he WHERE ifRL = 'L' AND first_second ='SECOND_CHECK'  AND  student_new_id IN(SELECT DISTINCT stu.`new_id` FROM y_student_he stu,y_result_diopter_he dio WHERE stu.`new_id`=dio.`student_new_id` AND stu.last_check_time IS NOT NULL AND dio.`first_second`='SECOND_CHECK' AND dio.`type`='AVG' AND DATE_FORMAT(stu.`last_check_time`,'%Y')=2019)
+</select>
+
+	<select id="get2019CheckDataSR" resultType="java.util.Map">
+		SELECT student_new_id id,dengxiaoqiujing DXQJ FROM y_result_diopter_he WHERE ifRL = 'R' AND first_second ='SECOND_CHECK'  AND  student_new_id IN(SELECT DISTINCT stu.`new_id` FROM y_student_he stu,y_result_diopter_he dio WHERE stu.`new_id`=dio.`student_new_id` AND stu.last_check_time IS NOT NULL AND dio.`first_second`='SECOND_CHECK' AND dio.`type`='AVG' AND DATE_FORMAT(stu.`last_check_time`,'%Y')=2019)
+</select>
+
+	<select id="get2020CheckDataFL" resultType="java.util.Map">
+		SELECT student_new_id id,dengxiaoqiujing DXQJ FROM y_result_diopter_he WHERE ifRL = 'L' AND first_second ='FIRST_CHECK'  AND  student_new_id IN(SELECT DISTINCT stu.`new_id` FROM y_student_he stu,y_result_diopter_he dio WHERE stu.`new_id`=dio.`student_new_id` AND stu.last_check_time IS NOT NULL AND dio.`first_second`='SECOND_CHECK' AND dio.`type`='AVG' AND DATE_FORMAT(stu.`last_check_time`,'%Y')=2020)
+</select>
+
+	<select id="get2020CheckDataFR" resultType="java.util.Map">
+		SELECT student_new_id id,dengxiaoqiujing DXQJ FROM y_result_diopter_he WHERE ifRL = 'R' AND first_second ='FIRST_CHECK'  AND  student_new_id IN(SELECT DISTINCT stu.`new_id` FROM y_student_he stu,y_result_diopter_he dio WHERE stu.`new_id`=dio.`student_new_id` AND stu.last_check_time IS NOT NULL AND dio.`first_second`='SECOND_CHECK' AND dio.`type`='AVG' AND DATE_FORMAT(stu.`last_check_time`,'%Y')=2020)
+</select>
+
+	<select id="get2020CheckDataSL" resultType="java.util.Map">
+		SELECT student_new_id id,dengxiaoqiujing DXQJ FROM y_result_diopter_he WHERE ifRL = 'L' AND first_second ='SECOND_CHECK'  AND  student_new_id IN(SELECT DISTINCT stu.`new_id` FROM y_student_he stu,y_result_diopter_he dio WHERE stu.`new_id`=dio.`student_new_id` AND stu.last_check_time IS NOT NULL AND dio.`first_second`='SECOND_CHECK' AND dio.`type`='AVG' AND DATE_FORMAT(stu.`last_check_time`,'%Y')=2020)
+</select>
+
+	<select id="get2020CheckDataSR" resultType="java.util.Map">
+		SELECT student_new_id id,dengxiaoqiujing DXQJ FROM y_result_diopter_he WHERE ifRL = 'R' AND first_second ='SECOND_CHECK'  AND  student_new_id IN(SELECT DISTINCT stu.`new_id` FROM y_student_he stu,y_result_diopter_he dio WHERE stu.`new_id`=dio.`student_new_id` AND stu.last_check_time IS NOT NULL AND dio.`first_second`='SECOND_CHECK' AND dio.`type`='AVG' AND DATE_FORMAT(stu.`last_check_time`,'%Y')=2020)
+</select>
+
+	<select id="getData" resultType="java.util.Map">
+SELECT
+ CONCAT_WS('|',student_new_id,ifRL) student,lasy_check_time,student_sex studeny_sex, shifou_tangwo,zuizhong_tizhi,gzr_sm,zm_sm,zm_swhd,zm_mtgz,zx_swhd,xw_swhd, life_farvision,naked_farvision,diopter_s1,diopter_c1,diopter_a1,y1_x,diopter_s2,diopter_c2,diopter_a2,y2_x,corneal_mm,corneal_d,eyeaxis,eyepressure,age,eyeaxis_corneal,winter
+ FROM y_result_input
+ WHERE
+  lasy_check_time IS NOT NULL AND zuizhong_tizhi IS NOT NULL AND life_farvision IS NOT NULL AND naked_farvision IS NOT NULL AND diopter_s1 IS NOT NULL AND diopter_c1 IS NOT NULL AND diopter_a1 IS NOT NULL
+  AND y1_x IS NOT NULL AND diopter_s2 IS NOT NULL AND diopter_c2 IS NOT NULL AND diopter_a2 IS NOT NULL AND y2_x IS NOT NULL AND corneal_mm IS NOT NULL AND eyeaxis IS NOT NULL AND eyepressure IS NOT NULL
+  AND age IS NOT NULL AND eyeaxis_corneal IS NOT NULL AND winter IS NOT NULL AND corneal_d IS NOT NULL
+	</select>
+	<select id="getAvg" resultType="java.util.Map">
+		  SELECT FORMAT(AVG(shifou_tangwo),3) tw,FORMAT(AVG(gzr_sm),3) gzrsm,FORMAT(AVG(zm_mtgz),3) zmgz,FORMAT(AVG(zm_sm),3) zmsm,FORMAT(AVG(zm_swhd),3) zmsw,FORMAT(AVG(zx_swhd),3) zxsw,FORMAT(AVG(xw_swhd),3) xwsw FROM y_result_input
+	</select>
+	<update id="addYuce" >
+		UPDATE y_result_input SET y1_Y =#{y1Y},y2_Y=#{y2Y} WHERE student_new_id = #{id} AND ifRL =#{ifRL}
+	</update>
+	<select id="getNumber" resultType="java.lang.Integer">
+		SELECT
+	COUNT(DISTINCT student_new_id)
+ FROM y_result_input
+ WHERE
+  lasy_check_time IS NOT NULL AND zuizhong_tizhi IS NOT NULL AND life_farvision IS NOT NULL AND naked_farvision IS NOT NULL AND diopter_s1 IS NOT NULL AND diopter_c1 IS NOT NULL AND diopter_a1 IS NOT NULL
+  AND y1_x IS NOT NULL AND diopter_s2 IS NOT NULL AND diopter_c2 IS NOT NULL AND diopter_a2 IS NOT NULL AND y2_x IS NOT NULL AND corneal_mm IS NOT NULL AND eyeaxis IS NOT NULL AND eyepressure IS NOT NULL
+  AND age IS NOT NULL AND eyeaxis_corneal IS NOT NULL AND winter IS NOT NULL AND corneal_d IS NOT NULL
+	</select>
+</mapper>

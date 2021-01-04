@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xinshineng.information.dao.shaicha.shaiChaUserDao">
+	
+
+	<select id = "listShaiCha" resultType="com.xinshineng.information.domain.shaicha.shaiChaUserDo">
+		SELECT * from
+		(select top ${limit} * from (select top (${limit}*${page}) * from dbo.Up_Users
+		<where>
+			<if test="name != null and name != ''">
+				Name like '%' + #{name,jdbcType=NVARCHAR}+ '%'
+			</if>
+			<if test="telphone != null and telphone != ''">
+			  and Telphone = #{telphone}
+			</if>
+		</where>
+		order by id asc) as temp_sum_student order by id desc ) temp_order 
+		order by id asc	
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from dbo.Up_Users
+		<where>
+			<if test="name != null and name != ''">
+				Name like '%' + #{name,jdbcType=NVARCHAR}+ '%'
+			</if>
+		</where>
+	</select>
+			
+
+</mapper>

@@ -1,0 +1,473 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<title>眼健康咨询平台</title>
+<link rel="stylesheet" href="/css/index.css" type="text/css">
+<script type="text/javascript" src="/js/jquery-3.5.1.min.js"></script>
+<script type="text/javascript" src="/js/echarts.min.js"></script>
+</head>
+<body style="color:#333;">
+   <div class="tophead">
+   		<div class="main">
+            <h1>眼健康咨询平台</h1>
+            <div class="showName">您好，赵厚今！</div>
+        </div>
+    </div>
+    
+    <div class="gerenCon main">
+		<div class="gerenCon_top">
+			<div class="box boxJC">
+				<h3>三级防控</h3>
+				<ul>
+                    <li><a href="/skip/jiancebiao">用眼行为监测</a></li>
+                    <dl>
+                    	<dt>用眼行为矫正</dt>
+                    	<dd><a href="/skip/jiaose/jiazhang">家长</a><a href="/skip/jiaose/haizi">孩子</a></dd>
+                    </dl>
+                    <li><a href="/skip/EyeTEAS">Eye-TEAS治疗</a></li>
+                </ul>
+			</div>
+           
+            <div class="box boxL">
+                <h3>问答卷</h3>
+                <ul>
+                    <li><a href="/skip/wenjuan1">儿童青少年心理健康量表</a></li>
+                    <li><a href="/skip/wenjuan2">儿童青少年体质量表</a></li>
+                    <li><a href="/skip/wenjuan3">疫情期间用眼行为和体育锻炼调查问卷</a></li>
+                </ul>
+            </div>
+            
+        </div>
+        <div class="gerenCon_lishi">
+        	<h3>历史检查记录(三级预警)</h3>
+        	<div class="zdjg">
+        		<dl>
+        			<dt>左眼初步建议与预警提示：</dt>
+        			<dd>视力目前正常，<strong style="color: red">近视临床前期</strong>。请注意卫生用眼，避免长时间近距离持续用眼，多参加户外活动，建议建立完善的视觉健康档案，防控近视的发生，更好地进行近视发生的预警。</dd>
+        		</dl>
+        		<dl>
+        			<dt>右眼初步建议与预警提示：</dt>
+        			<dd>视力目前正常，<strong style="color: red">近视临床前期</strong>。请注意卫生用眼，避免长时间近距离持续用眼，多参加户外活动，建议建立完善的视觉健康档案，防控近视的发生，更好地进行近视发生的预警。</dd>
+        		</dl>
+        	</div>
+ 			<div class="zheLine">
+ 				<ul>
+ 					<li>
+ 						<p>左右眼视力</p>
+ 						<div id="main1"></div>
+ 					</li>
+					<li>
+ 						<p>散瞳前等效球镜</p>
+ 						<div id="main2"></div>
+ 					</li>
+ 					<li>
+ 						<p>眼轴长度</p>
+ 						<div id="main3"></div>
+ 					</li>
+ 				</ul>
+ 			</div>
+            <!--<h3>历史检查记录</h3>-->
+
+            <table width="200" border="1" cellspacing="0" cellpadding="0">
+              <thead>
+              	<tr>
+                  <th>时间</th>
+                  <th colspan="2">裸眼视力</th>
+                  <th> </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>2020-06-17</td>
+                  <td>左：5.0</td>
+                  <td>右：5.0</td>
+                  <td><a href="/skip/gerenchakan" target='_blank'>查看</a></td>
+                </tr>
+                <tr>
+                  <td>2019-09-10</td>
+                  <td>左：4.8</td>
+                  <td>右：4.9</td>
+                  <td><a href="/skip/gerenchakan" target='_blank'>查看</a></td>
+                </tr>
+                <tr>
+                  <td>2019-03-05</td>
+                  <td>左：5.0</td>
+                  <td>右：5.1</td>
+                  <td><a href="/skip/gerenchakan" target='_blank'>查看</a></td>
+                </tr>
+              </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+	
+	// 基于准备好的dom，初始化echarts实例
+        var myChart1 = echarts.init(document.getElementById('main1'));
+		var myChart2 = echarts.init(document.getElementById('main2'));
+		var myChart3 = echarts.init(document.getElementById('main3'));
+
+	
+        //折线图1
+        setTimeout(function () {
+			option = {
+				title: {
+					//text: '点击量',
+					textStyle: {
+                        fontWeight: 'normal',
+                        color: '#000',//标题颜色
+                },
+
+                x:"left" 
+				},
+				tooltip: {
+					trigger: 'axis'
+				},
+				legend: {
+					data:['左眼','右眼'],
+					textStyle: {
+						"fontSize": 14,
+						color:'#000',
+					}
+				},
+				grid: {
+					left: '0',
+					top:'30',
+					right: '30',
+					bottom: '0',
+					containLabel: true
+				},
+				xAxis: {
+					type: 'category',
+					boundaryGap: false,
+					data: ['2020-04','2020-06','2020-09'],
+					axisLabel: {
+							//formatter: '{value} 年',//单位
+							textStyle: {
+							   fontSize : 14 ,
+								color:'#000'
+						   },
+						}
+				},
+				yAxis: {
+					type: 'value',
+					axisLabel: {
+							//formatter: '{value} ml',//单位
+							textStyle: {
+							   fontSize : 14,
+								color:'#000'
+						   },
+						}
+				},
+				series: [
+					{
+						name:'左眼',
+						smooth:true,
+						symbol:"circle",
+						type:'line',
+						itemStyle: {
+							 normal: {
+							   color: "#ff5a00",//折线点的颜色
+							   lineStyle: {
+							   color: "#ff5a00"//折线的颜色
+							  }
+							}
+						 },
+						data:[5.0,4.8,5.0]
+					},
+					{
+						name:'右眼',
+						smooth:true,
+						symbol:"circle",
+						type:'line',
+						itemStyle: {
+							 normal: {
+							   color: "#20a01d",//折线点的颜色
+							   lineStyle: {
+							   color: "#20a01d"//折线的颜色
+							  }
+							}
+						 },
+						data:[5.1,4.9,5.0]
+					}
+				]
+			};	
+			
+			myChart1.setOption(option);
+		});	
+		
+		//折线图2
+        setTimeout(function () {
+			option = {
+				title: {
+					//text: '点击量',
+					textStyle: {
+                        fontWeight: 'normal',
+                        color: '#000',//标题颜色
+                },
+
+                x:"left" 
+				},
+				tooltip: {
+					trigger: 'axis'
+				},
+				legend: {
+					data:['左眼','右眼'],
+					textStyle: {
+						"fontSize": 14,
+						color:'#000',
+					}
+				},
+				grid: {
+					left: '0',
+					top:'30',
+					right: '30',
+					bottom: '0',
+					containLabel: true
+				},
+				xAxis: {
+					type: 'category',
+					boundaryGap: false,
+					data: ['2020-04','2020-06','2020-09'],
+					axisLabel: {
+							//formatter: '{value} 年',//单位
+							textStyle: {
+							   fontSize : 14 ,
+								color:'#000'
+						   },
+						}
+				},
+				yAxis: {
+					type: 'value',
+					axisLabel: {
+							//formatter: '{value} ml',//单位
+							textStyle: {
+							   fontSize : 14,
+								color:'#000'
+						   },
+						}
+				},
+				series: [
+					{
+						name:'左眼',
+						smooth:true,
+						symbol:"circle",
+						type:'line',
+						itemStyle: {
+							 normal: {
+							   color: "#ff5a00",//折线点的颜色
+							   lineStyle: {
+							   color: "#ff5a00"//折线的颜色
+							  }
+							}
+						 },
+						data:[-0.50,-0.75,-0.25]
+					},
+					{
+						name:'右眼',
+						smooth:true,
+						symbol:"circle",
+						type:'line',
+						stack: '总量',
+						itemStyle: {
+							 normal: {
+							   color: "#20a01d",//折线点的颜色
+							   lineStyle: {
+							   color: "#20a01d"//折线的颜色
+							  }
+							}
+						 },
+						data:[-0.75,-0.50,-0.25]
+					}
+				]
+			};	
+			
+			myChart2.setOption(option);
+		});	
+	
+		//折线图3
+        setTimeout(function () {
+			option = {
+				title: {
+					//text: '点击量',
+					textStyle: {
+                        fontWeight: 'normal',
+                        color: '#000',//标题颜色
+                },
+
+                x:"left" 
+				},
+				tooltip: {
+					trigger: 'axis'
+				},
+				legend: {
+					data:['左眼','右眼'],
+					textStyle: {
+						"fontSize": 14,
+						color:'#000',
+					}
+				},
+				grid: {
+					left: '0',
+					top:'30',
+					right: '30',
+					bottom: '0',
+					containLabel: true
+				},
+				xAxis: {
+					type: 'category',
+					boundaryGap: false,
+					data: ['2020-04','2020-06','2020-09'],
+					axisLabel: {
+							//formatter: '{value} 年',//单位
+							textStyle: {
+							   fontSize : 14 ,
+								color:'#000'
+						   },
+						}
+				},
+				yAxis: {
+					type: 'value',
+					axisLabel: {
+							//formatter: '{value} ml',//单位
+							textStyle: {
+							   fontSize : 14,
+								color:'#000'
+						   },
+						}
+				},
+				series: [
+					{
+						name:'左眼',
+						smooth:true,
+						symbol:"circle",
+						type:'line',
+						itemStyle: {
+							 normal: {
+							   color: "#ff5a00",//折线点的颜色
+							   lineStyle: {
+							   color: "#ff5a00"//折线的颜色
+							  }
+							}
+						 },
+						data:[21.97,22.62,22.94]
+					},
+					{
+						name:'右眼',
+						smooth:true,
+						symbol:"circle",
+						type:'line',
+						itemStyle: {
+							 normal: {
+							   color: "#20a01d",//折线点的颜色
+							   lineStyle: {
+							   color: "#20a01d"//折线的颜色
+							  }
+							}
+						 },
+						data:[21.89,22.43,22.89]
+					}
+				]
+			};	
+			
+			myChart3.setOption(option);
+		});	
+	
+		/*//折线图4
+        setTimeout(function () {
+			option = {
+				title: {
+					//text: '点击量',
+					textStyle: {
+                        fontWeight: 'normal',
+                        color: '#000',//标题颜色
+                },
+
+                x:"left" 
+				},
+				tooltip: {
+					trigger: 'axis'
+				},
+				legend: {
+					data:['左眼','右眼'],
+					textStyle: {
+						"fontSize": 14,
+						color:'#000',
+					}
+				},
+				grid: {
+					left: '0',
+					top:'30',
+					right: '30',
+					bottom: '0',
+					containLabel: true
+				},
+				xAxis: {
+					type: 'category',
+					boundaryGap: false,
+					data: ['2012','2013','2014','2015','2016','2017','2018'],
+					axisLabel: {
+							//formatter: '{value} 年',//单位
+							textStyle: {
+							   fontSize : 14 ,
+								color:'#000'
+						   },
+						}
+				},
+				yAxis: {
+					type: 'value',
+					axisLabel: {
+							//formatter: '{value} ml',//单位
+							textStyle: {
+							   fontSize : 14,
+								color:'#000'
+						   },
+						}
+				},
+				series: [
+					{
+						name:'左眼',
+						smooth:true,
+						symbol:"circle",
+						type:'line',
+						stack: '总量',
+						itemStyle: {
+							 normal: {
+							   color: "#ff5a00",//折线点的颜色
+							   lineStyle: {
+							   color: "#ff5a00"//折线的颜色
+							  }
+							}
+						 },
+						data:[120, 132, 101, 134, 90, 230, 210]
+					},
+					{
+						name:'右眼',
+						smooth:true,
+						symbol:"circle",
+						type:'line',
+						stack: '总量',
+						itemStyle: {
+							 normal: {
+							   color: "#20a01d",//折线点的颜色
+							   lineStyle: {
+							   color: "#20a01d"//折线的颜色
+							  }
+							}
+						 },
+						data:[220, 182, 191, 234, 290, 330, 310]
+					}
+				]
+			};	
+			
+			myChart4.setOption(option);
+		});	*/
+</script>
+
+
+

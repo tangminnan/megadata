@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content ">
+	<input id="uid" th:value="${data.id}"  type="hidden">
+		<div class="col-sm-12">
+			<div class="ibox">
+				<div class="ibox-body">
+					<div class="fixed-table-toolbar">
+						<div class="columns pull-left">
+							<button shiro:hasPermission="information:data:batchRemove" type="button" class="btn  btn-danger"
+								onclick="batchRemove()">
+								<i class="fa fa-trash" aria-hidden="true"></i>删除
+							</button>
+							
+							<button class="btn  btn-info" id="month">
+							<i class="fa fa-calendar-minus-o"></i>月</button>
+							<input id="startmonth" name="startmonth" class="form-control" th:value="${startmonth}" type="hidden">
+							<input id="endmonth" name="endmonth" class="form-control" th:value="${endmonth}" type="hidden">
+							
+							<button class="btn  btn-info" id="week">
+							<i class="fa fa-calendar-minus-o"></i>周</button>
+							<input id="startweek" name="startweek" class="form-control" th:value="${startweek}" type="hidden">
+							<input id="endweek" name="endweek" class="form-control" th:value="${endweek}" type="hidden">
+							
+							<button class="btn  btn-info" id="day">
+							<i class="fa fa-calendar-minus-o"></i>日</button>
+							<input id="today" name="today" class="form-control" th:value="${today}" type="hidden">
+							
+						</div>
+						
+						
+						<div class="columns pull-right">
+							<button class="btn btn-success" id="select">查询</button>
+						</div>
+						
+						<div class="columns pull-right col-md-2 nopadding ">
+							<input id="endTime" name="endTime" class="form-control" placeholder="结束时间：" type="text">
+						</div>
+						<div class="columns pull-right col-md-2 nopadding">
+							<input id="startTime" name="startTime" class="form-control" placeholder="开始时间：" type="text">
+						</div>
+						
+					</div>
+					<table id="exampleTable" data-mobile-responsive="true">
+					</table>
+					
+					<div>&nbsp;</div>
+					检查数据
+					<div></div>
+					<table id="exampleTable2" data-mobile-responsive="true"></table>
+					
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--shiro控制bootstraptable行内按钮看见性 来自bootdo的创新方案 -->
+		<div>
+			<script type="text/javascript">
+				var s_edit_h = 'hidden';
+				var s_remove_h = 'hidden';
+				var s_resetPwd_h = 'hidden';
+			</script>
+		</div>
+		<div shiro:hasPermission="information:data:edit">
+			<script type="text/javascript">
+				s_edit_h = '';
+			</script>
+		</div>
+		<div shiro:hasPermission="information:data:remove">
+			<script type="text/javascript">
+				var s_remove_h = '';
+			</script>
+		</div>
+		<div shiro:hasPermission="information:data:resetPwd">
+			<script type="text/javascript">
+				var s_resetPwd_h = '';
+			</script>
+		</div>
+	</div>
+	<div th:include="include :: footer"></div>
+	<script type="text/javascript" src="/js/appjs/information/users1/show.js"></script>
+	
+	<script type="text/javascript">
+	laydate.render({
+		elem: '#startTime',
+		type: 'datetime'
+	});
+	laydate.render({
+		elem: '#endTime',
+		type: 'datetime'
+	});
+	</script>
+	
+</body>
+</html>
