@@ -825,7 +825,7 @@
                                '</div>';
                            var html2='';
                            for (let i = 0; i < data.length; i++) {
-                               var href='/skip/school?school='+data[i].school+'&CityName='+checkCity+'&AreaName='+checkArea+'&checkdate='+data[i].check_time;
+                               var href='/skip/school?school='+data[i].school+'&CityName='+checkCity+'&AreaName='+checkArea+'&checkdate='+data[i].check_time+'&checkType='+data[i].checkType;
                                html2 += '<tr>'+
                                    '<td>'+data[i].check_time+'</td>'+
                                    '<td><a href='+href+'>'+data[i].school+'</a>'+'</td>'+
