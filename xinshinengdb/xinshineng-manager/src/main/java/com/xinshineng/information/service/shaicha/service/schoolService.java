@@ -9,4 +9,5 @@ public interface schoolService {
     List<Map> dataThree(String school, String CityName, String AreaName, String checkdate);
     List<Map> dataFour(String school, String CityName, String AreaName, String checkdate);
     List<Map> dataFive(String school, String CityName, String AreaName, String checkdate);
+    List<Map> dataSix(String school, String CityName, String AreaName, String checkdate);
 }

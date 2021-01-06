@@ -1327,7 +1327,7 @@ WHERE identity_card IN
 	</select>
 	<select id="studentList" resultType="map">
 		SELECT
-	student_name,
+	student_name,identity_card,
 	grade,
 	concat((DATE_FORMAT(last_check_time, '%Y') - SUBSTRING(identity_card, 7, 4)) , '') AS age,
 	naked_farvision_od,
@@ -1338,12 +1338,13 @@ WHERE identity_card IN
     	school = #{school}
     AND AreaName = #{AreaName}
     AND CityName = #{CityName}
-    AND DATE_FORMAT(last_check_time, '%Y-%m') = #{checkdate} and dengxiaoqiujingl is not NULL and dengxiaoqiujingr is not NULL and naked_farvision_od is not NULL and naked_farvision_os is not NULL
+    AND DATE_FORMAT(last_check_time, '%Y-%m') = #{checkdate} and dengxiaoqiujingl is not NULL and dengxiaoqiujingr is not NULL and  naked_farvision_od is not NULL and naked_farvision_os is not NULL and naked_farvision_od != '0' and naked_farvision_os != '0' and naked_farvision_os != '' and naked_farvision_od != ''
+    ORDER BY student_name
 	</select>
 	<select id="gradeNumber" resultType="map">
 		SELECT DISTINCT
-	grade,
-	COUNT(grade) num
+	grade as name,
+	COUNT(grade) as value
     FROM
     	s_student_school_he
     WHERE

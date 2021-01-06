@@ -93,8 +93,8 @@ public class schoolServiceImpl implements schoolService {
         String xueBu = shaichaStudentDao.getXueBu(school, CityName, AreaName, checkdate);
         List<Map> gradeNumberList = shaichaStudentDao.gradeNumber(school, CityName, AreaName, checkdate);
         for(Map map : gradeNumberList){
-            grade.add(map.get("grade")==null ? "" :xueBu(xueBu,map.get("grade").toString()));
-            gradeNumber.add(map.get("num"));
+            grade.add(map.get("name")==null ? "" :xueBu(xueBu,map.get("name").toString()));
+            gradeNumber.add(map.get("value"));
         }
 
         listMap.put("grade",grade);
@@ -144,6 +144,18 @@ public class schoolServiceImpl implements schoolService {
         }
         redisTemplate.opsForList().rightPushAll(school+AreaName+checkdate+"dataFive",gradeLv);
         return gradeLv;
+    }
+
+    @Override
+    public List<Map> dataSix(String school, String CityName, String AreaName, String checkdate) {
+        String xueBu = shaichaStudentDao.getXueBu(school, CityName, AreaName, checkdate);
+        List<Map> gradeNumberList = shaichaStudentDao.gradeNumber(school, CityName, AreaName, checkdate);
+        for(int s = 0;s<gradeNumberList.size();s++){
+            Map map = gradeNumberList.get(s);
+            gradeNumberList.get(s).put("name",map.get("name")==null ? "" :xueBu(xueBu,map.get("name").toString()));
+        }
+        redisTemplate.opsForList().rightPushAll(school+AreaName+checkdate+"dataSix",gradeNumberList);
+        return gradeNumberList;
     }
 
 

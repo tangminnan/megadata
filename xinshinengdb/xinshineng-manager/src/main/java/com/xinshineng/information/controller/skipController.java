@@ -55,12 +55,18 @@ public class skipController {
         if (dataFive.size()==0){
             dataFive = schoolservice.dataFive(school, CityName, AreaName, checkdate);
         }
-//        redisTemplate.opsForList().rightPushAll(school+AreaName+checkdate+"dataFive",dataFive);
+//        redisTemplate.opsForList().rightPushAll(school+AreaName+checkdate+"datafive",dataFive);
+        List<Map> dataSix;
+        dataSix = redisTemplate.opsForList().range(school+AreaName+checkdate+"dataSix",0,-1);
+        if(dataSix.size()==0){
+            dataSix = schoolservice.dataSix(school, CityName, AreaName, checkdate);
+        }
         model.addAttribute("dataOne",dataOne);
         model.addAttribute("dataTwo",dataTwo);
         model.addAttribute("dataThree",dataThree);
         model.addAttribute("dataFour",dataFour);
         model.addAttribute("dataFive",dataFive);
+        model.addAttribute("dataSix",dataSix);
         return "school";
     }
 
@@ -105,7 +111,8 @@ public class skipController {
     }
 
     @GetMapping("/geren")
-    public String skipToGeRen(){
+    public String skipToGeRen(Model model, String name,String idCard){
+        model.addAttribute("name","您好，"+name+"!");
         return "geren";
     }
 }

@@ -251,7 +251,7 @@
 					<h3>班级近视率排名</h3>
 					<div class="biaoge biaoge_pai" style="width:100%; height:24vh">
 						<div class="biaoge_paiIn">
-							<ul>
+							<ul id="paiMing">
 								<li>
 									<div class="liIn">
 										<div class="liIn_left"><span class="bot"></span><span class="zi" >六年级3班</span></div>
@@ -453,7 +453,7 @@
 				<div class="leftMain_middle_rightIn">
 					<h3>各年级近视情况</h3>
 					<div class="biaoge biaoge_bi" style="width:100%; height:24vh">
-						<ul>
+						<ul class="gradeLv" id="gradeLv">
 							<li>
 								<div class="liIn">
 									<p class="shu"><span class="shu1">7</span><i>%</i></p>
@@ -505,7 +505,7 @@
 				<div class="biaoge" style="width:100%; height:30vh" id="chartmain_bing"></div>
 				<script type="text/javascript" th:inline="javascript">
                     var grade = [[${dataTwo.grade}]];
-                    var gradeNumber = [[${dataTwo.gradeNumber}]];
+                    var gradeNumber = [[${dataSix}]];
 
 					option = {
 						title: {
@@ -530,7 +530,7 @@
 							top: 40,
 							bottom: 20,
 							left: 'right',
-							data: [grade],
+							data: grade,
 							textStyle: {
 								color: '#fff',
 								fontSize: 12
@@ -550,14 +550,7 @@
 								radius: '65%',
 								center: ['40%', '50%'],
 								selectedMode: 'single',
-								data: [
-									{value: gradeNumber[0], name: '一年级'},
-									{value: gradeNumber[1], name: '二年级'},
-									{value: gradeNumber[2], name: '三年级'},
-									{value: gradeNumber[3], name: '四年级'},
-									{value: gradeNumber[4], name: '五年级'},
-									{value: gradeNumber[5], name: '六年级'}
-								],
+								data: gradeNumber,
 								emphasis: {
 									itemStyle: {
 										shadowBlur: 10,
@@ -598,7 +591,7 @@
 
 						</div>
 						<div class="bd">
-							<ul class="ul_list">
+							<ul class="ul_list" id="studentlist">
 								<li><span><a href="/skip/geren">何启豪</a></span><span>2年2班</span><span>9</span><span>4.8</span><span>4.8</span></li>
 								<li><span><a href="/skip/geren">李晨生</a></span><span>3年4班</span><span>10</span><span>4.5</span><span>4.7</span></li>
 								<li><span><a href="/skip/geren">李天鹏</a></span><span>3年4班</span><span>10</span><span>4.6</span><span>5.0</span></li>
@@ -814,8 +807,30 @@
 
 <script type="text/javascript" th:inline="javascript">
 
+	var dataFive = [[${dataFive}]];
+	if (dataFive.length>0) {
+        var html = '';
+        for (var i = 0; i < dataFive.length; i++) {
+			html += '<li><div class="liIn"><p class="shu"><span class="shu'+(i+1)+'">'+dataFive[i].lv+'</span><i>%</i></p><p class="zi">'+dataFive[i].grade+'</p></div></li>'
+        }
+        $("#gradeLv").html(html)
+    }
+    var dataThree = [[${dataThree}]];
+	if (dataThree.length>0){
+	    var html = '';
+	    for (var i = 0;i<dataThree.length;i++){
+	        html+='<li><span><a href="/skip/geren?name='+dataThree[i].student_name+'&idCard='+dataThree[i].identity_card+'">'+dataThree[i].student_name+'</a></span><span>'+dataThree[i].grade+'</span><span>'+dataThree[i].age+'</span><span>'+dataThree[i].naked_farvision_od+'</span><span>'+dataThree[i].naked_farvision_os+'</span></li>'
+		}
+		$('#studentlist').html(html)
+	}
 	var dataFour = [[${dataFour}]];
-
+	if (dataFour.length>0){
+	    var html = '<li><div class="liIn"><div class="liIn_left"><span class="bot"></span><span class="zi" >'+dataFour[0].gradeClass+'</span></div><div class="liIn_line"><div class="line_lineIn" style="width:'+dataFour[0].lv+'%;"></div></div><p class="num">'+dataFour[0].lv+'%</p></div></li>';
+        for (var i = 1; i <dataFour.length ; i++) {
+			html+='<li><div class="liIn liIn'+(i+1)+'"><div class="liIn_left"><span class="bot"></span><span class="zi" >'+dataFour[i].gradeClass+'</span></div><div class="liIn_line"><div class="line_lineIn" style="width:'+dataFour[i].lv+'%;"></div></div><p class="num">'+dataFour[i].lv+'%</p></div></li>'
+        }
+        $('#paiMing').html(html)
+	}
 
 
 	$(".shu1").numScroll();
