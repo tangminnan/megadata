@@ -35,7 +35,7 @@
 					</li>
 					<li>
 						<div class="liIn">
-							<h3>实际筛查人数</h3>
+							<h3>本次筛查人数</h3>
 							<p class="shu"><span class="shu2" th:text="${dataOne.schoolThisNumber}"></span><i>人</i></p>
 							<!--<div class="zi"><span class="span1">小标题：文字</span><span>小标题：文字</span></div>-->
 							<span class="border_bg_leftTop"></span>
@@ -70,7 +70,7 @@
 					<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
 					<div class="biaoge" style="height:24vh;" id="chartmain"></div>
 					<script type="text/javascript" th:inline="javascript">
-						//window.onload = function () {
+						// window.onload = function () {
 						//指定图表的配置项和数据
 						var dataAxis = [[${dataTwo.everyTime}]];
 						var data = [[${dataTwo.zxjsLv}]];
@@ -190,7 +190,7 @@
 						var myChart = echarts.init(document.getElementById('chartmain'));
 						// 使用刚指定的配置项和数据显示图表。
 						myChart.setOption(option);
-						//};
+						// };
 					</script>
 					<span class="border_bg_leftTop"></span>
 					<span class="border_bg_rightBottom"></span>
@@ -659,7 +659,7 @@
 			<div class="leftMain_middle_leftIn">
 				<div class="biaoge" id="chartmain_zheOpen"></div>
 				<script type="text/javascript" th:inline="javascript">
-					//window.onload = function (){
+					// window.onload = function (){
 					//指定图表的配置项和数据
                     var zxjsLvt = [[${dataTwo.zxjsLv}]];
                     var lcqqLvt = [[${dataTwo.lcqqLv}]];
@@ -793,7 +793,7 @@
 					var myChart = echarts.init(document.getElementById('chartmain_zheOpen'));
 					// 使用刚指定的配置项和数据显示图表。
 					myChart.setOption(option);
-					//};
+					// };
 				</script>
 				<span class="border_bg_leftTop"></span>
 				<span class="border_bg_rightBottom"></span>
@@ -819,7 +819,7 @@
 	if (dataThree.length>0){
 	    var html = '';
 	    for (var i = 0;i<dataThree.length;i++){
-	        html+='<li><span><a href="/skip/geren?name='+dataThree[i].student_name+'&idCard='+dataThree[i].identity_card+'">'+dataThree[i].student_name+'</a></span><span>'+dataThree[i].grade+'</span><span>'+dataThree[i].age+'</span><span>'+dataThree[i].naked_farvision_od+'</span><span>'+dataThree[i].naked_farvision_os+'</span></li>'
+	        html+='<li><span><a href="/skip/geren?name='+dataThree[i].student_name+'&idCard='+dataThree[i].identity_card+'&checkdate='+dataThree[i].checkdate+'&checkType='+dataThree[i].checkType+'">'+dataThree[i].student_name+'</a></span><span>'+dataThree[i].grade+'</span><span>'+dataThree[i].age+'</span><span>'+dataThree[i].naked_farvision_od+'</span><span>'+dataThree[i].naked_farvision_os+'</span></li>'
 		}
 		$('#studentlist').html(html)
 	}
@@ -833,12 +833,12 @@
 	}
 
 
-	$(".shu1").numScroll();
-	$(".shu2").numScroll();
-	$(".shu3").numScroll();
-	$(".shu4").numScroll();
-	$(".shu5").numScroll();
-	$(".shu6").numScroll();
+	// $(".shu1").numScroll();
+	// $(".shu2").numScroll();
+	// $(".shu3").numScroll();
+	// $(".shu4").numScroll();
+	// $(".shu5").numScroll();
+	// $(".shu6").numScroll();
 
 	$(".lookat").click(function(){
 		$("#popLineshow").show();

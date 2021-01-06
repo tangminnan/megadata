@@ -20,8 +20,8 @@ public class skipController {
     private RedisTemplate redisTemplate;
 
     @GetMapping("/school")
-    public String skipToSchool(Model model, String school, String CityName, String AreaName, String checkdate){
-
+    public String skipToSchool(Model model, String school, String CityName, String AreaName, String checkdate,String checkType){
+        System.out.println(checkType);
         Map<String, String> dataOne;
         dataOne = redisTemplate.opsForHash().entries(school+AreaName+checkdate+"dataOne");
         if(dataOne.isEmpty()){
@@ -39,7 +39,7 @@ public class skipController {
         List<Map> dataThree;
         dataThree = redisTemplate.opsForList().range(school+AreaName+checkdate+"dataThree",0,-1);
         if (dataThree.size()==0){
-            dataThree = schoolservice.dataThree(school, CityName, AreaName, checkdate);
+            dataThree = schoolservice.dataThree(school, CityName, AreaName, checkdate,checkType);
         }
 //        redisTemplate.opsForList().rightPushAll(school+AreaName+checkdate+"dataThree",dataThree);
 
@@ -111,8 +111,13 @@ public class skipController {
     }
 
     @GetMapping("/geren")
-    public String skipToGeRen(Model model, String name,String idCard){
+    public String skipToGeRen(Model model, String name,String idCard,String checkdate,String checkType){
         model.addAttribute("name","您好，"+name+"!");
+        Map gerenAdvice  = schoolservice.gerenAdvice(name, idCard, checkdate);
+        List<Map> table = schoolservice.table(name, idCard);
+
+        model.addAttribute("gerenAdvice",gerenAdvice);
+        model.addAttribute("table",table);
         return "geren";
     }
 }

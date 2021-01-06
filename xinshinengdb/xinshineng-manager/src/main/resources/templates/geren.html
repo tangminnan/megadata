@@ -47,11 +47,11 @@
         	<div class="zdjg">
         		<dl>
         			<dt>左眼初步建议与预警提示：</dt>
-        			<dd>视力目前正常，<strong style="color: red">近视临床前期</strong>。请注意卫生用眼，避免长时间近距离持续用眼，多参加户外活动，建议建立完善的视觉健康档案，防控近视的发生，更好地进行近视发生的预警。</dd>
+        			<dd th:text="${gerenAdvice.zdoctorchubu}"></dd>
         		</dl>
         		<dl>
         			<dt>右眼初步建议与预警提示：</dt>
-        			<dd>视力目前正常，<strong style="color: red">近视临床前期</strong>。请注意卫生用眼，避免长时间近距离持续用眼，多参加户外活动，建议建立完善的视觉健康档案，防控近视的发生，更好地进行近视发生的预警。</dd>
+        			<dd th:text="${gerenAdvice.ydoctorchubu}"></dd>
         		</dl>
         	</div>
  			<div class="zheLine">
@@ -80,7 +80,7 @@
                   <th> </th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody id="gerentable">
                 <tr>
                   <td>2020-06-17</td>
                   <td>左：5.0</td>
@@ -103,6 +103,16 @@
             </table>
         </div>
     </div>
+   <script type="text/javascript" th:inline="javascript">
+       var table = [[${table}]];
+       var html = '';
+       if (table.length>0) {
+           for (var i = 0; i <table.length ; i++) {
+               html+='<tr><td>'+table[i].checkdate+'</td><td>左：'+table[i].luoyanl+'</td><td>右：'+table[i].luoyanr+'</td><td><a href="/skip/gerenchakan?name='+table[i].name+'&idCard='+table[i].idCard+'&checkdate='+table[i].checkdate+'" target=\'_blank\'>查看</a></td></tr>'
+           }
+           $('#gerentable').html(html)
+       }
+   </script>
 </body>
 </html>
 <script>

@@ -515,40 +515,6 @@ public class ShaichaStudentServiceImpl implements ShaichaStudentService {
 	}
 
 
-	@Override
-	public Map getEveryYearCount(String checkType) {
-		Map<String,Long> resultMap = new HashMap<>();
-		resultMap.put("in2012",0L);
-		resultMap.put("in2013",0L);
-		resultMap.put("in2014",0L);
-		resultMap.put("in2015",0L);
-		resultMap.put("in2018",0L);
-		resultMap.put("in2019",0L);
-		resultMap.put("in2020",0L);
-		if ("all".equals(checkType)){
-			Long shaiChaIn2020 = studentDao.getShaiChaNewEveryYearCount();
-			resultMap.put("in2020",resultMap.get("in2020")+shaiChaIn2020);
-			List<Map<String,Long>> shaiChaOldData = studentDao.getShaiChaOldEveryYearCount();
-			addEveryYearCount(resultMap,shaiChaOldData);
-			Long liuDiaoIn2020 = liuDiaoDao.getLiuDiaoNewEveryYearCount();
-			resultMap.put("in2020",resultMap.get("in2020")+liuDiaoIn2020);
-			List<Map<String,Long>> liuDiaoOldData = liuDiaoDao.getLiuDiaoOldEveryYearCount();
-			addEveryYearCount(resultMap,liuDiaoOldData);
-		}
-		if ("shaiCha".equals(checkType)){
-			Long shaiChaIn2020 = studentDao.getShaiChaNewEveryYearCount();
-			resultMap.put("in2020",resultMap.get("in2020")+shaiChaIn2020);
-			List<Map<String,Long>> shaiChaOldData = studentDao.getShaiChaOldEveryYearCount();
-			addEveryYearCount(resultMap,shaiChaOldData);
-		}
-		if ("liuDiao".equals(checkType)){
-			Long liuDiaoIn2020 = liuDiaoDao.getLiuDiaoNewEveryYearCount();
-			resultMap.put("in2020",resultMap.get("in2020")+liuDiaoIn2020);
-			List<Map<String,Long>> liuDiaoOldData = liuDiaoDao.getLiuDiaoOldEveryYearCount();
-			addEveryYearCount(resultMap,liuDiaoOldData);
-		}
-		return resultMap;
-	}
 
 	static void addEveryYearCount(Map<String,Long> resultMap,List<Map<String,Long>> dataMap){
 		for (Map<String, Long> map : dataMap) {
@@ -964,24 +930,6 @@ public class ShaichaStudentServiceImpl implements ShaichaStudentService {
 			resultMap.put("lc",lcList);
 			resultMap.put("jx",jxList);
 			resultMap.put("zx",zxList);
-			/*List<Map<String,Object>> liudiaoyuceData =  liuDiaoDao.get2020YuCeData();
-			ResponseEntity<String> responseEntity = restTemplate.postForEntity("http://121.36.21.238:8081/vision_analyze/api/vision/visionAnalyze", 1, String.class);
-			String response = responseEntity.getBody();*/
-
-		/*if ("shaiCha".equals(checkType)){
-			List<Map<String,Object>> shaiChaiNewData = studentDao.getDevelopmentAndWarningDataForNew();
-			List<Map<String,Object>> shaiChaiOldData =studentDao.getDevelopmentAndWarningDataForOld();
-			Map<String, List<Integer>> map1 = processTheDataForShaiCha(shaiChaiNewData);
-			Map<String, List<Integer>> map2 = processTheDataForShaiCha(shaiChaiOldData);
-			resultMap = processTheDataForMap(map1, map2);
-		}
-		if ("liuDiao".equals(checkType)){
-			List<Map<String,Object>> liuDiaoNewData =liuDiaoDao.getDevelopmentAndWarningDataForNew();
-			List<Map<String,Object>> liuDIaoOldData =liuDiaoDao.getDevelopmentAndWarningDataForOld();
-			Map<String, List<Integer>> map3 = processTheDataForLiuDiao(liuDiaoNewData);
-			Map<String, List<Integer>> map4 = processTheDataForLiuDiao(liuDIaoOldData);
-			resultMap = processTheDataForMap(map3, map4);
-		}*/
 		return resultMap;
 	}
 
@@ -1313,6 +1261,7 @@ public class ShaichaStudentServiceImpl implements ShaichaStudentService {
 				map.put("lcLv",lcLv);
 				map.put("zxLv",jxLv);
 				map.put("jxLv",zxLv);
+				map.put("checkType","sc");
 				resultMap.set(i,map);
 			}
 			redisTemplate.opsForList().rightPushAll(checkCity + checkArea + "SchoolData",resultMap);
@@ -1322,70 +1271,6 @@ public class ShaichaStudentServiceImpl implements ShaichaStudentService {
 		}
 
 		return  resultMap;
-	}
-
-	private List<Map<String, Object>> jiSuanOleAndNewSchoolNum(List<Map<String, Object>> list1, List<Map<String, Object>> list2) {
-		List<Map<String,Object>> result = new ArrayList<>();
-		List<String> schList = new ArrayList<>();
-		if (list1.size()>0 && list1!=null){
-			for (Map<String, Object> map : list1) {
-				schList.add((String) map.get("OrgName"));
-				result.add(map);
-			}
-		}
-		if (list2.size()>0 && list2 !=null){
-			for (Map<String, Object> map : list2) {
-				if (!schList.contains(map.get("OrgName"))){
-					result.add(map);
-					continue;
-				}
-				for (int i = 0; i < result.size(); i++) {
-					Map<String, Object> map2 = result.get(i);
-					if (map2.get("OrgName").equals(map.get("OrgName"))){
-						map2.put("num",(Long)map2.get("num")+(Long)map.get("num"));
-						result.set(i,map2);
-					}
-				}
-			}
-		}
-
-
-		return result;
-	}
-	private List<Map<String, Object>> jiSuanShaiChaAndLiuDiaoSchoolNum(List<Map<String, Object>> shaiChaSchoolNum, List<Map<String, Object>> liudiaoSchoolNum) {
-		List<Map<String,Object>> result = new ArrayList<>();
-		List<String> schList = new ArrayList<>();
-		if (shaiChaSchoolNum.size()>0 && shaiChaSchoolNum!=null){
-			for (Map<String, Object> map : shaiChaSchoolNum) {
-				schList.add((String) map.get("OrgName"));
-				Map<String,Object> shaichaMap=new HashMap<>();
-				shaichaMap.put("OrgName",map.get("OrgName"));
-				shaichaMap.put("ShaiChaNum",map.get("num"));
-				shaichaMap.put("LiuDiaoNum",0);
-				result.add(shaichaMap);
-			}
-		}
-		if (liudiaoSchoolNum.size()>0 && liudiaoSchoolNum !=null){
-			for (Map<String, Object> map : liudiaoSchoolNum) {
-				if (!schList.contains(map.get("OrgName"))){
-					Map<String,Object> shaichaMap=new HashMap<>();
-					shaichaMap.put("OrgName",map.get("OrgName"));
-					shaichaMap.put("ShaiChaNum",0);
-					shaichaMap.put("LiuDiaoNum",map.get("num"));
-					continue;
-				}
-				for (int i = 0; i < result.size(); i++) {
-					Map<String, Object> map2 = result.get(i);
-					if (map2.get("OrgName").equals(map.get("OrgName"))){
-						map2.put("LiuDiaoNum",(Long)map2.get("LiuDiaoNum")+(Long)map.get("num"));
-						result.set(i,map2);
-					}
-				}
-			}
-		}
-
-
-		return result;
 	}
 
 	@Override

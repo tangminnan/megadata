@@ -1199,7 +1199,7 @@ WHERE identity_card IN
     	s_student_school_he
     WHERE
     	school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName}
-    AND DATE_FORMAT(last_check_time, '%Y') >= '2019'
+    AND DATE_FORMAT(last_check_time, '%Y') >= '2019' and dengxiaoqiujingl is not NULL and dengxiaoqiujingr is not NULL and  naked_farvision_od is not NULL and naked_farvision_os is not NULL and naked_farvision_od != '0' and naked_farvision_os != '0' and naked_farvision_os != '' and naked_farvision_od != ''
     GROUP BY
     	DATE_FORMAT(last_check_time, '%Y-%m')
 	</select>
@@ -1443,5 +1443,11 @@ WHERE identity_card IN
 		GROUP BY
 		grade) as bb
 		WHERE bb.grade = aa.grade GROUP BY lv desc
+	</select>
+	<select id="advice" resultType="map">
+		SELECT naked_farvision_od luoyanr,naked_farvision_os luoyanl,dengxiaoqiujingr,dengxiaoqiujingl,diopter_c_od zhujingr,diopter_c_os zhujingl,correction_farvision_od daijingr,correction_farvision_os daijingl FROM s_student_school_he WHERE student_name = #{name} and identity_card = #{idCard} and DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate}
+	</select>
+	<select id="table" resultType="map">
+		SELECT student_name name,identity_card idCard,naked_farvision_od luoyanr,naked_farvision_os luoyanl,DATE_FORMAT(last_check_time,'%Y-%m-%d') checkdate FROM s_student_school_he where	student_name = #{name} and identity_card = #{idCard} and naked_farvision_od is not NULL and naked_farvision_os is not NULL and last_check_time is not NULL ORDER BY last_check_time desc
 	</select>
 </mapper>
