@@ -191,5 +191,12 @@ public interface ShaichaStudentDao {
 	List<Map> yanzhou (@Param("name")String name, @Param("idCard")String idCard);
 	List<Map> luoyan (@Param("name")String name, @Param("idCard")String idCard);
 	List<Map> dengxiaoqiujing (@Param("name")String name, @Param("idCard")String idCard);
+
 	String maxcheckdate (@Param("name")String name, @Param("idCard")String idCard);
+
+
+    int login(@Param("username") String username, @Param("password") String password);
+
+	String getLastCheckDate(@Param("username") String username, @Param("password") String password);
+
 }

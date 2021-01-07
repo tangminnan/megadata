@@ -451,7 +451,9 @@
 			</div>
 			<div class="leftMain_middle_right">
 				<div class="leftMain_middle_rightIn">
-					<h3>各年级近视情况</h3>
+
+					<h3 id="TZ"></h3>
+
 					<div class="biaoge biaoge_bi" style="width:100%; height:24vh">
 						<ul class="gradeLv" id="gradeLv">
 							<li>
@@ -802,10 +804,17 @@
 	</div>
 
 </div>
-<div th:include="include::footer"></div>
+
 <!--数字增长累加动画-->
 
 <script type="text/javascript" th:inline="javascript">
+
+	var school = [[${dataOne.school}]];
+	var checkType = [[${checkType}]];
+	var CityName = [[${CityName}]];
+	var AreaName = [[${AreaName}]];
+	var href = '/skip/Newhuyan?school='+school+'&checkType='+checkType+'&CityName='+CityName+'&AreaName='+AreaName;
+	$("#TZ").html('各年级近视情况<a '+'href='+href+'>矫正培养</a>')
 
 	var dataFive = [[${dataFive}]];
 	if (dataFive.length>0) {

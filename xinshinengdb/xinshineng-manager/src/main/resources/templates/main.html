@@ -830,13 +830,13 @@
                                    '<td>'+data[i].check_time+'</td>'+
                                    '<td><a href='+href+'>'+data[i].school+'</a>'+'</td>'+
                                    '<td>'+data[i].num+'</td>' +
-                                   '<td>0</td>' +
-                                   '<td>'+data[i].lcLv+'%'+'</td>' +
-                                   '<td>'+data[i].jxLv+'%'+'</td>' +
-                                   '<td>'+data[i].zxLv+'%'+'</td>' +
-                                   '<td>0%</td>' +
-                                   '<td>0%</td>' +
-                                   '<td>0%</td>' +
+                                   '<td>'+data[i].ldNum+'</td>' +
+                                   '<td>'+data[i].sclcLv+'%'+'</td>' +
+                                   '<td>'+data[i].scjxLv+'%'+'</td>' +
+                                   '<td>'+data[i].sczxLv+'%'+'</td>' +
+                                   '<td>'+data[i].ldlcLv+'%'+'</td>' +
+                                   '<td>'+data[i].ldjxLv+'%'+'</td>' +
+                                   '<td>'+data[i].ldzxLv+'%'+'</td>' +
                                    '</tr>'
                            }
                            $("#map_table").html(
@@ -857,7 +857,7 @@
                             <ul class="infoList">`;
                                      var html4=``;
                                      for (let i = 0; i < data.length; i++) {
-                                         html4+=`<li><span class="num">`+data[i].check_time+`</span><span class="name">`+data[i].school+`</span><span class="shuL">`+data[i].zxLv+`%</span></li>`
+                                         html4+=`<li><span class="num">`+data[i].check_time+`</span><span class="name">`+data[i].school+`</span><span class="shuL">`+data[i].sczxLv+`%</span></li>`
                                      }
                                      var html5 = html3+html4+`</ul></div>`;
                                      $("#gundong").html(html5);
@@ -1463,7 +1463,7 @@
                         parent.layer.alert("网络超时");
                     },
                     success: function (data) {
-                        var html1=`<h2>`+checkCity+`师范学校近视率</h2>
+                        var html1=`<h2>`+checkCity+`示范学校近视率</h2>
                             <div class="hd">
                             <ul>
                             <li class="HHup" id="HHnext"><a class="next"></a></li>

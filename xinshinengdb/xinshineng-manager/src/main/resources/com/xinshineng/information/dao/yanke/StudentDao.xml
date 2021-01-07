@@ -689,4 +689,40 @@ SELECT
   AND y1_x IS NOT NULL AND diopter_s2 IS NOT NULL AND diopter_c2 IS NOT NULL AND diopter_a2 IS NOT NULL AND y2_x IS NOT NULL AND corneal_mm IS NOT NULL AND eyeaxis IS NOT NULL AND eyepressure IS NOT NULL
   AND age IS NOT NULL AND eyeaxis_corneal IS NOT NULL AND winter IS NOT NULL AND corneal_d IS NOT NULL
 	</select>
+
+
+	<select id="getSchoolNum" resultType="java.util.Map">
+		SELECT DATE_FORMAT(last_check_time,'%Y-%m') check_time,school,COUNT(student_new_id) num FROM y_student_school_he WHERE
+last_check_time IS NOT NULL AND dengxiaoqiujing_od_first IS NOT NULL AND dengxiaoqiujing_os_first IS NOT NULL
+AND dengxiaoqiujing_od_second IS NOT NULL AND dengxiaoqiujing_os_second AND CityName = #{checkCity} AND AreaName = #{checkArea} GROUP BY school
+	</select>
+
+	<select id="getSchoolLCNum" resultType="long">
+		SELECT COUNT(DXQJF) num FROM
+		(SELECT LEAST(dengxiaoqiujing_od_first,dengxiaoqiujing_os_first) DXQJF,LEAST(dengxiaoqiujing_od_second,dengxiaoqiujing_os_second) DXQJS FROM y_student_school_he WHERE
+		last_check_time IS NOT NULL AND dengxiaoqiujing_od_first IS NOT NULL AND dengxiaoqiujing_os_first IS NOT NULL
+		AND dengxiaoqiujing_od_second IS NOT NULL AND dengxiaoqiujing_os_second AND CityName = #{checkCity} AND AreaName = #{checkArea} AND DATE_FORMAT(last_check_time,'%Y-%m') =#{check_time} AND school=#{school}) stu
+		WHERE DXQJS &gt;-0.5 AND DXQJS &lt;=0.75
+	</select>
+	<select id="getSchoolZXNum" resultType="long">
+		SELECT COUNT(DXQJF) num FROM
+		(SELECT LEAST(dengxiaoqiujing_od_first,dengxiaoqiujing_os_first) DXQJF,LEAST(dengxiaoqiujing_od_second,dengxiaoqiujing_os_second) DXQJS FROM y_student_school_he WHERE
+		last_check_time IS NOT NULL AND dengxiaoqiujing_od_first IS NOT NULL AND dengxiaoqiujing_os_first IS NOT NULL
+		AND dengxiaoqiujing_od_second IS NOT NULL AND dengxiaoqiujing_os_second AND CityName = #{checkCity} AND AreaName = #{checkArea} AND DATE_FORMAT(last_check_time,'%Y-%m') =#{check_time} AND school=#{school}) stu
+		WHERE DXQJS &lt;=-0.5
+	</select>
+	<select id="getSchoolJXNum" resultType="long">
+		SELECT COUNT(DXQJF) num FROM
+		(SELECT LEAST(dengxiaoqiujing_od_first,dengxiaoqiujing_os_first) DXQJF,LEAST(dengxiaoqiujing_od_second,dengxiaoqiujing_os_second) DXQJS FROM y_student_school_he WHERE
+		last_check_time IS NOT NULL AND dengxiaoqiujing_od_first IS NOT NULL AND dengxiaoqiujing_os_first IS NOT NULL
+		AND dengxiaoqiujing_od_second IS NOT NULL AND dengxiaoqiujing_os_second AND CityName = #{checkCity} AND AreaName = #{checkArea} AND DATE_FORMAT(last_check_time,'%Y-%m') =#{check_time} AND school=#{school}) stu
+		WHERE DXQJF &lt;-0.5 AND DXQJS &gt;-0.5 AND (DXQJS-DXQJF)&gt;0.5
+	</select>
+
+	<select id="login" resultType="int">
+		SELECT COUNT(id) FROM y_student_school_he WHERE student_name = #{username} AND identity_card = #{password} AND last_check_time IS NOT NULL AND naked_farvision_od IS NOT NULL AND naked_farvision_os IS NOT NULL
+	</select>
+	<select id="getLastCheckDate" resultType="string">
+		SELECT MAX(DATE_FORMAT(last_check_time,'%Y-%m')) checkdate FROM y_student_school_he WHERE student_name = #{username} AND identity_card = #{password}
+	</select>
 </mapper>

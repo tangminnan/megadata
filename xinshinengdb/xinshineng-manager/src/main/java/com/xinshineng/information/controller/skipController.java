@@ -72,6 +72,9 @@ public class skipController {
             model.addAttribute("dataOne",dataOne);
         }
 
+        model.addAttribute("checkType",checkType);
+        model.addAttribute("CityName",CityName);
+        model.addAttribute("AreaName",AreaName);
         return "school";
     }
 
@@ -127,6 +130,16 @@ public class skipController {
         model.addAttribute("gerenAdvice",gerenAdvice);
         model.addAttribute("table",table);
         model.addAttribute("echarts",echarts);
+
         return "geren";
     }
+    @GetMapping("/Newhuyan")
+    public String skipToNewhuyan(Model model,String school, String CityName, String AreaName, String checkType){
+        model.addAttribute("CityName",CityName);
+        model.addAttribute("AreaName",AreaName);
+        model.addAttribute("checkType",checkType);
+        model.addAttribute("school",school);
+        return "NEWrenwu";
+    }
+
 }

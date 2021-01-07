@@ -1057,7 +1057,7 @@ background-size: cover;}
 .renwuBox .hd li{float: left;width: 25%;text-align: center;padding:2% 3% 0;margin-bottom:3%;cursor: pointer;padding-bottom:30px;}
 .renwuBox .hd li img{border:1px solid #ddd;transition:0.3s;width:180px;height:180px;}
 .renwuBox .hd li.on{background:url(../img/sanjiao.png) no-repeat bottom center;}
-.renwuBox .hd li.on img{border-color: #e87504;box-shadow:0 0 20px #ccc;margin-top:-2%;}
+.renwuBox .hd li.on img{border-color: #e87504;box-shadow:0 0 10px #ccc;margin-top:-2%;}
 .renwuBox .hd li.on p{color:#e87504;}
 .renwuBox .bd{
 	border:8px solid #98d6f5;border-radius:10px;position: relative;
@@ -1085,7 +1085,7 @@ background-size: cover;}
 .renwuBox .bd .txt p span{color: #e97e06;}
 .renwuBox .bd .txt dl{margin-top:30px;line-height: 26px;margin-bottom:5%;overflow: hidden;}
 .renwuBox .bd .txt dl dd li{
-	float: left;width: 44%;border-bottom:1px solid #eee;padding:1.5% 0 1.5% 3%;margin:0 3%;
+	float: left;width: 44%;border-bottom:1px solid #eee;padding:1.5% 0 1.5% 35px;margin:0 3%;
 	background:url(../img/icon-1.png) no-repeat left center;
 	-webkit-background-size:24px 24px;
 	background-size:24px 24px;
@@ -1107,8 +1107,8 @@ background-size: cover;}
 	}
 
 .zidingyi{
-	color:#fff;width:300px;height:150px;
-	line-height:230px;
+	color:#fff;width:200px;height:100px;
+	line-height:150px;
 	font-size:22px;outline: none;
 	position: absolute;top:86px;right: 0;
 	background:url(../img/guapai.png) no-repeat center;
@@ -1173,17 +1173,53 @@ background-size: cover;}
 .YJpop table th:nth-child(2){background:#f4cc8d;}
 
 
+/*======================================2020/12/30新增护眼样式============================================*/
+.New_jieguo{margin-bottom: 20px;padding:0 5%;overflow: hidden;}
+.New_jieguo .LeftUp, .New_jieguo .LeftDown{background:#fff;width:40%;float: left;}
+.New_jieguo .LeftUp .xuebu{margin-bottom:40px;color:#333;}
+.New_jieguo .LeftUp select{border:1px solid #ddd;width: 80%;height:32px;font-size: 16px;background: #ecf9ff;font-weight: bold;padding-left:3%;}
+.New_jieguo .LeftDown{overflow: hidden;text-align: center;float: right;border:2px solid #98d6f5;padding:15px 0;}
+.New_jieguo .LeftDown h3{color:#0693da;font-size: 20px;border-bottom:2px solid #98d6f5;padding-bottom:20px;margin-bottom:20px;letter-spacing: 2px;}
+.New_jieguo .LeftDown li{float: left;width: 50%;color: #666;font-size: 14px;}
+.New_jieguo .LeftDown li span{color:#ff8a00;font-size:28px;display: block;margin-bottom:20px;}
+.New_jieguo .LeftDown li:nth-child(1){border-right:2px solid #98d6f5;}
 
-
-
-
-
-
-
-
-
-
-
+#New_hd{margin-bottom:15px;border-radius:10px;background-color: #fff;}
+#New_bd li select{border:1px solid #ddd;color:#e97e06;width:33%;height:32px;font-size: 15px;background: #f1dfc6;float: right;text-align: center;}
+#New_bd li{margin:0;width:45%;}
+#New_bd li:nth-child(even){float: right;}
+#New_bd{border:none;background-color: #fff;}
+#New_bd::after {
+    position: absolute;
+    top: -38px;
+    left: 28%;
+    background: url(../img/two.png) no-repeat top center;
+    width: 560px;
+    height: 60px;
+    content: "";
+    -webkit-background-size:contain;
+    background-size:contain;
+}
+.leftMain_middle_rightIn h3 a{
+    cursor: pointer;
+    background:#1499b1;
+    font-weight: normal;
+    padding:1% 4%;
+    position:absolute;
+    right: 0;top: 0;
+}
+.New_h3{color:#333;text-align: center;margin:30px 0 60px;font-size: 20px;position: relative;letter-spacing:3px;}
+.New_h3:after{
+	position: absolute;
+    bottom:-5px;
+    left: 50%;
+	margin-left:-30px;
+    background:#e97e06;
+    width: 60px;
+    height: 6px;
+    content: "";
+	border-radius:10px;
+}
 
 
 

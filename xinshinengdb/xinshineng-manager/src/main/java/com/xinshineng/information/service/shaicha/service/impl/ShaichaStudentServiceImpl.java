@@ -1240,12 +1240,12 @@ public class ShaichaStudentServiceImpl implements ShaichaStudentService {
 	@Override
 	public List<Map<String, Object>> getAreaSchoolData(String checkCity, String checkArea) {
 		DecimalFormat df = new DecimalFormat("0.0");
-		List<Map<String,Object>> resultMap = new ArrayList<>();
+		List<Map<String,Object>> resultList = new ArrayList<>();
 		Boolean flag = redisTemplate.hasKey(checkCity + checkArea + "SchoolData");
 		if (!flag){
-			 resultMap = studentDao.getSchoolNum(checkCity,checkArea);
-			for (int i = 0; i < resultMap.size(); i++) {
-				Map<String, Object> map = resultMap.get(i);
+			resultList = studentDao.getSchoolNum(checkCity,checkArea);
+			for (int i = 0; i < resultList.size(); i++) {
+				Map<String, Object> map = resultList.get(i);
 				String check_time = (String) map.get("check_time");
 				String school = (String) map.get("school");
 				Long lcNum = studentDao.getSchoolLCNum(checkCity,checkArea,school,check_time);
@@ -1258,19 +1258,59 @@ public class ShaichaStudentServiceImpl implements ShaichaStudentService {
 				String zxLv = df.format(bg.setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue() * 100);
 				bg = new BigDecimal((float) jxNum / num);
 				String jxLv = df.format(bg.setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue() * 100);
-				map.put("lcLv",lcLv);
-				map.put("zxLv",jxLv);
-				map.put("jxLv",zxLv);
+				map.put("sclcLv",lcLv);
+				map.put("sczxLv",jxLv);
+				map.put("scjxLv",zxLv);
+				map.put("ldNum",0);
+				map.put("ldlcLv",0);
+				map.put("ldzxLv",0);
+				map.put("ldjxLv",0);
 				map.put("checkType","sc");
-				resultMap.set(i,map);
+				resultList.set(i,map);
 			}
-			redisTemplate.opsForList().rightPushAll(checkCity + checkArea + "SchoolData",resultMap);
+			List<Map<String,Object>> liuDiaoSchool=  liuDiaoDao.getSchoolNum(checkCity,checkArea);
+			if (liuDiaoSchool.size()==0){
+				redisTemplate.opsForList().rightPushAll(checkCity + checkArea + "SchoolData",resultList);
+				return resultList;
+			}
+			if (liuDiaoSchool.size()>0){
+				for (int i = 0; i < liuDiaoSchool.size(); i++) {
+					Map<String, Object> map = liuDiaoSchool.get(i);
+					String check_time = (String) map.get("check_time");
+					String school = (String) map.get("school");
+					Long lcNum = liuDiaoDao.getSchoolLCNum(checkCity,checkArea,school,check_time);
+					Long zxNum = liuDiaoDao.getSchoolZXNum(checkCity,checkArea,school,check_time);
+					Long jxNum = liuDiaoDao.getSchoolJXNum(checkCity,checkArea,school,check_time);
+					Long num = (Long) map.get("num");
+					BigDecimal bg = new BigDecimal((float) lcNum / num);
+					String lcLv = df.format(bg.setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue() * 100);
+					bg = new BigDecimal((float) zxNum / num);
+					String zxLv = df.format(bg.setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue() * 100);
+					bg = new BigDecimal((float) jxNum / num);
+					String jxLv = df.format(bg.setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue() * 100);
+					map.put("sclcLv",0);
+					map.put("sczxLv",0);
+					map.put("scjxLv",0);
+					map.put("num",0);
+					map.put("ldNum",num);
+					map.put("ldlcLv",lcLv);
+					map.put("ldzxLv",zxLv);
+					map.put("ldjxLv",jxLv);
+					map.put("checkType","ld");
+					liuDiaoSchool.set(i,map);
+				}
+				resultList.addAll(liuDiaoSchool);
+				redisTemplate.opsForList().rightPushAll(checkCity + checkArea + "SchoolData",resultList);
+				return resultList;
+			}
+
 		}
 		if (flag){
-			resultMap = redisTemplate.opsForList().range(checkCity + checkArea + "SchoolData",0,-1);
+			resultList = redisTemplate.opsForList().range(checkCity + checkArea + "SchoolData",0,-1);
+			return resultList;
 		}
 
-		return  resultMap;
+		return  resultList;
 	}
 
 	@Override
