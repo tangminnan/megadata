@@ -1085,7 +1085,7 @@ background-size: cover;}
 .renwuBox .bd .txt p span{color: #e97e06;}
 .renwuBox .bd .txt dl{margin-top:30px;line-height: 26px;margin-bottom:5%;overflow: hidden;}
 .renwuBox .bd .txt dl dd li{
-	float: left;width: 44%;border-bottom:1px solid #eee;padding:1.5% 0 1.5% 35px;margin:0 3%;
+	float: left;width: 44%;border-bottom:1px solid #eee;padding:1.5% 0 1.5% 3%;margin:0 3%;
 	background:url(../img/icon-1.png) no-repeat left center;
 	-webkit-background-size:24px 24px;
 	background-size:24px 24px;
@@ -1107,8 +1107,8 @@ background-size: cover;}
 	}
 
 .zidingyi{
-	color:#fff;width:200px;height:100px;
-	line-height:150px;
+	color:#fff;width:300px;height:150px;
+	line-height:230px;
 	font-size:22px;outline: none;
 	position: absolute;top:86px;right: 0;
 	background:url(../img/guapai.png) no-repeat center;
@@ -1144,6 +1144,15 @@ background-size: cover;}
 .boyTxt dt{font-size: 18px;margin-bottom:10px;}
 .boyTxt dd{margin-bottom: 5px;}
 
+
+/*====孩子新增切换按钮20210106====*/
+.HnewBtn{width:100%;margin-bottom:30px;overflow: hidden;border-bottom:2px solid #f9ae40;}
+.HnewBtn li{float: left;width: 50%;text-align: center;cursor: pointer;color:#000;line-height:40px;margin-bottom: 1px;}
+.HnewBtn li.on{background:#fb6e10;color:#fff;font-weight: bold;}
+.HHxiangqing table td{width: 33.33%;}
+.ring2{position: absolute;top:605px;left:32%;width: 400px;height: 65px;}
+
+
 /*========================tsae治疗====================================*/
 .teas-top{text-align: center;background:#0f8cdc;font-weight: normal;font-size: 24px;padding:2% 0;color:#fff;margin-bottom: 1%;}
 .Teas{color:#333;}
@@ -1173,6 +1182,7 @@ background-size: cover;}
 .YJpop table th:nth-child(2){background:#f4cc8d;}
 
 
+
 /*======================================2020/12/30新增护眼样式============================================*/
 .New_bd_left{float: left;width:33%;background:#f9ae40;padding:8px;border-radius:10px;margin-top: 40px;}
 .New_bd_left .LeftUp, .New_bd_left .LeftDown{background:#fff;padding:12% 5%;}
@@ -1193,22 +1203,36 @@ background-size: cover;}
 #bjnone dl{margin-bottom:0;}
 #bjnone dl dt{margin-bottom: 20px;}
 .New_botBtn{background: #fe6a10;color: #fff;width:300px;height:50px;font-size: 22px;
-	display: block;margin:3% auto 0;outline: none;cursor: pointer;border-radius:4px;}
+    display: block;margin:3% auto 0;outline: none;cursor: pointer;border-radius:4px;}
 #bjnone li select, .New_zidingyi li select{border:1px solid #ddd;color:#e97e06;width:33%;height:32px;font-size: 16px;background: #f1dfc6;float: right;text-align: center;outline: none;}
 #bjnone li{margin:0 0 10px 0;width:45%;border: none;}
 #bjnone li:nth-child(even){float: right;}
 
 /*学校按钮入口*/
 .leftMain_middle_rightIn h3 a{
-	cursor: pointer;
-	background:#1499b1;
-	font-weight: normal;
-	padding:1% 4%;
-	position:absolute;
-	right: 0;top: 0;
-	}
+    cursor: pointer;
+    background:#1499b1;
+    font-weight: normal;
+    padding:1% 4%;
+    position:absolute;
+    right: 0;top: 0;
+}
 
 /*自定义计划*/
 .New_zidingyi{width: 100%;-webkit-background-size:300px 90px;
-background-size:300px 90px;}
+    background-size:300px 90px;}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

@@ -14,7 +14,7 @@
    <div class="tophead">
    		<div class="main">
             <h1>眼健康咨询平台</h1>
-            <div class="showName" th:text="${name}"></div>
+            <div class="showName">您好，赵厚今！</div>
         </div>
     </div>
     
@@ -47,11 +47,11 @@
         	<div class="zdjg">
         		<dl>
         			<dt>左眼初步建议与预警提示：</dt>
-        			<dd th:text="${gerenAdvice.zdoctorchubu}"></dd>
+        			<dd>视力目前正常，<strong style="color: red">近视临床前期</strong>。请注意卫生用眼，避免长时间近距离持续用眼，多参加户外活动，建议建立完善的视觉健康档案，防控近视的发生，更好地进行近视发生的预警。</dd>
         		</dl>
         		<dl>
         			<dt>右眼初步建议与预警提示：</dt>
-        			<dd th:text="${gerenAdvice.ydoctorchubu}"></dd>
+        			<dd>视力目前正常，<strong style="color: red">近视临床前期</strong>。请注意卫生用眼，避免长时间近距离持续用眼，多参加户外活动，建议建立完善的视觉健康档案，防控近视的发生，更好地进行近视发生的预警。</dd>
         		</dl>
         	</div>
  			<div class="zheLine">
@@ -80,7 +80,7 @@
                   <th> </th>
                 </tr>
               </thead>
-              <tbody id="gerentable">
+              <tbody>
                 <tr>
                   <td>2020-06-17</td>
                   <td>左：5.0</td>
@@ -103,26 +103,15 @@
             </table>
         </div>
     </div>
-   <script type="text/javascript" th:inline="javascript">
-       var table = [[${table}]];
-       var html = '';
-       if (table.length>0) {
-           for (var i = 0; i <table.length ; i++) {
-               html+='<tr><td>'+table[i].checkdate+'</td><td>左：'+table[i].luoyanl+'</td><td>右：'+table[i].luoyanr+'</td><td><a href="/skip/gerenchakan?name='+table[i].name+'&idCard='+table[i].idCard+'&checkdate='+table[i].checkdate+'&checkType='+table[i].checkType+'" target=\'_blank\'>查看</a></td></tr>'
-           }
-           $('#gerentable').html(html)
-       }
-   </script>
 </body>
 </html>
-<script type="text/javascript" th:inline="javascript">
+<script>
 	
 	// 基于准备好的dom，初始化echarts实例
         var myChart1 = echarts.init(document.getElementById('main1'));
 		var myChart2 = echarts.init(document.getElementById('main2'));
 		var myChart3 = echarts.init(document.getElementById('main3'));
 
-        var echarts = [[${echarts}]];
 	
         //折线图1
         setTimeout(function () {
@@ -156,14 +145,13 @@
 				xAxis: {
 					type: 'category',
 					boundaryGap: false,
-					data: echarts.luoyantime,
+					data: ['2020-04','2020-06','2020-09'],
 					axisLabel: {
 							//formatter: '{value} 年',//单位
 							textStyle: {
 							   fontSize : 14 ,
 								color:'#000'
 						   },
-                        interval:0,
 						}
 				},
 				yAxis: {
@@ -190,7 +178,7 @@
 							  }
 							}
 						 },
-						data:echarts.luoyanl
+						data:[5.0,4.8,5.0]
 					},
 					{
 						name:'右眼',
@@ -205,7 +193,7 @@
 							  }
 							}
 						 },
-						data:echarts.luoyanr
+						data:[5.1,4.9,5.0]
 					}
 				]
 			};	
@@ -245,14 +233,13 @@
 				xAxis: {
 					type: 'category',
 					boundaryGap: false,
-					data: echarts.dengxiaoqiujingtime,
+					data: ['2020-04','2020-06','2020-09'],
 					axisLabel: {
 							//formatter: '{value} 年',//单位
 							textStyle: {
 							   fontSize : 14 ,
 								color:'#000'
 						   },
-                        interval:0,
 						}
 				},
 				yAxis: {
@@ -279,7 +266,7 @@
 							  }
 							}
 						 },
-						data:echarts.dengxiaoqiujingl
+						data:[-0.50,-0.75,-0.25]
 					},
 					{
 						name:'右眼',
@@ -295,7 +282,7 @@
 							  }
 							}
 						 },
-						data:echarts.dengxiaoqiujingr
+						data:[-0.75,-0.50,-0.25]
 					}
 				]
 			};	
@@ -335,14 +322,13 @@
 				xAxis: {
 					type: 'category',
 					boundaryGap: false,
-					data: echarts.yanzhoutime,
+					data: ['2020-04','2020-06','2020-09'],
 					axisLabel: {
 							//formatter: '{value} 年',//单位
 							textStyle: {
 							   fontSize : 14 ,
 								color:'#000'
 						   },
-                        interval:0,
 						}
 				},
 				yAxis: {
@@ -369,7 +355,7 @@
 							  }
 							}
 						 },
-						data:echarts.yanzhoul
+						data:[21.97,22.62,22.94]
 					},
 					{
 						name:'右眼',
@@ -384,7 +370,7 @@
 							  }
 							}
 						 },
-						data:echarts.yanzhour
+						data:[21.89,22.43,22.89]
 					}
 				]
 			};	
