@@ -1,17 +1,19 @@
 package com.xinshineng.information.service.shaicha.service.impl;
 
+import com.xinshineng.common.utils.ShiroUtils;
+import com.xinshineng.common.utils.TimeUtils;
 import com.xinshineng.information.dao.shaicha.ShaichaStudentDao;
 import com.xinshineng.information.service.shaicha.service.schoolService;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 public class schoolServiceImpl implements schoolService {
@@ -177,12 +179,199 @@ public class schoolServiceImpl implements schoolService {
     }
 
     @Override
-    public List<Map> table(String name, String idCard) {
+    public List<Map> table(String name, String idCard,String checkType) {
         List<Map> table = shaichaStudentDao.table(name, idCard);
+        for (int i = 0;i<table.size();i++) {
+            table.get(i).put("checkType",checkType);
+        }
         return table;
     }
+
     @Override
-    public Map report(String name, String idCard, String checkdate) {
+    public Map<String,List> echarts(String name, String idCard) {
+        List<Map> yanzhou = shaichaStudentDao.yanzhou(name, idCard);
+        List<Map> luoyan = shaichaStudentDao.luoyan(name, idCard);
+        List<Map> dengxiaoqiujing = shaichaStudentDao.dengxiaoqiujing(name, idCard);
+        fixList(yanzhou);
+        fixList(luoyan);
+        fixList(dengxiaoqiujing);
+        Map<String,List> map = new HashMap<>();
+        List yanzhour = new ArrayList();
+        List yanzhoul = new ArrayList();
+        List yanzhoutime = new ArrayList();
+        List luoyanr = new ArrayList();
+        List luoyanl = new ArrayList();
+        List luoyantime = new ArrayList();
+        List dengxiaoqiujingr = new ArrayList();
+        List dengxiaoqiujingl = new ArrayList();
+        List dengxiaoqiujingtime = new ArrayList();
+        for (int i = 3; i >=0 ; i--) {
+            luoyanr.add(luoyan.get(i).get("youyan"));
+            luoyanl.add(luoyan.get(i).get("zuoyan"));
+            luoyantime.add(luoyan.get(i).get("checkdate"));
+        }
+        for (int i = 3; i >=0 ; i--) {
+            yanzhour.add(yanzhou.get(i).get("youyan"));
+            yanzhoul.add(yanzhou.get(i).get("zuoyan"));
+            yanzhoutime.add(yanzhou.get(i).get("checkdate"));
+        }
+        for (int i = 3; i >=0 ; i--) {
+            dengxiaoqiujingr.add(dengxiaoqiujing.get(i).get("youyan"));
+            dengxiaoqiujingl.add(dengxiaoqiujing.get(i).get("zuoyan"));
+            dengxiaoqiujingtime.add(dengxiaoqiujing.get(i).get("checkdate"));
+        }
+        map.put("yanzhour",yanzhour);
+        map.put("yanzhoul",yanzhoul);
+        map.put("yanzhoutime",yanzhoutime);
+        map.put("dengxiaoqiujingr",dengxiaoqiujingr);
+        map.put("dengxiaoqiujingl",dengxiaoqiujingl);
+        map.put("dengxiaoqiujingtime",dengxiaoqiujingtime);
+        map.put("luoyanr",luoyanr);
+        map.put("luoyanl",luoyanl);
+        map.put("luoyantime",luoyantime);
+        return map;
+    }
+
+    @Override
+    public Map report(String name, String idCard, String checkdate,String checkType) {
+//        Map report = shaichaStudentDao.report(name, idCard, checkdate);
+//        Map<String, Object> params = new HashMap<String, Object>();
+//        //基本信息获取
+//        params.put("school", report.get("school"));
+//        params.put("grade",report.get("grade"));
+//        params.put("studentClass",report.get("student_class"));
+//        params.put("studentName",report.get("student_name"));
+//        params.put("studentSex", report.get("student_sex")==null?"":(int)report.get("student_sex")==1? "男":"女");
+//        params.put("lastCheckTime", new SimpleDateFormat("yyyy-MM-dd").format(report.get("last_check_time")));
+//        DecimalFormat df = new DecimalFormat("0.00");
+//        DecimalFormat df1 = new DecimalFormat("0.0");
+//
+//        //视力检查结果获取
+//        String nakedFarvisionOd="";
+//        String nakedFarvisionOs="";
+//        String correctionFarvisionOd="5.0";
+//        String correctionFarvisionOs="5.0";
+//
+//        nakedFarvisionOd=report.get("naked_farvision_od")==null?"":report.get("naked_farvision_od").toString();
+//        nakedFarvisionOs=report.get("grade")==null?"":report.get("grade").toString();
+//        correctionFarvisionOd=report.get("grade")==null?"":report.get("grade").toString();
+//        correctionFarvisionOs=report.get("grade")==null?"":report.get("grade").toString();
+//
+//        params.put("nakedFarvisionOd",zhuanhuan1(nakedFarvisionOd)==""?"":zhuanhuan1(nakedFarvisionOd));
+//        params.put("nakedFarvisionOs",zhuanhuan1(nakedFarvisionOs)==""?"":zhuanhuan1(nakedFarvisionOs));
+//        params.put("glassvisionOd",zhuanhuan1(correctionFarvisionOd)==""?"":zhuanhuan1(correctionFarvisionOd));
+//        params.put("glassvisionOs",zhuanhuan1(correctionFarvisionOd)==""?"":zhuanhuan1(correctionFarvisionOs));
+//
+//        //自动电脑验光结果(左眼)
+//        double dengxiaoqiujingL = 0.0,dengxiaoqiujingR=0.0;
+//
+//        String diopterSL="";
+//        if(resultDiopterDO.getDiopterS()!=null){
+//            diopterSL = df.format(zhuanhuan(resultDiopterDO.getDiopterS().toString()));
+//            if(Double.valueOf(diopterSL)>0){
+//                diopterSL="+"+diopterSL;
+//            }
+//        }
+//
+//        params.put("diopterSL",diopterSL);
+//        params.put("diopterCL",resultDiopterDO.getDiopterC()==null?"":df.format(zhuanhuan(resultDiopterDO.getDiopterC().toString())));
+//        params.put("diopterAL",resultDiopterDO.getDiopterA()==null?"":zhuanhuan(resultDiopterDO.getDiopterA().toString()));
+//        dengxiaoqiujingL=resultDiopterDO.getDengxiaoqiujing()==null?0.0:resultDiopterDO.getDengxiaoqiujing();
+//        double zhujingqL = resultDiopterDO.getDiopterC() == null ? 0.0 : resultDiopterDO.getDiopterC();
+//
+//
+//        //自动电脑验光结果(右眼)
+//        resultDiopterDOList = studentNewDao.getLatestResultDiopterDOListL(studentDO.getId(),"R");
+//        resultDiopterDO = new ResultDiopterNewDO();
+//        if(resultDiopterDOList.size()>0)
+//            resultDiopterDO=resultDiopterDOList.get(0);
+//        String diopterSR="";
+//        if(resultDiopterDO.getDiopterS()!=null){
+//            diopterSR = df.format(zhuanhuan(resultDiopterDO.getDiopterS().toString()));
+//            if(Double.valueOf(diopterSR)>0){
+//                diopterSR="+"+diopterSR;
+//            }
+//        }
+//
+//        params.put("diopterSR",diopterSR);
+//        params.put("diopterCR",resultDiopterDO.getDiopterC()==null?"":df.format(zhuanhuan(resultDiopterDO.getDiopterC().toString())));
+//        params.put("diopterAR",resultDiopterDO.getDiopterA()==null?"":zhuanhuan(resultDiopterDO.getDiopterA().toString()));
+//        dengxiaoqiujingR=resultDiopterDO.getDengxiaoqiujing()==null?0.0:resultDiopterDO.getDengxiaoqiujing();
+//        double zhujingqr = resultDiopterDO.getDiopterC() == null ? 0.0 : resultDiopterDO.getDiopterC();
+//
+//        //眼轴长度数据拼装
+//        List<ResultEyeaxisNewDO> resultEyeaxisDOList = studentNewDao.getLatelestResultEyeaxisDO(studentDO.getId());
+//        ResultEyeaxisNewDO resultEyeaxisDO = new ResultEyeaxisNewDO();
+//        if(resultEyeaxisDOList.size()>0)
+//            resultEyeaxisDO=resultEyeaxisDOList.get(0);
+//        params.put("secondCheckOd",resultEyeaxisDO.getFirstCheckOd()==null?"":zhuanhuan(resultEyeaxisDO.getFirstCheckOd().toString()));
+//        params.put("secondCheckOs", resultEyeaxisDO.getFirstCheckOs()==null?"":zhuanhuan(resultEyeaxisDO.getFirstCheckOs().toString()));
+//
+//        //角膜验光拼装
+//        ResultCornealNewDO resultCornealDO = new ResultCornealNewDO();
+//        List<ResultCornealNewDO> resultCornealDOList = studentNewDao.getResultCornealDOList(studentDO.getId(),"R","R1");
+//        if(resultCornealDOList.size()>0) resultCornealDO = resultCornealDOList.get(0);
+//        params.put("cornealMmr1R",resultCornealDO.getCornealMm()==null?"0":zhuanhuan(resultCornealDO.getCornealMm()));
+//        params.put("cornealDr1R", resultCornealDO.getCornealDeg()==null?"0":resultCornealDO.getCornealDeg());
+//        resultCornealDO = new ResultCornealNewDO();
+//        resultCornealDOList = studentNewDao.getResultCornealDOList(studentDO.getId(),"R","R2");
+//        if(resultCornealDOList.size()>0) resultCornealDO = resultCornealDOList.get(0);
+//        params.put("cornealMmr2R",resultCornealDO.getCornealMm()==null?"0":zhuanhuan(resultCornealDO.getCornealMm()));
+//        params.put("cornealDr2R", resultCornealDO.getCornealDeg()==null?"0":resultCornealDO.getCornealDeg());
+//
+//        resultCornealDO = new ResultCornealNewDO();
+//        resultCornealDOList = studentNewDao.getResultCornealDOList(studentDO.getId(),"L","R1");
+//        if(resultCornealDOList.size()>0) resultCornealDO = resultCornealDOList.get(0);
+//        params.put("cornealMmr1L",resultCornealDO.getCornealMm()==null?"0":zhuanhuan(resultCornealDO.getCornealMm()));
+//        params.put("cornealDr1L", resultCornealDO.getCornealDeg()==null?"0":resultCornealDO.getCornealDeg());
+//
+//
+//
+//        resultCornealDO = new ResultCornealNewDO();
+//        resultCornealDOList = studentNewDao.getResultCornealDOList(studentDO.getId(),"L","R2");
+//        if(resultCornealDOList.size()>0) resultCornealDO = resultCornealDOList.get(0);
+//
+//        params.put("cornealMmr2L",resultCornealDO.getCornealMm()==null?"0":zhuanhuan(resultCornealDO.getCornealMm()));
+//        params.put("cornealDr2L", resultCornealDO.getCornealDeg()==null?"0":resultCornealDO.getCornealDeg());
+//        //医生的建议
+//        Date birthday = studentDO.getBirthday()==null?new Date():studentDO.getBirthday();
+//        int birth = 0;
+//        try {
+//            birth = TimeUtils.getAgeByBirth(birthday);
+//
+//        } catch (ParseException e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        }
+//
+//        if(birth>=3 && birth<=5){
+//            params.put("ifStu","1");
+//        }else{
+//            params.put("ifStu","2");
+//        }
+//        double od=0.0,os=0.0;
+//        if(!StringUtils.isBlank(nakedFarvisionOd) && isDouble(nakedFarvisionOd)){
+//            od=Double.parseDouble(nakedFarvisionOd);
+//        }
+//        if(!StringUtils.isBlank(nakedFarvisionOs) && isDouble(nakedFarvisionOs)){
+//            os=Double.parseDouble(nakedFarvisionOs);
+//        }
+////	    od=od<os?od:os;
+////	    dengxiaoqiujingL=dengxiaoqiujingL<dengxiaoqiujingR?dengxiaoqiujingL:dengxiaoqiujingR;
+//        double yuanjingshiliL=0,yuanjingshiliR=0;//原镜视力
+//        String ssL="ss",ssR="ss";
+//        if(!StringUtils.isBlank(correctionFarvisionOd) && isDouble(correctionFarvisionOd)){
+////	    	correctionFarvisionOd=correctionFarvisionOd.compareTo(correctionFarvisionOs)>0?correctionFarvisionOs:correctionFarvisionOd;
+//            yuanjingshiliR=Double.parseDouble(correctionFarvisionOd);
+//        }
+//        if(!StringUtils.isBlank(correctionFarvisionOs) && isDouble(correctionFarvisionOs)){
+////	    	correctionFarvisionOd=correctionFarvisionOd.compareTo(correctionFarvisionOs)>0?correctionFarvisionOs:correctionFarvisionOd;
+//            yuanjingshiliL=Double.parseDouble(correctionFarvisionOs);
+//        }
+//        if(yuanjingshiliL==0)
+//            ssL="wuyuanjing";
+//        if(yuanjingshiliR==0)
+//            ssR="wuyuanjing";
         return null;
     }
 
@@ -324,6 +513,18 @@ public class schoolServiceImpl implements schoolService {
         return df.format(ff);
     }
 
+    /**
+     * 输出医生建议
+     * @param params
+     * @param od
+     * @param os
+     * @param dengxiaoqiujingR
+     * @param dengxiaoqiujingL
+     * @param zhujingqr
+     * @param zhujingqL
+     * @param yuanjingshiliR
+     * @param yuanjingshiliL
+     */
     public static void advice (Map<String, Object> params,Double od,Double os,Double dengxiaoqiujingR,Double dengxiaoqiujingL,Double zhujingqr,Double zhujingqL,Double yuanjingshiliR,Double yuanjingshiliL){
         if (od >= 5.0 && dengxiaoqiujingR > 0.75 && zhujingqr > -1.0) {
             params.put("ydoctorchubu", "视力目前正常，无近视发生。请注意卫生用眼，避免长时间近距离持续用眼，多参加户外活动，建议建立完善的视觉健康档案，更好地进行近视发生的预警。");
@@ -421,5 +622,42 @@ public class schoolServiceImpl implements schoolService {
         if (os < 5.0 && dengxiaoqiujingL < -0.5 && yuanjingshiliL < 5.0 && zhujingqL <= -1.0) {
             params.put("zdoctorchubu", "视力下降，近视，散光。建议及时到医院接受近视的详细检查，通过散瞳明确近视的程度并排除其他眼病；若已进行近视矫治，根据检查结果提示，眼镜度数可能需要调整，请及时到医院进行复查，采取科学的方法进行近视的防控或采取相应眼病治疗措施，避免低度近视发展为中度近视，避免中度近视发展为高度近视，减少高度近视的并发症发生。并请严格注意用眼卫生，避免长时间近距离持续用眼，多参加户外活动，建立完善的视觉健康档案，延缓近视的进展。");
         }
+    }
+
+    /**
+     * 将集合补全为4个
+     * @param param
+     */
+    public static void fixList (List<Map> param){
+        if (param.size()<4){
+            for (int i = param.size();i<4;i++){
+                Map map = new HashMap();
+                map.put("youyan",0);
+                map.put("zuoyan",0);
+                SimpleDateFormat sdFormat=new SimpleDateFormat("yyyy-MM");
+                try {
+                    Date date = sdFormat.parse(param.get(i-1).get("checkdate").toString());
+                    date.setMonth(date.getMonth()-6);
+                    String format = sdFormat.format(date);
+                    map.put("checkdate",format);
+                    param.add(i,map);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private static Object zhuanhuan1(Object s){
+        DecimalFormat df1 = new DecimalFormat("0.0");
+        String d=null;
+        if(s instanceof String){
+            if("".equals((String)s))
+                return "";
+            d = (String)s;
+        }
+        if(s instanceof Double)
+            d = df1.format(s);
+        return d;
     }
 }

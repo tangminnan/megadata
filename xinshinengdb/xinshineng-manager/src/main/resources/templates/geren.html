@@ -108,20 +108,21 @@
        var html = '';
        if (table.length>0) {
            for (var i = 0; i <table.length ; i++) {
-               html+='<tr><td>'+table[i].checkdate+'</td><td>左：'+table[i].luoyanl+'</td><td>右：'+table[i].luoyanr+'</td><td><a href="/skip/gerenchakan?name='+table[i].name+'&idCard='+table[i].idCard+'&checkdate='+table[i].checkdate+'" target=\'_blank\'>查看</a></td></tr>'
+               html+='<tr><td>'+table[i].checkdate+'</td><td>左：'+table[i].luoyanl+'</td><td>右：'+table[i].luoyanr+'</td><td><a href="/skip/gerenchakan?name='+table[i].name+'&idCard='+table[i].idCard+'&checkdate='+table[i].checkdate+'&checkType='+table[i].checkType+'" target=\'_blank\'>查看</a></td></tr>'
            }
            $('#gerentable').html(html)
        }
    </script>
 </body>
 </html>
-<script>
+<script type="text/javascript" th:inline="javascript">
 	
 	// 基于准备好的dom，初始化echarts实例
         var myChart1 = echarts.init(document.getElementById('main1'));
 		var myChart2 = echarts.init(document.getElementById('main2'));
 		var myChart3 = echarts.init(document.getElementById('main3'));
 
+        var echarts = [[${echarts}]];
 	
         //折线图1
         setTimeout(function () {
@@ -155,13 +156,14 @@
 				xAxis: {
 					type: 'category',
 					boundaryGap: false,
-					data: ['2020-04','2020-06','2020-09'],
+					data: echarts.luoyantime,
 					axisLabel: {
 							//formatter: '{value} 年',//单位
 							textStyle: {
 							   fontSize : 14 ,
 								color:'#000'
 						   },
+                        interval:0,
 						}
 				},
 				yAxis: {
@@ -188,7 +190,7 @@
 							  }
 							}
 						 },
-						data:[5.0,4.8,5.0]
+						data:echarts.luoyanl
 					},
 					{
 						name:'右眼',
@@ -203,7 +205,7 @@
 							  }
 							}
 						 },
-						data:[5.1,4.9,5.0]
+						data:echarts.luoyanr
 					}
 				]
 			};	
@@ -243,13 +245,14 @@
 				xAxis: {
 					type: 'category',
 					boundaryGap: false,
-					data: ['2020-04','2020-06','2020-09'],
+					data: echarts.dengxiaoqiujingtime,
 					axisLabel: {
 							//formatter: '{value} 年',//单位
 							textStyle: {
 							   fontSize : 14 ,
 								color:'#000'
 						   },
+                        interval:0,
 						}
 				},
 				yAxis: {
@@ -276,7 +279,7 @@
 							  }
 							}
 						 },
-						data:[-0.50,-0.75,-0.25]
+						data:echarts.dengxiaoqiujingl
 					},
 					{
 						name:'右眼',
@@ -292,7 +295,7 @@
 							  }
 							}
 						 },
-						data:[-0.75,-0.50,-0.25]
+						data:echarts.dengxiaoqiujingr
 					}
 				]
 			};	
@@ -332,13 +335,14 @@
 				xAxis: {
 					type: 'category',
 					boundaryGap: false,
-					data: ['2020-04','2020-06','2020-09'],
+					data: echarts.yanzhoutime,
 					axisLabel: {
 							//formatter: '{value} 年',//单位
 							textStyle: {
 							   fontSize : 14 ,
 								color:'#000'
 						   },
+                        interval:0,
 						}
 				},
 				yAxis: {
@@ -365,7 +369,7 @@
 							  }
 							}
 						 },
-						data:[21.97,22.62,22.94]
+						data:echarts.yanzhoul
 					},
 					{
 						name:'右眼',
@@ -380,7 +384,7 @@
 							  }
 							}
 						 },
-						data:[21.89,22.43,22.89]
+						data:echarts.yanzhour
 					}
 				]
 			};	

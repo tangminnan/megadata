@@ -1450,4 +1450,16 @@ WHERE identity_card IN
 	<select id="table" resultType="map">
 		SELECT student_name name,identity_card idCard,naked_farvision_od luoyanr,naked_farvision_os luoyanl,DATE_FORMAT(last_check_time,'%Y-%m-%d') checkdate FROM s_student_school_he where	student_name = #{name} and identity_card = #{idCard} and naked_farvision_od is not NULL and naked_farvision_os is not NULL and last_check_time is not NULL ORDER BY last_check_time desc
 	</select>
+	<select id="yanzhou" resultType="map">
+		SELECT first_check_od youyan,first_check_os zuoyan,DATE_FORMAT(last_check_time,'%Y-%m') checkdate FROM s_student_school_he WHERE	student_name = #{name} and identity_card = #{idCard} and last_check_time is not NULL and first_check_od is not NULL and first_check_os is not NULL ORDER BY DATE_FORMAT(last_check_time,'%Y-%m') DESC LIMIT 4
+	</select>
+	<select id="luoyan" resultType="map">
+        SELECT naked_farvision_od youyan,naked_farvision_os zuoyan,DATE_FORMAT(last_check_time,'%Y-%m') checkdate FROM s_student_school_he WHERE	student_name = #{name} and identity_card = #{idCard} and last_check_time is not NULL and naked_farvision_od is not NULL and naked_farvision_os is not NULL ORDER BY DATE_FORMAT(last_check_time,'%Y-%m') DESC LIMIT 4
+	</select>
+	<select id="dengxiaoqiujing" resultType="map">
+		SELECT dengxiaoqiujingr youyan,dengxiaoqiujingl zuoyan,DATE_FORMAT(last_check_time,'%Y-%m') checkdate FROM s_student_school_he WHERE	student_name = #{name} and identity_card = #{idCard} and last_check_time is not NULL and dengxiaoqiujingl is not NULL and dengxiaoqiujingr is not NULL ORDER BY DATE_FORMAT(last_check_time,'%Y-%m') DESC LIMIT 4
+	</select>
+	<select id="report" resultType="map">
+		SELECT * FROM s_student_school_he WHERE student_name = #{name} and identity_card = #{idCard} and last_check_time = #{checkdate}
+	</select>
 </mapper>
