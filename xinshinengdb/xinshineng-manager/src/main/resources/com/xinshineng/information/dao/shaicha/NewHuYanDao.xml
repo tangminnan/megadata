@@ -28,16 +28,31 @@ AND last_check_time IS NOT NULL AND dengxiaoqiujingl IS NOT NULL AND dengxiaoqiu
 
     <select id="getXueBuListForLd" resultType="string">
     SELECT xue_bu FROM y_student_school_he
-     WHERE dengxiaoqiujing_od_first IS NOT NULL AND dengxiaoqiujing_os_first IS NOT NULL AND dengxiaoqiujing_od_second IS NOT NULL AND dengxiaoqiujing_os_second
+     WHERE dengxiaoqiujing_od_first IS NOT NULL AND dengxiaoqiujing_os_first IS NOT NULL AND dengxiaoqiujing_od_second IS NOT NULL AND dengxiaoqiujing_os_second IS NOT NULL
      AND school=#{school} AND CityName=#{cityName} AND AreaName=#{areaName} GROUP BY xue_bu
 </select>
     <select id="getGradeListForLd" resultType="string">
     SELECT grade FROM y_student_school_he
-    WHERE dengxiaoqiujing_od_first IS NOT NULL AND dengxiaoqiujing_os_first IS NOT NULL AND dengxiaoqiujing_od_second IS NOT NULL AND dengxiaoqiujing_os_second
+    WHERE dengxiaoqiujing_od_first IS NOT NULL AND dengxiaoqiujing_os_first IS NOT NULL AND dengxiaoqiujing_od_second IS NOT NULL AND dengxiaoqiujing_os_second IS NOT NULL
     AND school=#{school} AND CityName=#{cityName} AND AreaName=#{areaName} and xue_bu =#{xuebu} GROUP BY grade
     </select>
 
     <select id="getClazzListForLd" resultType="string">
-        SELECT student_class FROM s_student_school_he WHERE school=#{school} AND CityName=#{cityName} AND AreaName=#{areaName} AND xue_bu =#{xuebu} AND grade=#{grade} AND last_check_time IS NOT NULL AND dengxiaoqiujingl IS NOT NULL AND dengxiaoqiujingr IS NOT NULL AND naked_farvision_od IS NOT NULL AND naked_farvision_os IS NOT NULL GROUP BY  student_class
+        SELECT student_class FROM y_student_school_he
+WHERE dengxiaoqiujing_od_first IS NOT NULL AND dengxiaoqiujing_os_first IS NOT NULL AND dengxiaoqiujing_od_second IS NOT NULL AND dengxiaoqiujing_os_second IS NOT NULL
+AND school=#{school} AND CityName=#{cityName} AND AreaName=#{areaName} and xue_bu =#{xuebu} AND grade = #{grade} GROUP BY student_class
+    </select>
+
+    <select id="getClazzNumForLd" resultType="long">
+     SELECT COUNT(id) FROM y_student_school_he WHERE
+last_check_time IS NOT NULL AND dengxiaoqiujing_od_first IS NOT NULL AND dengxiaoqiujing_os_first IS NOT NULL AND dengxiaoqiujing_od_second IS NOT NULL AND dengxiaoqiujing_os_second IS NOT NULL
+ AND CityName =#{cityName} AND AreaName = #{areaName}  AND school=#{school} AND xue_bu =#{xuebu} AND grade = #{grade} AND student_class = #{clazz}
+    </select>
+    <select id="getClazzJSNumForLd" resultType="long">
+        SELECT COUNT(DXQJF) FROM
+        (SELECT LEAST(dengxiaoqiujing_od_first,dengxiaoqiujing_os_first) DXQJF,LEAST(dengxiaoqiujing_od_second,dengxiaoqiujing_os_second) DXQJS FROM y_student_school_he WHERE
+        last_check_time IS NOT NULL AND dengxiaoqiujing_od_first IS NOT NULL AND dengxiaoqiujing_os_first IS NOT NULL AND dengxiaoqiujing_od_second IS NOT NULL AND dengxiaoqiujing_os_second IS NOT NULL
+        ANDCityName =#{cityName} AND AreaName = #{areaName}  AND school=#{school} AND xue_bu =#{xuebu} AND grade = #{grade} AND student_class = #{clazz}) stu
+        WHERE DXQJS &lt;=-0.5
     </select>
 </mapper>
