@@ -14,4 +14,6 @@ public interface schoolService {
     Map report ( String name,String idCard,String checkdate,String checkType);
     List<Map> table ( String name,String idCard,String checkType);
     Map<String,List> echarts ( String name,String idCard);
+
+    Map<String,String> dataOneld(String school, String CityName, String AreaName, String checkdate);
 }

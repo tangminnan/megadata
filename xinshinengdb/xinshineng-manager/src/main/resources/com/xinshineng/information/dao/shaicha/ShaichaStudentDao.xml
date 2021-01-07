@@ -1152,8 +1152,14 @@ WHERE identity_card IN
 	<select id="schoolAllNumber" resultType="int">
 		SELECT COUNT(*) FROM s_student_school_he where	school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and last_check_time is not null
 	</select>
+	<select id="schoolAllNumberld" resultType="int">
+		SELECT COUNT(*) FROM y_student_school_he where	school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and last_check_time is not null
+	</select>
 	<select id="schoolThisNumber" resultType="int">
 		SELECT COUNT(*) FROM s_student_school_he where	school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate}
+	</select>
+	<select id="schoolThisNumberld" resultType="int">
+		SELECT COUNT(*) FROM y_student_school_he where	school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate}
 	</select>
 	<select id="illNumber" resultType="int" >
 		SELECT
@@ -1179,11 +1185,28 @@ WHERE identity_card IN
 		dengxiaoqiujing &lt; '-0.5'
 		AND naked_farvision &lt; '5.0'
 	</select>
+	<select id="illNumberld" resultType="int">
+		SELECT COUNT(dengxiaoqiujing) num FROM
+		(SELECT LEAST(dengxiaoqiujing_od_second,dengxiaoqiujing_os_second) dengxiaoqiujing FROM y_student_school_he
+		WHERE `school` = #{school} AND`AreaName` = #{AreaName} AND `CityName` = #{CityName} and DATE_FORMAT(`last_check_time`,'%Y-%m') = #{checkdate}
+		AND dengxiaoqiujing_od_second is not NULL AND dengxiaoqiujing_os_second is not NULL) as one
+		WHERE dengxiaoqiujing &lt;='-0.5';
+	</select>
 	<select id="sexThisNumber" resultType="int">
 		SELECT COUNT(*) FROM s_student_school_he where	school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate} and student_sex = #{sex}
 	</select>
+	<select id="sexThisNumberld" resultType="int">
+		SELECT COUNT(*) FROM y_student_school_he where	school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate} and student_sex = #{sex}
+	</select>
 	<select id="getXueBu" resultType="string">
 		SELECT DISTINCT xue_bu FROM s_student_school_he
+        WHERE school = #{school}
+        AND AreaName = #{AreaName}
+        AND CityName = #{CityName}
+        AND DATE_FORMAT(last_check_time, '%Y-%m') = #{checkdate}
+	</select>
+	<select id="getXueBuld" resultType="string">
+		SELECT DISTINCT xue_bu FROM y_student_school_he
         WHERE school = #{school}
         AND AreaName = #{AreaName}
         AND CityName = #{CityName}
@@ -1200,6 +1223,20 @@ WHERE identity_card IN
     WHERE
     	school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName}
     AND DATE_FORMAT(last_check_time, '%Y') >= '2019' and dengxiaoqiujingl is not NULL and dengxiaoqiujingr is not NULL and  naked_farvision_od is not NULL and naked_farvision_os is not NULL and naked_farvision_od != '0' and naked_farvision_os != '0' and naked_farvision_os != '' and naked_farvision_od != ''
+    GROUP BY
+    	DATE_FORMAT(last_check_time, '%Y-%m')
+	</select>
+	<select id="everyCheckld" resultType="map">
+		SELECT  DISTINCT
+	DATE_FORMAT(last_check_time, '%Y-%m') checkTime,
+	COUNT(
+		DATE_FORMAT(last_check_time, '%Y-%m')
+	) checkNumber
+    FROM
+    	y_student_school_he
+    WHERE
+    	school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName}
+    AND DATE_FORMAT(last_check_time, '%Y') >= '2019' and dengxiaoqiujing_od_second is not NULL and dengxiaoqiujing_os_second is not NULL and  naked_farvision_od is not NULL and naked_farvision_os is not NULL and naked_farvision_od != '0' and naked_farvision_os != '0' and naked_farvision_os != '' and naked_farvision_od != ''
     GROUP BY
     	DATE_FORMAT(last_check_time, '%Y-%m')
 	</select>
@@ -1461,5 +1498,8 @@ WHERE identity_card IN
 	</select>
 	<select id="report" resultType="map">
 		SELECT * FROM s_student_school_he WHERE student_name = #{name} and identity_card = #{idCard} and last_check_time = #{checkdate}
+	</select>
+	<select id="maxcheckdate" resultType="string">
+		SELECT Max(DATE_FORMAT(last_check_time,'%Y-%m')) checkdate FROM s_student_school_he WHERE student_name = #{name} and identity_card = #{idCard} and dengxiaoqiujingl is not NULL and dengxiaoqiujingr is not NULL and  naked_farvision_od is not NULL and naked_farvision_os is not NULL and naked_farvision_od != '0' and naked_farvision_os != '0' and naked_farvision_os != '' and naked_farvision_od != ''
 	</select>
 </mapper>

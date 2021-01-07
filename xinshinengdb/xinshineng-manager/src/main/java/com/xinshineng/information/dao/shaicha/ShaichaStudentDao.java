@@ -166,10 +166,15 @@ public interface ShaichaStudentDao {
 	Long getSchoolHuanBingNum(@Param("checkCity") String checkCity,@Param("school") String school);
 
 	Integer schoolAllNumber (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName);
+	Integer schoolAllNumberld (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName);
 	Integer schoolThisNumber (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate);
+	Integer schoolThisNumberld (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate);
 	Integer illNumber (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate);
+	Integer illNumberld (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate);
 	Integer sexThisNumber (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate,@Param("sex")Integer sex);
+	Integer sexThisNumberld (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate,@Param("sex")Integer sex);
 	List<Map> everyCheck(@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName);
+	List<Map> everyCheckld(@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName);
 	Integer mildNumber (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate);
 	Integer moderateNumber (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate);
 	Integer highlyNumber (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate);
@@ -186,4 +191,5 @@ public interface ShaichaStudentDao {
 	List<Map> yanzhou (@Param("name")String name, @Param("idCard")String idCard);
 	List<Map> luoyan (@Param("name")String name, @Param("idCard")String idCard);
 	List<Map> dengxiaoqiujing (@Param("name")String name, @Param("idCard")String idCard);
+	String maxcheckdate (@Param("name")String name, @Param("idCard")String idCard);
 }

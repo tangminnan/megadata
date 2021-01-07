@@ -22,7 +22,7 @@ public class skipController {
 
     @GetMapping("/school")
     public String skipToSchool(Model model, String school, String CityName, String AreaName, String checkdate,String checkType){
-        System.out.println(checkType);
+        if ("sc".equals(checkType)){
         Map<String, String> dataOne;
         dataOne = redisTemplate.opsForHash().entries(school+AreaName+checkdate+"dataOne");
         if(dataOne.isEmpty()){
@@ -63,6 +63,15 @@ public class skipController {
         model.addAttribute("dataFour",dataFour);
         model.addAttribute("dataFive",dataFive);
         model.addAttribute("dataSix",dataSix);
+        }else if ("ld".equals(checkType)){
+            Map<String, String> dataOne;
+            dataOne = redisTemplate.opsForHash().entries(school+AreaName+checkdate+"dataOneld");
+            if(dataOne.isEmpty()){
+                dataOne = schoolservice.dataOneld(school, CityName, AreaName, checkdate);
+            }
+            model.addAttribute("dataOne",dataOne);
+        }
+
         return "school";
     }
 
@@ -81,8 +90,8 @@ public class skipController {
 
     @GetMapping("/gerenchakan")
     public String skipToChaKan(Model model,String name,String idCard,String checkdate,String checkType){
-
-
+        Map report = schoolservice.report(name, idCard, checkdate, checkType);
+        model.addAttribute("report",report);
         return "gerenchakan";
     }
 
