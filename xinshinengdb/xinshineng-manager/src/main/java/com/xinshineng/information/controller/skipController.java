@@ -1,5 +1,6 @@
 package com.xinshineng.information.controller;
 
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import com.xinshineng.information.service.shaicha.service.schoolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -20,47 +21,51 @@ public class skipController {
     private RedisTemplate redisTemplate;
 
     @GetMapping("/school")
-    public String skipToSchool(Model model, String school, String CityName, String AreaName, String checkdate){
-
+    public String skipToSchool(Model model, String school, String CityName, String AreaName, String checkdate,String checkType){
+        System.out.println(checkType);
         Map<String, String> dataOne;
         dataOne = redisTemplate.opsForHash().entries(school+AreaName+checkdate+"dataOne");
         if(dataOne.isEmpty()){
             dataOne = schoolservice.dataOne(school, CityName, AreaName, checkdate);
         }
-//        redisTemplate.opsForHash().putAll(school+AreaName+checkdate+"dataOne",dataOne);
 
         Map<String, List> dataTwo;
         dataTwo = redisTemplate.opsForHash().entries(school+AreaName+checkdate+"dataTwo");
         if (dataTwo.isEmpty()){
             dataTwo = schoolservice.dataTwo(school, CityName, AreaName, checkdate);
         }
-//        redisTemplate.opsForHash().putAll(school+AreaName+checkdate+"dataTwo",dataTwo);
 
         List<Map> dataThree;
         dataThree = redisTemplate.opsForList().range(school+AreaName+checkdate+"dataThree",0,-1);
         if (dataThree.size()==0){
-            dataThree = schoolservice.dataThree(school, CityName, AreaName, checkdate);
+            dataThree = schoolservice.dataThree(school, CityName, AreaName, checkdate,checkType);
         }
-//        redisTemplate.opsForList().rightPushAll(school+AreaName+checkdate+"dataThree",dataThree);
 
         List<Map> dataFour;
         dataFour = redisTemplate.opsForList().range(school+AreaName+checkdate+"dataFour",0,-1);
         if (dataFour.size()==0){
             dataFour = schoolservice.dataFour(school, CityName, AreaName, checkdate);
         }
-//        redisTemplate.opsForList().rightPushAll(school+AreaName+checkdate+"dataFour",dataFour);
 
         List<Map> dataFive;
         dataFive = redisTemplate.opsForList().range(school+AreaName+checkdate+"dataFive",0,-1);
         if (dataFive.size()==0){
             dataFive = schoolservice.dataFive(school, CityName, AreaName, checkdate);
         }
-//        redisTemplate.opsForList().rightPushAll(school+AreaName+checkdate+"dataFive",dataFive);
+        List<Map> dataSix;
+        dataSix = redisTemplate.opsForList().range(school+AreaName+checkdate+"dataSix",0,-1);
+        if(dataSix.size()==0){
+            dataSix = schoolservice.dataSix(school, CityName, AreaName, checkdate);
+        }
         model.addAttribute("dataOne",dataOne);
         model.addAttribute("dataTwo",dataTwo);
         model.addAttribute("dataThree",dataThree);
         model.addAttribute("dataFour",dataFour);
         model.addAttribute("dataFive",dataFive);
+        model.addAttribute("dataSix",dataSix);
+        model.addAttribute("checkType",checkType);
+        model.addAttribute("CityName",CityName);
+        model.addAttribute("AreaName",AreaName);
         return "school";
     }
 
@@ -78,7 +83,9 @@ public class skipController {
     }
 
     @GetMapping("/gerenchakan")
-    public String skipToChaKan(){
+    public String skipToChaKan(Model model,String name,String idCard,String checkdate,String checkType){
+
+
         return "gerenchakan";
     }
 
@@ -105,7 +112,24 @@ public class skipController {
     }
 
     @GetMapping("/geren")
-    public String skipToGeRen(){
+    public String skipToGeRen(Model model, String name,String idCard,String checkdate,String checkType){
+        model.addAttribute("name","您好，"+name+"!");
+        Map gerenAdvice  = schoolservice.gerenAdvice(name, idCard, checkdate);
+        List<Map> table = schoolservice.table(name, idCard,checkType);
+        Map<String,List> echarts = schoolservice.echarts(name, idCard);
+
+        model.addAttribute("gerenAdvice",gerenAdvice);
+        model.addAttribute("table",table);
+        model.addAttribute("echarts",echarts);
         return "geren";
     }
+    @GetMapping("/Newhuyan")
+    public String skipToNewhuyan(Model model,String school, String CityName, String AreaName, String checkType){
+        model.addAttribute("CityName",CityName);
+        model.addAttribute("AreaName",AreaName);
+        model.addAttribute("checkType",checkType);
+        model.addAttribute("school",school);
+        return "Newhuyan";
+    }
+
 }

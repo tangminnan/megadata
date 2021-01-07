@@ -180,5 +180,10 @@ public interface ShaichaStudentDao {
 	List<Map> gradeNumber (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate);
 	List<Map> paiMing (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate);
 	List<Map> gradeLv (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate);
-
+	Map advice (@Param("name")String name, @Param("idCard")String idCard,@Param("checkdate")String checkdate);
+	Map report (@Param("name")String name, @Param("idCard")String idCard,@Param("checkdate")String checkdate);
+	List<Map> table (@Param("name")String name, @Param("idCard")String idCard);
+	List<Map> yanzhou (@Param("name")String name, @Param("idCard")String idCard);
+	List<Map> luoyan (@Param("name")String name, @Param("idCard")String idCard);
+	List<Map> dengxiaoqiujing (@Param("name")String name, @Param("idCard")String idCard);
 }

@@ -18,7 +18,7 @@ public interface ShaichaStudentService {
 
     Map<String, Object> getCount();
 
-	Map getEveryYearCount(String checkType);
+
 
 	Map manAndWomenCount(String checkCity,String checkArea);
 

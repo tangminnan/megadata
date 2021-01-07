@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Mapper;
 import com.xinshineng.information.domain.yanke.AnswerResultDO;
 import com.xinshineng.information.domain.yanke.StudentDO;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.security.access.method.P;
 
 
 /**
@@ -170,5 +171,10 @@ public interface StudentDao {
 	void addYuce(@Param("id") String id,@Param("y1Y") double y1Y,@Param("y2Y") double y2Y,@Param("ifRL") String ifRl);
 
 	Integer getNumber();
+	List<Map<String, Object>> getSchoolNum(@Param("checkCity") String checkCity,@Param("checkArea") String checkArea);
+
+    Long getSchoolLCNum(@Param("checkCity") String checkCity,@Param("checkArea") String checkArea,@Param("school") String school, @Param("check_time") String check_time);
+	Long getSchoolZXNum(@Param("checkCity") String checkCity,@Param("checkArea") String checkArea,@Param("school") String school, @Param("check_time") String check_time);
+	Long getSchoolJXNum(@Param("checkCity") String checkCity,@Param("checkArea") String checkArea,@Param("school") String school, @Param("check_time") String check_time);
 
 }
