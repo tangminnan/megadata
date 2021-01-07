@@ -1,5 +1,6 @@
 package com.xinshineng.information.controller;
 
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import com.xinshineng.information.service.shaicha.service.schoolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -27,35 +28,30 @@ public class skipController {
         if(dataOne.isEmpty()){
             dataOne = schoolservice.dataOne(school, CityName, AreaName, checkdate);
         }
-//        redisTemplate.opsForHash().putAll(school+AreaName+checkdate+"dataOne",dataOne);
 
         Map<String, List> dataTwo;
         dataTwo = redisTemplate.opsForHash().entries(school+AreaName+checkdate+"dataTwo");
         if (dataTwo.isEmpty()){
             dataTwo = schoolservice.dataTwo(school, CityName, AreaName, checkdate);
         }
-//        redisTemplate.opsForHash().putAll(school+AreaName+checkdate+"dataTwo",dataTwo);
 
         List<Map> dataThree;
         dataThree = redisTemplate.opsForList().range(school+AreaName+checkdate+"dataThree",0,-1);
         if (dataThree.size()==0){
             dataThree = schoolservice.dataThree(school, CityName, AreaName, checkdate,checkType);
         }
-//        redisTemplate.opsForList().rightPushAll(school+AreaName+checkdate+"dataThree",dataThree);
 
         List<Map> dataFour;
         dataFour = redisTemplate.opsForList().range(school+AreaName+checkdate+"dataFour",0,-1);
         if (dataFour.size()==0){
             dataFour = schoolservice.dataFour(school, CityName, AreaName, checkdate);
         }
-//        redisTemplate.opsForList().rightPushAll(school+AreaName+checkdate+"dataFour",dataFour);
 
         List<Map> dataFive;
         dataFive = redisTemplate.opsForList().range(school+AreaName+checkdate+"dataFive",0,-1);
         if (dataFive.size()==0){
             dataFive = schoolservice.dataFive(school, CityName, AreaName, checkdate);
         }
-//        redisTemplate.opsForList().rightPushAll(school+AreaName+checkdate+"datafive",dataFive);
         List<Map> dataSix;
         dataSix = redisTemplate.opsForList().range(school+AreaName+checkdate+"dataSix",0,-1);
         if(dataSix.size()==0){
@@ -84,7 +80,9 @@ public class skipController {
     }
 
     @GetMapping("/gerenchakan")
-    public String skipToChaKan(){
+    public String skipToChaKan(Model model,String name,String idCard,String checkdate,String checkType){
+
+
         return "gerenchakan";
     }
 
@@ -114,10 +112,12 @@ public class skipController {
     public String skipToGeRen(Model model, String name,String idCard,String checkdate,String checkType){
         model.addAttribute("name","您好，"+name+"!");
         Map gerenAdvice  = schoolservice.gerenAdvice(name, idCard, checkdate);
-        List<Map> table = schoolservice.table(name, idCard);
+        List<Map> table = schoolservice.table(name, idCard,checkType);
+        Map<String,List> echarts = schoolservice.echarts(name, idCard);
 
         model.addAttribute("gerenAdvice",gerenAdvice);
         model.addAttribute("table",table);
+        model.addAttribute("echarts",echarts);
         return "geren";
     }
 }

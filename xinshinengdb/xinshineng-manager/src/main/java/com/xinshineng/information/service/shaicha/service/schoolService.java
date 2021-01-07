@@ -11,6 +11,7 @@ public interface schoolService {
     List<Map> dataFive(String school, String CityName, String AreaName, String checkdate);
     List<Map> dataSix(String school, String CityName, String AreaName, String checkdate);
     Map gerenAdvice ( String name,String idCard,String checkdate);
-    Map report ( String name,String idCard,String checkdate);
-    List<Map> table ( String name,String idCard);
+    Map report ( String name,String idCard,String checkdate,String checkType);
+    List<Map> table ( String name,String idCard,String checkType);
+    Map<String,List> echarts ( String name,String idCard);
 }
