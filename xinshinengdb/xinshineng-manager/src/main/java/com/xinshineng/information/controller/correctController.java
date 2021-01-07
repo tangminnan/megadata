@@ -14,15 +14,6 @@ import java.util.Map;
 @Controller
 @RequestMapping("/skip")
 public class correctController {
-    @Autowired
-    private schoolService schoolservice;
-    @Autowired
-    private RedisTemplate redisTemplate;
-
-    @GetMapping("/Newhuyan")
-    public String Newhuyan(){
-        return "Newhuyan";
-    }
 
     @GetMapping("/Newzidingyi")
     public String Newzidingyi(){
