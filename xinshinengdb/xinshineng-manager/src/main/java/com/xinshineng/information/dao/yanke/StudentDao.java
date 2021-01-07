@@ -177,4 +177,7 @@ public interface StudentDao {
 	Long getSchoolZXNum(@Param("checkCity") String checkCity,@Param("checkArea") String checkArea,@Param("school") String school, @Param("check_time") String check_time);
 	Long getSchoolJXNum(@Param("checkCity") String checkCity,@Param("checkArea") String checkArea,@Param("school") String school, @Param("check_time") String check_time);
 
+    int login(@Param("username") String username, @Param("password") String password);
+
+	String getLastCheckDate(@Param("username") String username, @Param("password") String password);
 }

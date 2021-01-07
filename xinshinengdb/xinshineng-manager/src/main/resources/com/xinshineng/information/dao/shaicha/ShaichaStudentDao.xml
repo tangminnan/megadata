@@ -1463,6 +1463,9 @@ WHERE identity_card IN
 		SELECT * FROM s_student_school_he WHERE student_name = #{name} and identity_card = #{idCard} and last_check_time = #{checkdate}
 	</select>
 	<select id="login" resultType="int">
-		select count(id) from s_student_school_he where student_name=#{username} and identity_card=#{password} and naked_farvision_od is not null and correction_farvision_os is not null
+		select count(id) from s_student_school_he where student_name=#{username} and identity_card=#{password} and naked_farvision_od is not null and correction_farvision_os is not null and last_check_time is not null
+	</select>
+	<select id="getLastCheckDate" resultType="string">
+		SELECT MAX(DATE_FORMAT(last_check_time,'%Y-%m')) checkdate FROM s_student_school_he WHERE student_name = #{username} AND identity_card =#{password}
 	</select>
 </mapper>

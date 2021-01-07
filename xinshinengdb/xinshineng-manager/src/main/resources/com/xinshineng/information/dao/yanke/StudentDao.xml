@@ -718,4 +718,11 @@ AND dengxiaoqiujing_od_second IS NOT NULL AND dengxiaoqiujing_os_second AND City
 		AND dengxiaoqiujing_od_second IS NOT NULL AND dengxiaoqiujing_os_second AND CityName = #{checkCity} AND AreaName = #{checkArea} AND DATE_FORMAT(last_check_time,'%Y-%m') =#{check_time} AND school=#{school}) stu
 		WHERE DXQJF &lt;-0.5 AND DXQJS &gt;-0.5 AND (DXQJS-DXQJF)&gt;0.5
 	</select>
+
+	<select id="login" resultType="int">
+		SELECT COUNT(id) FROM y_student_school_he WHERE student_name = #{username} AND identity_card = #{password} AND last_check_time IS NOT NULL AND naked_farvision_od IS NOT NULL AND naked_farvision_os IS NOT NULL
+	</select>
+	<select id="getLastCheckDate" resultType="string">
+		SELECT MAX(DATE_FORMAT(last_check_time,'%Y-%m')) checkdate FROM y_student_school_he WHERE student_name = #{username} AND identity_card = #{password}
+	</select>
 </mapper>

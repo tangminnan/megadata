@@ -188,4 +188,6 @@ public interface ShaichaStudentDao {
 	List<Map> dengxiaoqiujing (@Param("name")String name, @Param("idCard")String idCard);
 
     int login(@Param("username") String username, @Param("password") String password);
+
+	String getLastCheckDate(@Param("username") String username, @Param("password") String password);
 }

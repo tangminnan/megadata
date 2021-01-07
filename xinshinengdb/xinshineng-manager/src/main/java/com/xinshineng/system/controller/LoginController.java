@@ -25,7 +25,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 @Controller
@@ -84,8 +86,29 @@ public class LoginController extends BaseController {
 				UsernamePasswordToken token = new UsernamePasswordToken(admin, psw);
 				Subject subject = SecurityUtils.getSubject();
 				subject.login(token);
-
+				String checkdate = shaichaStudentDao.getLastCheckDate(username,password);
+				try {
+					username= new String(username.getBytes(),"ISO-8859-1");
+				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
+				}
+				return "redirect:/skip/geren?name="+username+"&idCard="+password+"&checkdate="+checkdate+"&checkType=sc";
 			}
+				if (cow==0){
+				cow = studentDao.login(username,password);
+				if (cow>0){
+					psw = MD5Utils.encrypt(admin,psw);
+					UsernamePasswordToken token = new UsernamePasswordToken(admin, psw);
+					Subject subject = SecurityUtils.getSubject();
+					subject.login(token);
+					String checkdate = studentDao.getLastCheckDate(username,password);
+					return "redirect:/skip/geren?name="+username+"&idCard="+password+"&checkdate="+checkdate+"&checkType=ld";
+				}
+				else {
+					return "/login";
+				}
+			}
+
 		}
 
 		password = MD5Utils.encrypt(username, password);
@@ -101,9 +124,6 @@ public class LoginController extends BaseController {
 			}
 			if ("学校".equals(choseType)){
 				return "school";
-			}
-			if ("家庭个人".equals(choseType)){
-				return "geren";
 			}
 		} catch (AuthenticationException e) {
 			return "";
