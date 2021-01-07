@@ -8,6 +8,8 @@ import com.xinshineng.common.service.FileService;
 import com.xinshineng.common.utils.MD5Utils;
 import com.xinshineng.common.utils.R;
 import com.xinshineng.common.utils.ShiroUtils;
+import com.xinshineng.information.dao.shaicha.ShaichaStudentDao;
+import com.xinshineng.information.dao.yanke.StudentDao;
 import com.xinshineng.system.domain.MenuDO;
 import com.xinshineng.system.service.MenuService;
 
@@ -65,9 +67,26 @@ public class LoginController extends BaseController {
 		return "login";
 	}
 
+	@Autowired
+	private ShaichaStudentDao shaichaStudentDao;
+	@Autowired
+	private StudentDao studentDao;
+
 	@Log("登录")
 	@PostMapping("/login")
 	String ajaxLogin(String username, String password,String choseType) {
+		if ("家庭个人".equals(choseType)){
+			String admin= "admin";
+			String psw="Dmld202009&";
+			int cow = shaichaStudentDao.login(username,password);
+			if (cow>0){
+				psw = MD5Utils.encrypt(admin,psw);
+				UsernamePasswordToken token = new UsernamePasswordToken(admin, psw);
+				Subject subject = SecurityUtils.getSubject();
+				subject.login(token);
+
+			}
+		}
 
 		password = MD5Utils.encrypt(username, password);
 		UsernamePasswordToken token = new UsernamePasswordToken(username, password);

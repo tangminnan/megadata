@@ -22,4 +22,8 @@ public interface NewHuYanDao {
     List<String> getGradeListForLd(@Param("school") String school,@Param("cityName") String cityName,@Param("areaName") String areaName,@Param("xuebu") String xuebu);
 
     List<String> getClazzListForLd(@Param("school") String school,@Param("cityName") String cityName,@Param("areaName") String areaName,@Param("xuebu") String xuebu,@Param("grade") String grade);
+
+    Long getClazzNumForLd(@Param("school") String school,@Param("cityName") String cityName,@Param("areaName") String areaName,@Param("xuebu") String xuebu,@Param("grade") String grade,@Param("clazz") String clazz);
+
+    Long getClazzJSNumForLd(@Param("school") String school,@Param("cityName") String cityName,@Param("areaName") String areaName,@Param("xuebu") String xuebu,@Param("grade") String grade,@Param("clazz") String clazz);
 }

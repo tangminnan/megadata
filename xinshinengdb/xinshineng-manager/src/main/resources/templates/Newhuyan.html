@@ -274,8 +274,10 @@
 			$("#grade").html(`<option>=请选择=</option>`);
 			$("#clazz").html(`<option>=请选择=</option>`);
 			$("#JSL").text(`0%`);
+			$("#JG").text(``);
 			XueBu='';
 			Grade='';
+
 		}
 		if ('=请选择='!=xuebu){
 			XueBu=xuebu;
@@ -303,6 +305,8 @@
 		if ('=请选择='==grade){
 			$("#clazz").html(`<option>=请选择=</option>`);
 			$("#JSL").text(`0%`);
+			$("#JG").text(``);
+
 			Grade='';
 		}
 		if ('=请选择='!=grade){
@@ -331,7 +335,7 @@
 		if ('=请选择='==clazz){
 			$("#JG").html(``);
 			$("#JSL").text(`0%`);
-
+			$("#JG").text(``);
 		}
 		if ('=请选择='!=clazz){
 			$("#JG").text($("#XB").val()+$("#grade").val()+$("#clazz").val()+'统计结果');

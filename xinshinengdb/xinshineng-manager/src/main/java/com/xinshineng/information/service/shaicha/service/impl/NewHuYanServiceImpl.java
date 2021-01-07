@@ -73,6 +73,16 @@ public class NewHuYanServiceImpl implements NewHuYanService {
             String classJSL = df.format(bg.setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue() * 100);
             return classJSL;
         }
+        if ("ld".equals(checkType)){
+            Long clazzNum = newHuYanDao.getClazzNumForLd(school,cityName,areaName,xuebu,grade,clazz);
+            Long clazzJSNum = newHuYanDao.getClazzJSNumForLd(school,cityName,areaName,xuebu,grade,clazz);
+            if (clazzNum == 0 || clazzJSNum ==0){
+                return "0";
+            }
+            BigDecimal bg = new BigDecimal((float) clazzJSNum / clazzNum);
+            String classJSL = df.format(bg.setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue() * 100);
+            return classJSL;
+        }
         return "0";
     }
 }

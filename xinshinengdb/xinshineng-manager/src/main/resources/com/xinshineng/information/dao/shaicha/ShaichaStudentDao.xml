@@ -1462,4 +1462,7 @@ WHERE identity_card IN
 	<select id="report" resultType="map">
 		SELECT * FROM s_student_school_he WHERE student_name = #{name} and identity_card = #{idCard} and last_check_time = #{checkdate}
 	</select>
+	<select id="login" resultType="int">
+		select count(id) from s_student_school_he where student_name=#{username} and identity_card=#{password} and naked_farvision_od is not null and correction_farvision_os is not null
+	</select>
 </mapper>
