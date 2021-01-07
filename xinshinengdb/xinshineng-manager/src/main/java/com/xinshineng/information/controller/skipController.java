@@ -67,6 +67,9 @@ public class skipController {
         model.addAttribute("dataFour",dataFour);
         model.addAttribute("dataFive",dataFive);
         model.addAttribute("dataSix",dataSix);
+        model.addAttribute("checkType",checkType);
+        model.addAttribute("CityName",CityName);
+        model.addAttribute("AreaName",AreaName);
         return "school";
     }
 
@@ -120,4 +123,13 @@ public class skipController {
         model.addAttribute("table",table);
         return "geren";
     }
+    @GetMapping("/Newhuyan")
+    public String skipToNewhuyan(Model model,String school, String CityName, String AreaName, String checkType){
+        model.addAttribute("CityName",CityName);
+        model.addAttribute("AreaName",AreaName);
+        model.addAttribute("checkType",checkType);
+        model.addAttribute("school",school);
+        return "Newhuyan";
+    }
+
 }

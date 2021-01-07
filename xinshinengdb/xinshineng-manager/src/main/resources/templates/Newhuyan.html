@@ -1,0 +1,262 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<title>护眼</title>
+	<link type="text/css" href="/css/index.css" rel="stylesheet">
+	<script src="/js/jquery-3.5.1.min.js" type="text/javascript"></script>
+	<script src="/js/jquery.SuperSlide.2.1.3.js" type="text/javascript"></script>
+
+</head>
+<body>
+   <div class="topbanner">呵护眼睛 从小做起</div>
+   <div class="main renwuBox">
+  		<div class="New_bd_left">
+  			<div class="LeftUp">
+  				<!--装饰图片-->
+  				<img src="/img/two.png" alt=""/>
+  				<!--学部下拉框选择-->
+  				<div class="xuebu">
+					<label>学部：
+						<select id="XB" name="sel1" onChange="XueBuChange(this.value)">
+							<option>=请选择=</option>
+						</select>
+					</label>
+				</div>
+				<!--年级下拉框选择-->
+				<div class="xuebu">
+					<label>年级：
+						<select id="grade" name="sel1" onChange="GradeChange(this.value)">
+							<option>=请选择=</option>
+						</select>
+					</label>
+				</div>
+				<!--班级下拉框选择-->
+				<div class="xuebu">
+					<label>班级：
+						<select id="clazz" name="sel1" onChange="ClazzChange(this.value)">
+							<option>=请选择=</option>
+						</select>
+					</label>
+				</div>
+  			</div>
+  			<div class="LeftDown">
+  				<h3 id="JG"></h3>
+  				<ul>
+  					<li><span id="JSL">36%</span>近视率</li>
+  					<li><span>优秀</span>用眼行为评级</li>
+  				</ul>
+  			</div>
+  		</div>
+   		<div class="bd" id="bjnone">
+   			<h3>任务简介</h3>
+   			<div class="txt">
+				<p>任务时间：<span>7天</span></p>
+				<p>平均评级：<span>优秀等级</span></p>
+   				<dl>
+   					<dt>任务详情：</dt>
+   					<dd>
+						<ul>
+							<li><em>时长：</em>
+								<select name="sel1" onChange="OnS1Change(this.value)">
+									<option value="0">=请选择=</option>
+									<option value="1">一周</option>
+									<option value="2">10天</option>
+									<option value="3">15天</option>
+									<option value="4">20天</option>
+								</select>
+							</li>
+							<li><em>健康用眼评级：</em>
+								<select name="sel1" onChange="OnS1Change(this.value)">
+									<option value="0">=请选择=</option>
+									<option value="1">优秀</option>
+									<option value="2">良好</option>
+									<option value="3">一般</option>
+								</select>
+							</li>
+							<li><em>平均单次阅读时长：</em>
+								<select name="sel1" onChange="OnS1Change(this.value)">
+									<option value="0">=请选择=</option>
+									<option value="1">优秀</option>
+									<option value="2">良好</option>
+									<option value="3">一般</option>
+								</select>
+							</li>
+							<li><em>平均户外时长：</em>
+								<select name="sel1" onChange="OnS1Change(this.value)">
+									<option value="0">=请选择=</option>
+									<option value="1">优秀</option>
+									<option value="2">良好</option>
+									<option value="3">一般</option>
+								</select>
+							</li>
+							<li><em>平均阅读距离：</em>
+								<select name="sel1" onChange="OnS1Change(this.value)">
+									<option value="0">=请选择=</option>
+									<option value="1">优秀</option>
+									<option value="2">良好</option>
+									<option value="3">一般</option>
+								</select>
+							</li>
+							<li><em>平均阅读光照：</em>
+								<select name="sel1" onChange="OnS1Change(this.value)">
+									<option value="0">=请选择=</option>
+									<option value="1">优秀</option>
+									<option value="2">良好</option>
+									<option value="3">一般</option>
+								</select>
+							</li>
+							<li><em>平均单次看手机时长：</em>
+								<select name="sel1" onChange="OnS1Change(this.value)">
+									<option value="0">=请选择=</option>
+									<option value="1">优秀</option>
+									<option value="2">良好</option>
+									<option value="3">一般</option>
+								</select>
+							</li>
+							<li><em>平均单次看电脑电视时长：</em>
+								<select name="sel1" onChange="OnS1Change(this.value)">
+									<option value="0">=请选择=</option>
+									<option value="1">优秀</option>
+									<option value="2">良好</option>
+									<option value="3">一般</option>
+								</select>
+							</li>
+							<li><em>平均坐姿倾斜度：</em>
+								<select name="sel1" onChange="OnS1Change(this.value)">
+									<option value="0">=请选择=</option>
+									<option value="1">优秀</option>
+									<option value="2">良好</option>
+									<option value="3">一般</option>
+								</select>
+							</li>
+							<li><em>有效使用监护仪总时长：</em>
+								<select name="sel1" onChange="OnS1Change(this.value)">
+									<option value="0">=请选择=</option>
+									<option value="1">优秀</option>
+									<option value="2">良好</option>
+									<option value="3">一般</option>
+								</select>
+							</li>
+						</ul>
+  					</dd>
+   				</dl>
+   			</div>
+   		</div>
+   </div>
+   <input type="button" class="New_botBtn" value="执行任务">
+</body>
+<script type="text/javascript" th:inline="javascript">
+	var school = [[${school}]];
+	var checkType = [[${checkType}]];
+	var CityName = [[${CityName}]];
+	var AreaName = [[${AreaName}]];
+
+	var XueBu='';
+	var Grade='';
+	$.ajax({
+		cache: true,
+		type: "GET",
+		async: false,
+		url: '/Newhuyan/XueBu?school='+school+'&CityName='+CityName+'&AreaName='+AreaName+'&checkType='+checkType,
+		error: function (request) {
+			parent.layer.alert("网络超时");
+		},
+		success: function (data) {
+			var html=`<option>=请选择=</option>`;
+			for (let i = 0; i < data.length; i++) {
+				html+=`<option value=`+data[i]+`>`+data[i]+`</option>`
+			}
+
+			$("#XB").html(html)
+		}
+	})
+	var XueBuChange = function (xuebu){
+		if ('=请选择='==xuebu){
+			$("#grade").html(`<option>=请选择=</option>`);
+			$("#clazz").html(`<option>=请选择=</option>`);
+			$("#JSL").text(`0%`);
+			XueBu='';
+			Grade='';
+		}
+		if ('=请选择='!=xuebu){
+			XueBu=xuebu;
+			$.ajax({
+				cache: true,
+				type: "GET",
+				async: false,
+				url: '/Newhuyan/Grade?school='+school+'&CityName='+CityName+'&AreaName='+AreaName+'&checkType='+checkType+'&xuebu='+xuebu,
+				error: function (request) {
+					parent.layer.alert("网络超时");
+				},
+				success: function (data) {
+					var html=`<option>=请选择=</option>`;
+					for (let i = 0; i < data.length; i++) {
+						html+=`<option value=`+data[i]+`>`+data[i]+`</option>`
+					}
+					$("#grade").html(html)
+				}
+			})
+		}
+	}
+
+
+	var GradeChange = function (grade){
+		if ('=请选择='==grade){
+			$("#clazz").html(`<option>=请选择=</option>`);
+			$("#JSL").text(`0%`);
+			Grade='';
+		}
+		if ('=请选择='!=grade){
+			Grade=grade;
+			$.ajax({
+				cache: true,
+				type: "GET",
+				async: false,
+				url: '/Newhuyan/Clazz?school='+school+'&CityName='+CityName+'&AreaName='+AreaName+'&checkType='+checkType+'&xuebu='+XueBu+'&grade='+grade,
+				error: function (request) {
+					parent.layer.alert("网络超时");
+				},
+				success: function (data) {
+					var html=`<option>=请选择=</option>`;
+					for (let i = 0; i < data.length; i++) {
+						html+=`<option value=`+data[i]+`>`+data[i]+`</option>`
+					}
+					$("#clazz").html(html)
+				}
+			})
+		}
+	}
+
+
+	var ClazzChange = function (clazz){
+		if ('=请选择='==clazz){
+			$("#JG").html(``);
+			$("#JSL").text(`0%`);
+
+		}
+		if ('=请选择='!=clazz){
+			$("#JG").text($("#XB").val()+$("#grade").val()+$("#clazz").val()+'统计结果');
+			$.ajax({
+				cache: true,
+				type: "GET",
+				async: false,
+				url: '/Newhuyan/ClazzJSL?school='+school+'&CityName='+CityName+'&AreaName='+AreaName+'&checkType='+checkType+'&xuebu='+XueBu+'&grade='+Grade+'&clazz='+clazz,
+				error: function (request) {
+					parent.layer.alert("网络超时");
+				},
+				success: function (data) {
+					$("#JSL").text(data+'%')
+				}
+			})
+		}
+	}
+
+</script>
+</html>
+
+
+
