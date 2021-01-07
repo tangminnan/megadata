@@ -121,6 +121,7 @@ public class skipController {
         model.addAttribute("gerenAdvice",gerenAdvice);
         model.addAttribute("table",table);
         model.addAttribute("echarts",echarts);
+
         return "geren";
     }
     @GetMapping("/Newhuyan")
@@ -129,7 +130,7 @@ public class skipController {
         model.addAttribute("AreaName",AreaName);
         model.addAttribute("checkType",checkType);
         model.addAttribute("school",school);
-        return "Newhuyan";
+        return "NEWrenwu";
     }
 
 }
