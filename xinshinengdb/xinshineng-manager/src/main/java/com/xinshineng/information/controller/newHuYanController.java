@@ -3,6 +3,7 @@ package com.xinshineng.information.controller;
 import com.xinshineng.information.service.shaicha.service.NewHuYanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -42,8 +43,10 @@ public class newHuYanController {
 
     @GetMapping("/ClazzJSL")
     @ResponseBody
-    public String getClazzJSL(String school, String CityName, String AreaName, String checkType,String xuebu,String grade,String clazz){
+    public String getClazzJSL(Model model,String school, String CityName, String AreaName, String checkType, String xuebu, String grade, String clazz){
         String  ClazzJSL =  newHuYanService.getClazzJSL(school,CityName,AreaName,checkType,xuebu,grade,clazz);
+        List<String> clazzIdCards = newHuYanService.getClazzIdCards(school,CityName,AreaName,checkType,xuebu,grade,clazz);
+        model.addAttribute("idcards",clazzIdCards);
         return ClazzJSL;
     }
 }
