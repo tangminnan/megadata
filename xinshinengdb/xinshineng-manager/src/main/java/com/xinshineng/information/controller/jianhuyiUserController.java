@@ -62,4 +62,10 @@ public class jianhuyiUserController {
 		return pageUtils;
 	}
 
+	@GetMapping("GetData")
+	@ResponseBody
+	public Map GetData(String name ,String idCard){
+		
+		return null;
+	}
 }

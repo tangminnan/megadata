@@ -12,41 +12,41 @@
 
 </head>
 <body>
- <div class="teas-top">用户最后一日使用监护仪平均统计数据</div>
+ <div class="teas-top">用户最后一日使用监护仪统计数据</div>
 <div class="pieList">
 	<ul>
 		<li>
-			<p>平均阅读时长：35.95分钟</p>
+			<p>阅读时长：35.95分钟</p>
 			<h2>平均单次阅读时长</h2>
 			<div id="main" style="width: 100%;height:200px;"></div>
 		</li>
 		<li>
-			<p>户外总时长：0.61分钟</p>
+			<p>户外时长：0.61分钟</p>
 			<h2>户外总时长</h2>
 			<div id="main1" style="width: 100%;height:200px;"></div>
 		</li>
 		<li>
-			<p>平均阅读距离：24.44厘米</p>
+			<p>阅读距离：24.44厘米</p>
 			<h2>平均阅读距离</h2>
 			<div id="main2" style="width: 100%;height:200px;"></div>
 		</li>
 		<li>
-			<p>平均阅读光照：296.29lux</p>
+			<p>阅读光照：296.29lux</p>
 			<h2>平均阅读光照</h2>
 			<div id="main3" style="width: 100%;height:200px;"></div>
 		</li>
 		<li>
-			<p>平均看手机时长：0.38分钟</p>
+			<p>看手机时长：0.38分钟</p>
 			<h2>平均看手机时长</h2>
 			<div id="main4" style="width: 100%;height:200px;"></div>
 		</li>
 		<li>
-			<p>平均单次看电脑时长：0.89分钟</p>
+			<p>单次看电脑时长：0.89分钟</p>
 			<h2>平均单次看电脑时长(分钟)</h2>
 			<div id="main5" style="width: 100%;height:200px;"></div>
 		</li>
 		<li>
-			<p>平均坐姿倾斜度：12.93°</p>
+			<p>坐姿倾斜度：12.93°</p>
 			<h2>平均坐姿倾斜度</h2>
 			<div id="main6" style="width: 100%;height:200px;"></div>
 		</li>
@@ -62,7 +62,21 @@
 </body>
 </html>
 
-<script type="text/javascript">
+<script type="text/javascript" th:inline="javascript">
+	var name =  [[${name}]];
+	var idCard =  [[${idCard}]];
+	$.ajax({
+		cache: true,
+		type: "GET",
+		async: false,
+		url: '/xinshineng/jianhuyi/GetData?name='+name+'&idCard='+idCard,
+		error: function (request) {
+			parent.layer.alert("网络超时");
+		},
+		success: function (data) {
+
+		}
+	})
 	// 基于准备好的dom，初始化echarts实例
 	var myChart = echarts.init(document.getElementById('main'));
 	var myChart1 = echarts.init(document.getElementById('main1'));

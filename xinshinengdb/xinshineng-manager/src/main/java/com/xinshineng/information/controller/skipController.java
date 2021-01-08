@@ -90,7 +90,9 @@ public class skipController {
     }
 
     @GetMapping("/jiancebiao")
-    public String skipToJianCeBiao(){
+    public String skipToJianCeBiao(Model model,String name,String idCard){
+        model.addAttribute("name",name);
+        model.addAttribute("idCard",idCard);
         return "jiancebiao";
     }
 
