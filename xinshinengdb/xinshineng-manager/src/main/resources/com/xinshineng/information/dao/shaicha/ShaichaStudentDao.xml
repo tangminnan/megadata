@@ -1265,6 +1265,31 @@ WHERE identity_card IN
 		AND naked_farvision &lt; '5.0'
 		AND dengxiaoqiujing >= '-3.0'
 	</select>
+	<select id="mildNumberld" resultType="int">
+		SELECT
+		COUNT(dengxiaoqiujing) num
+		FROM
+		(
+		SELECT
+		LEAST(
+		dengxiaoqiujing_od_first,
+		dengxiaoqiujing_os_first
+		) AS dengxiaoqiujing,
+		LEAST(
+		naked_farvision_od,
+		naked_farvision_os
+		) AS naked_farvision
+		FROM
+		y_student_school_he
+		WHERE
+		school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and
+		DATE_FORMAT(last_check_time,'%Y-%m') =  #{checkdate} and naked_farvision_od is not NULL and naked_farvision_os is not NULL and dengxiaoqiujing_od_first is not NULL and dengxiaoqiujing_os_first is not NULL
+		) AS one
+		WHERE
+		dengxiaoqiujing &lt; '-0.5'
+		AND naked_farvision &lt; '5.0'
+		AND dengxiaoqiujing >= '-3.0'
+	</select>
 	<select id="moderateNumber" resultType="int">
 		SELECT
 		COUNT(dengxiaoqiujing) num
@@ -1284,6 +1309,31 @@ WHERE identity_card IN
 		WHERE
 		school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and
 		DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate} and dengxiaoqiujingl is not NULL and dengxiaoqiujingr is not NULL and naked_farvision_od is not NULL and naked_farvision_os is not NULL
+		) AS one
+		WHERE
+		dengxiaoqiujing &lt; '-3.0'
+		AND naked_farvision &lt; '5.0'
+		AND dengxiaoqiujing >= '-6.0'
+	</select>
+	<select id="moderateNumberld" resultType="int">
+		SELECT
+		COUNT(dengxiaoqiujing) num
+		FROM
+		(
+		SELECT
+		LEAST(
+		dengxiaoqiujing_od_first,
+		dengxiaoqiujing_os_first
+		) AS dengxiaoqiujing,
+		LEAST(
+		naked_farvision_od,
+		naked_farvision_os
+		) AS naked_farvision
+		FROM
+		y_student_school_he
+		WHERE
+		school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and
+		DATE_FORMAT(last_check_time,'%Y-%m') =  #{checkdate} and naked_farvision_od is not NULL and naked_farvision_os is not NULL and dengxiaoqiujing_od_first is not NULL and dengxiaoqiujing_os_first is not NULL
 		) AS one
 		WHERE
 		dengxiaoqiujing &lt; '-3.0'
@@ -1314,6 +1364,30 @@ WHERE identity_card IN
 		dengxiaoqiujing &lt; '-6.0'
 		AND naked_farvision &lt; '5.0'
 	</select>
+	<select id="highlyNumberld" resultType="int">
+		SELECT
+		COUNT(dengxiaoqiujing) num
+		FROM
+		(
+		SELECT
+		LEAST(
+		dengxiaoqiujing_od_first,
+		dengxiaoqiujing_os_first
+		) AS dengxiaoqiujing,
+		LEAST(
+		naked_farvision_od,
+		naked_farvision_os
+		) AS naked_farvision
+		FROM
+		y_student_school_he
+		WHERE
+		school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and
+		DATE_FORMAT(last_check_time,'%Y-%m') =  #{checkdate} and naked_farvision_od is not NULL and naked_farvision_os is not NULL and dengxiaoqiujing_od_first is not NULL and dengxiaoqiujing_os_first is not NULL
+		) AS one
+		WHERE
+		dengxiaoqiujing &lt; '-6.0'
+		AND naked_farvision &lt; '5.0'
+	</select>
 	<select id="lcqqNumber" resultType="int">
 		SELECT
 		COUNT(dengxiaoqiujing) num
@@ -1337,6 +1411,26 @@ WHERE identity_card IN
 		WHERE
 		dengxiaoqiujing >= '-0.5'
 		AND dengxiaoqiujing &lt;= '0.75'
+	</select>
+	<select id="lcqqNumberld" resultType="int">
+		SELECT
+		COUNT(dengsecond) num
+		FROM
+		(
+		SELECT
+		LEAST(
+		dengxiaoqiujing_od_second,
+		dengxiaoqiujing_os_second
+		) AS dengsecond
+		FROM
+		y_student_school_he
+		WHERE
+		school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and
+		DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate} and dengxiaoqiujing_od_second is not null and dengxiaoqiujing_os_second is not null
+		) AS one
+		WHERE
+		dengsecond &lt;= '0.75'
+		AND dengsecond > '-0.5'
 	</select>
 	<select id="jxjsNumber" resultType="int">
 		SELECT
@@ -1362,6 +1456,30 @@ WHERE identity_card IN
 		naked_farvision >= '5.0'
 		AND dengxiaoqiujing &lt; '-0.5'
 	</select>
+	<select id="jxjsNumberld" resultType="int">
+		SELECT
+		COUNT(dengfirst) num
+		FROM
+		(
+		SELECT
+		LEAST(
+		dengxiaoqiujing_od_first,
+		dengxiaoqiujing_os_first
+		) AS dengfirst,
+		LEAST(
+		dengxiaoqiujing_od_second,
+		dengxiaoqiujing_os_second
+		) AS dengsecond
+		FROM
+		y_student_school_he
+		WHERE
+		school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and
+		DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate} and  dengxiaoqiujing_od_first is not NULL and dengxiaoqiujing_os_first is not NULL and dengxiaoqiujing_od_second is not null and dengxiaoqiujing_os_second is not null
+		) AS one
+		WHERE
+		dengfirst &lt; '-0.5'
+		AND dengsecond > '-0.5' and (dengsecond-dengfirst) >= '0.5'
+	</select>
 	<select id="studentList" resultType="map">
 		SELECT
 	student_name,identity_card,
@@ -1378,12 +1496,40 @@ WHERE identity_card IN
     AND DATE_FORMAT(last_check_time, '%Y-%m') = #{checkdate} and dengxiaoqiujingl is not NULL and dengxiaoqiujingr is not NULL and  naked_farvision_od is not NULL and naked_farvision_os is not NULL and naked_farvision_od != '0' and naked_farvision_os != '0' and naked_farvision_os != '' and naked_farvision_od != ''
     ORDER BY student_name
 	</select>
+	<select id="studentListld" resultType="map">
+		SELECT
+	student_name,identity_card,
+	grade,
+	concat((DATE_FORMAT(last_check_time, '%Y') - SUBSTRING(identity_card, 7, 4)) , '') AS age,
+	naked_farvision_od,
+	naked_farvision_os
+    FROM
+    	y_student_school_he
+    WHERE
+    	school = #{school}
+    AND AreaName = #{AreaName}
+    AND CityName = #{CityName}
+    AND DATE_FORMAT(last_check_time, '%Y-%m') = #{checkdate} and naked_farvision_od is not NULL and naked_farvision_os is not NULL and dengxiaoqiujing_od_first is not NULL and dengxiaoqiujing_os_first is not NULL and dengxiaoqiujing_od_second is not NULL and dengxiaoqiujing_os_second is not NULL
+    ORDER BY student_name
+	</select>
 	<select id="gradeNumber" resultType="map">
 		SELECT DISTINCT
 	grade as name,
 	COUNT(grade) as value
     FROM
     	s_student_school_he
+    WHERE
+    	school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and
+    	DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate}
+    GROUP BY
+    	grade;
+	</select>
+	<select id="gradeNumberld" resultType="map">
+		SELECT DISTINCT
+	grade as name,
+	COUNT(grade) as value
+    FROM
+    	y_student_school_he
     WHERE
     	school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and
     	DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate}
@@ -1439,7 +1585,53 @@ WHERE identity_card IN
 		student_class
 		) AS bb
 		WHERE
-		aa.grade = bb.grade and aa.student_class = bb.student_class GROUP BY lv DESC LIMIT 1,6
+		aa.grade = bb.grade and aa.student_class = bb.student_class GROUP BY lv DESC LIMIT 6
+	</select>
+	<select id="paiMingld" resultType="map">
+		SELECT
+		bb.grade 年级,bb.student_class 班级 ,
+		Round((bb.d / aa.b)*100,1) lv
+		FROM
+		(
+		SELECT
+		grade, student_class,
+		COUNT(student_class) b
+		FROM
+		y_student_school_he
+		WHERE
+		school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and
+		DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate} and dengxiaoqiujing_od_second is not NULL and dengxiaoqiujing_os_second is not NULL
+		GROUP BY
+		grade,
+		student_class
+		) AS aa,
+		(
+		SELECT
+		grade, student_class,
+		COUNT(student_class) d
+		FROM
+		(
+		SELECT
+		LEAST(
+		dengxiaoqiujing_od_second,
+		dengxiaoqiujing_os_second
+		) AS dengxiaoqiujing,
+		grade,
+		student_class
+		FROM
+		y_student_school_he
+		WHERE
+		school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and
+		DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate} and dengxiaoqiujing_od_second is not NULL and dengxiaoqiujing_os_second is not NULL
+		) AS two
+		WHERE
+		dengxiaoqiujing &lt; '-0.5'
+		GROUP BY
+		grade,
+		student_class
+		) AS bb
+		WHERE
+		aa.grade = bb.grade and aa.student_class = bb.student_class GROUP BY lv DESC LIMIT 6
 	</select>
 	<select id="gradeLv" resultType="map">
 		SELECT bb.grade , Round((aa.num / bb.num)*100,1) lv FROM
@@ -1481,27 +1673,83 @@ WHERE identity_card IN
 		grade) as bb
 		WHERE bb.grade = aa.grade GROUP BY lv desc
 	</select>
+	<select id="gradeLvld" resultType="map">
+		SELECT bb.grade , Round((aa.num / bb.num)*100,1) lv FROM
+		(SELECT DISTINCT
+		grade,
+		COUNT(grade) num
+		FROM
+		(
+		SELECT
+		LEAST(
+		dengxiaoqiujing_od_second,
+		dengxiaoqiujing_os_second
+		) AS dengxiaoqiujing,
+		grade
+		FROM
+		y_student_school_he
+		WHERE
+		school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and
+		DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate} and dengxiaoqiujing_od_second is not NULL and dengxiaoqiujing_os_second is not NULL
+		) AS one
+		WHERE
+		dengxiaoqiujing &lt; '-0.5'
+		GROUP BY
+		grade) as aa,
+		(SELECT DISTINCT
+		grade,
+		COUNT(grade) num
+		FROM
+		y_student_school_he
+		WHERE
+		school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and
+		DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate} and dengxiaoqiujing_od_second is not NULL and dengxiaoqiujing_os_second is not NULL
+		GROUP BY
+		grade) as bb
+		WHERE bb.grade = aa.grade GROUP BY lv desc
+	</select>
 	<select id="advice" resultType="map">
 		SELECT naked_farvision_od luoyanr,naked_farvision_os luoyanl,dengxiaoqiujingr,dengxiaoqiujingl,diopter_c_od zhujingr,diopter_c_os zhujingl,correction_farvision_od daijingr,correction_farvision_os daijingl FROM s_student_school_he WHERE student_name = #{name} and identity_card = #{idCard} and DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate}
+	</select>
+	<select id="adviceld" resultType="map">
+		SELECT dengxiaoqiujing_od_second dengxiaoqiujingr,dengxiaoqiujing_os_second dengxiaoqiujingl,diopter_c_od_first zhujingr,diopter_c_os_first zhujingl,correction_farvision_od daijingr,correction_farvision_os daijingl FROM y_student_school_he WHERE student_name = #{name} and identity_card = #{idCard} and DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate}
 	</select>
 	<select id="table" resultType="map">
 		SELECT student_name name,identity_card idCard,naked_farvision_od luoyanr,naked_farvision_os luoyanl,DATE_FORMAT(last_check_time,'%Y-%m-%d') checkdate FROM s_student_school_he where	student_name = #{name} and identity_card = #{idCard} and naked_farvision_od is not NULL and naked_farvision_os is not NULL and last_check_time is not NULL ORDER BY last_check_time desc
 	</select>
+	<select id="tableld" resultType="map">
+		SELECT student_name name,identity_card idCard,naked_farvision_od luoyanr,naked_farvision_os luoyanl,DATE_FORMAT(last_check_time,'%Y-%m-%d') checkdate FROM y_student_school_he where	student_name = #{name} and identity_card = #{idCard} and naked_farvision_od is not NULL and naked_farvision_os is not NULL and last_check_time is not NULL ORDER BY last_check_time desc
+	</select>
 	<select id="yanzhou" resultType="map">
 		SELECT first_check_od youyan,first_check_os zuoyan,DATE_FORMAT(last_check_time,'%Y-%m') checkdate FROM s_student_school_he WHERE	student_name = #{name} and identity_card = #{idCard} and last_check_time is not NULL and first_check_od is not NULL and first_check_os is not NULL ORDER BY DATE_FORMAT(last_check_time,'%Y-%m') DESC LIMIT 4
+	</select>
+	<select id="yanzhould" resultType="map">
+		SELECT first_check_od youyan,first_check_os zuoyan,DATE_FORMAT(last_check_time,'%Y-%m') checkdate FROM y_student_school_he WHERE	student_name = #{name} and identity_card = #{idCard} and last_check_time is not NULL and first_check_od is not NULL and first_check_os is not NULL ORDER BY DATE_FORMAT(last_check_time,'%Y-%m') DESC LIMIT 4
 	</select>
 	<select id="luoyan" resultType="map">
         SELECT naked_farvision_od youyan,naked_farvision_os zuoyan,DATE_FORMAT(last_check_time,'%Y-%m') checkdate FROM s_student_school_he WHERE	student_name = #{name} and identity_card = #{idCard} and last_check_time is not NULL and naked_farvision_od is not NULL and naked_farvision_os is not NULL ORDER BY DATE_FORMAT(last_check_time,'%Y-%m') DESC LIMIT 4
 	</select>
+	<select id="luoyanld" resultType="map">
+        SELECT naked_farvision_od youyan,naked_farvision_os zuoyan,DATE_FORMAT(last_check_time,'%Y-%m') checkdate FROM y_student_school_he WHERE	student_name = #{name} and identity_card = #{idCard} and last_check_time is not NULL and naked_farvision_od is not NULL and naked_farvision_os is not NULL ORDER BY DATE_FORMAT(last_check_time,'%Y-%m') DESC LIMIT 4
+	</select>
 	<select id="dengxiaoqiujing" resultType="map">
 		SELECT dengxiaoqiujingr youyan,dengxiaoqiujingl zuoyan,DATE_FORMAT(last_check_time,'%Y-%m') checkdate FROM s_student_school_he WHERE	student_name = #{name} and identity_card = #{idCard} and last_check_time is not NULL and dengxiaoqiujingl is not NULL and dengxiaoqiujingr is not NULL ORDER BY DATE_FORMAT(last_check_time,'%Y-%m') DESC LIMIT 4
+	</select>
+	<select id="dengxiaoqiujingld" resultType="map">
+		SELECT dengxiaoqiujing_od_first youyan,dengxiaoqiujing_os_first zuoyan,DATE_FORMAT(last_check_time,'%Y-%m') checkdate FROM y_student_school_he WHERE	student_name = #{name} and identity_card = #{idCard} and last_check_time is not NULL and dengxiaoqiujing_od_first is not NULL and dengxiaoqiujing_os_first is not NULL ORDER BY DATE_FORMAT(last_check_time,'%Y-%m') DESC LIMIT 4
 	</select>
 	<select id="report" resultType="map">
 		SELECT * FROM s_student_school_he WHERE student_name = #{name} and identity_card = #{idCard} and last_check_time = #{checkdate}
 	</select>
+	<select id="reportld" resultType="map">
+		SELECT * FROM y_student_school_he WHERE student_name = #{name} and identity_card = #{idCard} and last_check_time = #{checkdate}
+	</select>
 
 	<select id="maxcheckdate" resultType="string">
 		SELECT Max(DATE_FORMAT(last_check_time,'%Y-%m')) checkdate FROM s_student_school_he WHERE student_name = #{name} and identity_card = #{idCard} and dengxiaoqiujingl is not NULL and dengxiaoqiujingr is not NULL and  naked_farvision_od is not NULL and naked_farvision_os is not NULL and naked_farvision_od != '0' and naked_farvision_os != '0' and naked_farvision_os != '' and naked_farvision_od != ''
+    </select>
+	<select id="maxcheckdateld" resultType="string">
+		SELECT Max(DATE_FORMAT(last_check_time,'%Y-%m')) checkdate FROM y_student_school_he WHERE student_name = #{name} and identity_card = #{idCard} and dengxiaoqiujing_od_second is not NULL and dengxiaoqiujing_os_second is not NULL and  naked_farvision_od is not NULL and naked_farvision_os is not NULL
     </select>
 	<select id="login" resultType="int">
 		select count(id) from s_student_school_he where student_name=#{username} and identity_card=#{password} and naked_farvision_od is not null and correction_farvision_os is not null and last_check_time is not null

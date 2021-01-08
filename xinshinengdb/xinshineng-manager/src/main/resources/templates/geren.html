@@ -112,7 +112,7 @@
     $('#TEAS').html(TEAS)
     if (table.length>0) {
         for (var i = 0; i <table.length ; i++) {
-            html+='<tr><td>'+table[i].checkdate+'</td><td>左：'+table[i].luoyanl+'</td><td>右：'+table[i].luoyanr+'</td><td><a href="/skip/gerenchakan?name='+table[i].name+'&idCard='+table[i].idCard+'&checkdate='+table[i].checkdate+'&checkType='+table[i].checkType+'" target=\'_blank\'>查看</a></td></tr>'
+            html+='<tr><td>'+table[i].checkdate+'</td><td>左：'+table[i].luoyanl+'</td><td>右：'+table[i].luoyanr+'</td><td><a href="/skip/gerenchakan?name='+table[i].name+'&idCard='+table[i].idCard+'&checkdate='+table[i].checkdate+'&checkType='+table[i].checkType+'&age='+table[i].age+'" target=\'_blank\'>查看</a></td></tr>'
         }
         $('#gerentable').html(html)
     }

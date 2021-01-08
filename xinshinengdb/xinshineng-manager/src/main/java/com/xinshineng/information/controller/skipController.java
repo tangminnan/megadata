@@ -22,40 +22,40 @@ public class skipController {
 
     @GetMapping("/school")
     public String skipToSchool(Model model, String school, String CityName, String AreaName, String checkdate,String checkType){
-        if ("sc".equals(checkType)){
+
         Map<String, String> dataOne;
-        dataOne = redisTemplate.opsForHash().entries(school+AreaName+checkdate+"dataOne");
+        dataOne = redisTemplate.opsForHash().entries(school+AreaName+checkdate+checkType+"dataOne");
         if(dataOne.isEmpty()){
-            dataOne = schoolservice.dataOne(school, CityName, AreaName, checkdate);
+            dataOne = schoolservice.dataOne(school, CityName, AreaName, checkdate,checkType);
         }
 
         Map<String, List> dataTwo;
-        dataTwo = redisTemplate.opsForHash().entries(school+AreaName+checkdate+"dataTwo");
+        dataTwo = redisTemplate.opsForHash().entries(school+AreaName+checkdate+checkType+"dataTwo");
         if (dataTwo.isEmpty()){
-            dataTwo = schoolservice.dataTwo(school, CityName, AreaName, checkdate);
+            dataTwo = schoolservice.dataTwo(school, CityName, AreaName, checkdate,checkType);
         }
 
         List<Map> dataThree;
-        dataThree = redisTemplate.opsForList().range(school+AreaName+checkdate+"dataThree",0,-1);
+        dataThree = redisTemplate.opsForList().range(school+AreaName+checkdate+checkType+"dataThree",0,-1);
         if (dataThree.size()==0){
             dataThree = schoolservice.dataThree(school, CityName, AreaName, checkdate,checkType);
         }
 
         List<Map> dataFour;
-        dataFour = redisTemplate.opsForList().range(school+AreaName+checkdate+"dataFour",0,-1);
+        dataFour = redisTemplate.opsForList().range(school+AreaName+checkdate+checkType+"dataFour",0,-1);
         if (dataFour.size()==0){
-            dataFour = schoolservice.dataFour(school, CityName, AreaName, checkdate);
+            dataFour = schoolservice.dataFour(school, CityName, AreaName, checkdate,checkType);
         }
 
         List<Map> dataFive;
-        dataFive = redisTemplate.opsForList().range(school+AreaName+checkdate+"dataFive",0,-1);
+        dataFive = redisTemplate.opsForList().range(school+AreaName+checkdate+checkType+"dataFive",0,-1);
         if (dataFive.size()==0){
-            dataFive = schoolservice.dataFive(school, CityName, AreaName, checkdate);
+            dataFive = schoolservice.dataFive(school, CityName, AreaName, checkdate,checkType);
         }
         List<Map> dataSix;
-        dataSix = redisTemplate.opsForList().range(school+AreaName+checkdate+"dataSix",0,-1);
-        if(dataSix.size()==0){
-            dataSix = schoolservice.dataSix(school, CityName, AreaName, checkdate);
+        dataSix = redisTemplate.opsForList().range(school+AreaName+checkdate+checkType+"dataSix",0,-1);
+        if(dataSix.size()==0) {
+            dataSix = schoolservice.dataSix(school, CityName, AreaName, checkdate, checkType);
         }
         model.addAttribute("dataOne",dataOne);
         model.addAttribute("dataTwo",dataTwo);
@@ -63,14 +63,7 @@ public class skipController {
         model.addAttribute("dataFour",dataFour);
         model.addAttribute("dataFive",dataFive);
         model.addAttribute("dataSix",dataSix);
-        }else if ("ld".equals(checkType)){
-            Map<String, String> dataOne;
-            dataOne = redisTemplate.opsForHash().entries(school+AreaName+checkdate+"dataOneld");
-            if(dataOne.isEmpty()){
-                dataOne = schoolservice.dataOneld(school, CityName, AreaName, checkdate);
-            }
-            model.addAttribute("dataOne",dataOne);
-        }
+
 
         model.addAttribute("checkType",checkType);
         model.addAttribute("CityName",CityName);
@@ -92,10 +85,16 @@ public class skipController {
     }
 
     @GetMapping("/gerenchakan")
-    public String skipToChaKan(Model model,String name,String idCard,String checkdate,String checkType){
-        Map report = schoolservice.report(name, idCard, checkdate, checkType);
-        model.addAttribute("report",report);
-        return "gerenchakan";
+    public String skipToChaKan(Model model,String name,String idCard,String checkdate,String checkType,String age){
+        if ("sc".equals(checkType)) {
+            Map report = schoolservice.report(name, idCard, checkdate, checkType);
+            model.addAttribute("report", report);
+            return "gerenchakan";
+        }else {
+            Map report = schoolservice.reportld(name, idCard, checkdate, checkType,age);
+            model.addAttribute("report",report);
+            return "gerenliudiaochakan";
+        }
     }
 
     @GetMapping("/jiancebiao")
@@ -121,11 +120,11 @@ public class skipController {
     }
 
     @GetMapping("/geren")
-    public String skipToGeRen(Model model, String name,String idCard,String checkdate,String checkType){
+    public String skipToGeRen(Model model, String name,String idCard,String checkdate,String checkType,String age){
         model.addAttribute("name","您好，"+name+"!");
-        Map gerenAdvice  = schoolservice.gerenAdvice(name, idCard, checkdate);
-        List<Map> table = schoolservice.table(name, idCard,checkType);
-        Map<String,List> echarts = schoolservice.echarts(name, idCard);
+        Map gerenAdvice  = schoolservice.gerenAdvice(name, idCard, checkdate,age,checkType);
+        List<Map> table = schoolservice.table(name, idCard,checkType,age);
+        Map<String,List> echarts = schoolservice.echarts(name, idCard,checkType);
 
         model.addAttribute("gerenAdvice",gerenAdvice);
         model.addAttribute("table",table);
