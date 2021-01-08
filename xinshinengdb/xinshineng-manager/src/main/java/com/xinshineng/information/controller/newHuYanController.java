@@ -45,8 +45,13 @@ public class newHuYanController {
     @ResponseBody
     public String getClazzJSL(Model model,String school, String CityName, String AreaName, String checkType, String xuebu, String grade, String clazz){
         String  ClazzJSL =  newHuYanService.getClazzJSL(school,CityName,AreaName,checkType,xuebu,grade,clazz);
-        List<String> clazzIdCards = newHuYanService.getClazzIdCards(school,CityName,AreaName,checkType,xuebu,grade,clazz);
-        model.addAttribute("idcards",clazzIdCards);
+
         return ClazzJSL;
+    }
+    @GetMapping("/GetClazzIdCards")
+    @ResponseBody
+    public List<String> getClazzIdCards(Model model,String school, String CityName, String AreaName, String checkType, String xuebu, String grade, String clazz){
+        List<String> clazzIdCards = newHuYanService.getClazzIdCards(school,CityName,AreaName,checkType,xuebu,grade,clazz);
+        return clazzIdCards;
     }
 }
