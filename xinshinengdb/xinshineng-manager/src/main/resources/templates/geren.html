@@ -106,6 +106,10 @@
 <script type="text/javascript" th:inline="javascript">
     var table = [[${table}]];
     var html = '';
+    var JHY = '<a href="/skip/jiancebiao?name='+table[0].name+'&idCard='+table[0].idCard+'">用眼行为监测</a>';
+    var TEAS = '<a href="/skip/EyeTEAS?name='+table[0].name+'&idCard='+table[0].idCard+'">Eye-TEAS治疗</a>'
+    $('#JHY').html(JHY)
+    $('#TEAS').html(TEAS)
     if (table.length>0) {
         for (var i = 0; i <table.length ; i++) {
             html+='<tr><td>'+table[i].checkdate+'</td><td>左：'+table[i].luoyanl+'</td><td>右：'+table[i].luoyanr+'</td><td><a href="/skip/gerenchakan?name='+table[i].name+'&idCard='+table[i].idCard+'&checkdate='+table[i].checkdate+'&checkType='+table[i].checkType+'" target=\'_blank\'>查看</a></td></tr>'
