@@ -16,42 +16,42 @@
 <div class="pieList">
 	<ul>
 		<li>
-			<p>阅读时长：35.95分钟</p>
+			<p id="read">阅读时长：0分钟</p>
 			<h2>平均单次阅读时长</h2>
 			<div id="main" style="width: 100%;height:200px;"></div>
 		</li>
 		<li>
-			<p>户外时长：0.61分钟</p>
+			<p id="outdoors">户外时长：0小时</p>
 			<h2>户外总时长</h2>
 			<div id="main1" style="width: 100%;height:200px;"></div>
 		</li>
 		<li>
-			<p>阅读距离：24.44厘米</p>
+			<p id="distance_least">阅读距离：0厘米</p>
 			<h2>平均阅读距离</h2>
 			<div id="main2" style="width: 100%;height:200px;"></div>
 		</li>
 		<li>
-			<p>阅读光照：296.29lux</p>
+			<p id="light_least">阅读光照：0lux</p>
 			<h2>平均阅读光照</h2>
 			<div id="main3" style="width: 100%;height:200px;"></div>
 		</li>
 		<li>
-			<p>看手机时长：0.38分钟</p>
+			<p id="look_phone">看手机时长：0分钟</p>
 			<h2>平均看手机时长</h2>
 			<div id="main4" style="width: 100%;height:200px;"></div>
 		</li>
 		<li>
-			<p>单次看电脑时长：0.89分钟</p>
-			<h2>平均单次看电脑时长(分钟)</h2>
+			<p id="look_tv">看电脑时长：0分钟</p>
+			<h2>平均看电脑时长(分钟)</h2>
 			<div id="main5" style="width: 100%;height:200px;"></div>
 		</li>
 		<li>
-			<p>坐姿倾斜度：12.93°</p>
+			<p id="tilte">坐姿倾斜度：0°</p>
 			<h2>平均坐姿倾斜度</h2>
 			<div id="main6" style="width: 100%;height:200px;"></div>
 		</li>
 		<li>
-			<p>有效使用监护仪总时长：4.83小时</p>
+			<p id="use_jianhuyi">有效使用监护仪总时长：0小时</p>
 			<h2>有效使用监护仪总时长</h2>
 			<div id="main7" style="width: 100%;height:200px;"></div>
 		</li>
@@ -65,18 +65,50 @@
 <script type="text/javascript" th:inline="javascript">
 	var name =  [[${name}]];
 	var idCard =  [[${idCard}]];
-	$.ajax({
-		cache: true,
-		type: "GET",
-		async: false,
-		url: '/xinshineng/jianhuyi/GetData?name='+name+'&idCard='+idCard,
-		error: function (request) {
-			parent.layer.alert("网络超时");
-		},
-		success: function (data) {
+	window.onload=function (){
+		$.ajax({
+			cache: true,
+			type: "GET",
+			async: false,
+			url: '/xinshineng/jianhuyi/GetData?name='+name+'&idCard='+idCard,
+			error: function (request) {
+				parent.layer.alert("网络超时");
+			},
+			success: function (data) {
+				if (data==null || data=='null' || data==''){
+					alert('未使用监护仪，暂无数据');
+					history.go(-1);
+				}
+				var read = parseFloat(data.read);
+				var outdoors = parseFloat(data.outdoors);
+				var distance_least = parseFloat(data.distance_least);
+				var light_least = parseFloat(data.light_least);
+				var look_phone = parseFloat(data.look_phone);
+				var look_tv = parseFloat(data.look_tv);
+				var tilte = parseFloat(data.tilte);
+				var use_jianhuyi = parseFloat(data.use_jianhuyi);
 
-		}
-	})
+				var readLeavl = read<=20?'优':read<=40?'良':read<=90?'差':'极差';
+				var outdoorsLeavl = outdoors>=2?'优':outdoors>=1?'良':outdoors>=0.5?'差':'极差';
+				var distance_leastLeavl = distance_least>=33?'优':distance_least>=30?'良':distance_least>=20?'差':'极差';
+				var light_leastLeavl = light_least>=300?'优':data.light_least>=250?'良':light_least>=200?'差':'极差';
+				var look_phoneLeavl = look_phone<=10?'优':look_phone<=20?'良':look_phone<=40?'差':'极差';
+				var look_tvLeavl = look_tv<=20?'优':look_tv<=40?'良':look_tv<=60?'差':'极差';
+				var tilteLeavl = tilte<=5?'优':tilte<=10?'良':tilte<=15?'差':'极差';
+				var use_jianhuyiLeavl = use_jianhuyi>=10?'优':use_jianhuyi>=8?'良':use_jianhuyi>=5?'差':'极差';
+
+				$("#read").text('阅读时长：'+read+'分钟('+readLeavl+')');
+				$("#outdoors").text('户外时长：'+outdoors+'小时('+outdoorsLeavl+')');
+				$("#distance_least").text('阅读距离：'+distance_least+'厘米('+distance_leastLeavl+')');
+				$("#light_least").text('阅读光照：'+light_least+'lux('+light_leastLeavl+')');
+				$("#look_phone").text('看手机时长：'+look_phone+'分钟('+look_phoneLeavl+')');
+				$("#look_tv").text('看电脑时长：'+look_tv+'分钟('+look_tvLeavl+')');
+				$("#tilte").text('坐姿倾斜度：'+tilte+'°('+tilteLeavl+')');
+				$("#use_jianhuyi").text('有效使用监护仪总时长：'+use_jianhuyi+'小时('+use_jianhuyiLeavl+')');
+			}
+		})
+	}
+
 	// 基于准备好的dom，初始化echarts实例
 	var myChart = echarts.init(document.getElementById('main'));
 	var myChart1 = echarts.init(document.getElementById('main1'));

@@ -137,4 +137,8 @@
 		</foreach>
 	</delete>
 
+	<select id="getData" resultType="map">
+SELECT read_duration,outdoors_duration,read_distance,read_light,look_phone_duration,look_tv_computer_duration,sit_tilt,use_jianhuyi_duration FROM j_use_jianhuyi_log
+ WHERE user_id = (SELECT id FROM j_user WHERE NAME=#{name} AND identity_card = #{idCard}) AND DATE_FORMAT(add_time,'%Y-%m-%d') =  (SELECT MAX(DATE_FORMAT(add_time,'%Y-%m-%d')) FROM j_use_jianhuyi_log WHERE user_id=(SELECT id FROM j_user WHERE NAME=#{name} AND identity_card = #{idCard}) )
+	</select>
 </mapper>

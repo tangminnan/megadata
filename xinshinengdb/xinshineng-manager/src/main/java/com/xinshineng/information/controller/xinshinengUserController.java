@@ -196,5 +196,11 @@ public class xinshinengUserController{
 	}
 
 
-
+	@GetMapping("/GetData")
+	@ResponseBody
+	public List<Map<String,Object>> getData(String name,String idCard){
+		//按月查询列表数据
+		List<Map<String,Object>> result = dataService.getData(name,idCard);
+		return result;
+	}
 }

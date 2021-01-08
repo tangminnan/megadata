@@ -375,4 +375,8 @@
 		</foreach>
 	</delete>
 
+
+	<select id="getData" resultType="map">
+		 SELECT user.name,user.phone,treat.treat_time,treat.update_time,treat.adddate,treat.treat_strength,treat.treat_frequency,treat.treat_waveform,treat.treat_workmethod,treat.zb FROM z_user `user`,treat_data treat WHERE user.`id`=treat.userid AND user.name = #{name} AND identity_card = #{idCard}
+	</select>
 </mapper>

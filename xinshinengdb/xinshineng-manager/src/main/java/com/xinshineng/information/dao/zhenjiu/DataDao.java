@@ -8,6 +8,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.xinshineng.information.domain.zhenjiu.DataDO;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 
@@ -45,4 +46,6 @@ public interface DataDao {
 	List<DataDO> lists(Integer id);
 
 	List<Map<String, Object>> exeList(Map<String, Object> map);
+
+	List<Map<String, Object>> getData(@Param("name") String name,@Param("idCard") String idCard);
 }

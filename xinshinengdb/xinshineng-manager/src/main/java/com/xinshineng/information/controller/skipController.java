@@ -114,7 +114,9 @@ public class skipController {
         return "jiaose-haizi";
     }
     @GetMapping("/EyeTEAS")
-    public String skipToEyeTeas(){
+    public String skipToEyeTeas(Model model,String name,String idCard){
+        model.addAttribute("name",name);
+        model.addAttribute("idCard",idCard);
         return "biaoge-teas";
     }
     @GetMapping("/success")

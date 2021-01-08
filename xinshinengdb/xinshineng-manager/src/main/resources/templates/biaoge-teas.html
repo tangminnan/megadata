@@ -28,92 +28,54 @@
   	  		<th>载波强度</th>
   	  	</tr>
   	  </thead>
-	  <tbody>
-		<tr>
-		  <td>赵厚今</td>
-		  <td>15098907927</td>
-		  <td>30</td>
-		  <td>2020-12-15 21:30:11</td>
-		  <td>2020-12-15 20:00:11</td>
-		  <td>16</td>
-		  <td>15</td>
-		  <td>连续波</td>
-		  <td>同时</td>
-		  <td></td>
-		  <td>-</td>
-		</tr>
-		<tr>
-		  <td>赵厚今</td>
-		  <td>15098907927</td>
-		  <td>30</td>
-		  <td>2020-12-14 22:20:13</td>
-		  <td>2020-12-14 22:50:13</td>
-		  <td>16</td>
-		  <td>15</td>
-		  <td>连续波</td>
-		  <td>同时</td>
-		  <td></td>
-		  <td>-</td>
-		</tr>
-		<tr>
-		  <td>赵厚今</td>
-		  <td>15098907927</td>
-		  <td>30</td>
-		  <td>2020-12-13 22:08:04</td>
-		  <td>2020-12-13 22:38:04</td>
-		  <td>16</td>
-		  <td>15</td>
-		  <td>连续波</td>
-		  <td>同时</td>
-		  <td></td>
-		  <td>-</td>
-		</tr>
-		<tr>
-		  <td>赵厚今</td>
-		  <td>15098907927</td>
-		  <td>30</td>
-		  <td>2020-12-12 21:46:12</td>
-		  <td>2020-12-12 22:14:12</td>
-		  <td>16</td>
-		  <td>15</td>
-		  <td>连续波</td>
-		  <td>同时</td>
-		  <td></td>
-		  <td>-</td>
-		</tr>
-		<tr>
-		  <td>赵厚今</td>
-		  <td>15098907927</td>
-		  <td>30</td>
-		  <td>2020-12-11 22:05:53</td>
-		  <td>2020-12-11 22:35:53</td>
-		  <td>15</td>
-		  <td>15</td>
-		  <td>连续波</td>
-		  <td>同时</td>
-		  <td></td>
-		  <td>-</td>
-		</tr>
-		<tr>
-		  <td>赵厚今</td>
-		  <td>15098907927</td>
-		  <td>30</td>
-		  <td>2020-12-10 20:37:09</td>
-		  <td>2020-12-10 21:07:09</td>
-		  <td>13</td>
-		  <td>15</td>
-		  <td>连续波</td>
-		  <td>同时</td>
-		  <td></td>
-		  <td>-</td>
-		</tr>
+	  <tbody id="dataList">
+
 	  </tbody>
 	</table>
-
   </div>
    
-   
+
 </body>
+<script type="text/javascript" th:inline="javascript">
+	var name =  [[${name}]];
+	var idCard =  [[${idCard}]];
+
+	window.onload=function (){
+		$.ajax({
+			cache: true,
+			type: "GET",
+			async: false,
+			url: '/xinshineng/users/GetData?name=' + name + '&idCard=' + idCard,
+			error: function (request) {
+				parent.layer.alert("网络超时");
+			},
+			success: function (data) {
+				if (data==null || data ==''){
+					alert("未使用Eye-TEAS治疗仪,暂无数据！");
+					history.go(-1);
+				}
+				var html='';
+				for (let i = 0; i < data.length; i++) {
+					html+=`
+						<tr>
+						<td>`+data[i].name+`</td>
+						<td>`+data[i].phone+`</td>
+						<td>`+data[i].treat_time+`</td>
+						<td>`+data[i].adddate+`</td>
+						<td>`+data[i].update_time+`</td>
+						<td>`+data[i].treat_strength+`</td>
+						<td>`+data[i].treat_frequency+`</td>
+						<td>`+data[i].treat_waveform+`</td>
+						<td>`+data[i].treat_workmethod+`</td>
+						<td>`+data[i].treat_electrode+`</td>
+						<td>`+data[i].zb+`</td>
+						</tr>`
+				}
+				$("#dataList").html(html);
+			}
+		})
+	}
+</script>
 </html>
 
 

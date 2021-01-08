@@ -27,4 +27,6 @@ public interface UseJianhuyiLogService {
 	int remove(Integer id);
 	
 	int batchRemove(Integer[] ids);
+
+    Map getData(String name, String idCard);
 }
