@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.xinshineng.information.domain.jianhuyi.UseJianhuyiLogDO;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 检测记录表
@@ -29,4 +30,6 @@ public interface UseJianhuyiLogDao {
 	int remove(Integer id);
 	
 	int batchRemove(Integer[] ids);
+
+    List<Map> getData(@Param("name") String name,@Param("idCard") String idCard);
 }

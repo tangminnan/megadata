@@ -91,5 +91,43 @@ public class DataServiceImpl implements DataService {
 		
 		return dataDao.exeList(map);
 	}
-	
+
+	@Override
+	public List<Map<String,Object>> getData(String name, String idCard) {
+		List<Map<String,Object>> dataList = dataDao.getData(name,idCard);
+		if (dataList.size()==0){
+			return null;
+		}
+		for (int i = 0; i < dataList.size(); i++) {
+			Map<String, Object> map = dataList.get(i);
+			map.put("phone",map.get("phone")==null?"":map.get("phone"));
+			int treat_waveform = (int) map.get("treat_waveform");
+			if (0==treat_waveform){
+				map.put("treat_waveform","");
+			}
+			if (1==treat_waveform){
+				map.put("treat_waveform","连续波");
+			}
+			if (2==treat_waveform){
+				map.put("treat_waveform","断续波");
+			}
+			if (3==treat_waveform){
+				map.put("treat_waveform","疏密波");
+			}
+			int treat_workmethod = (int) map.get("treat_workmethod");
+			if (0==treat_workmethod){
+				map.put("treat_workmethod","");
+			}
+			if (1==treat_workmethod){
+				map.put("treat_workmethod","同时");
+			}
+			if (2==treat_workmethod){
+				map.put("treat_workmethod","轮巡");
+			}
+			map.put("treat_electrode","");
+			dataList.set(i,map);
+		}
+		return dataList;
+	}
+
 }

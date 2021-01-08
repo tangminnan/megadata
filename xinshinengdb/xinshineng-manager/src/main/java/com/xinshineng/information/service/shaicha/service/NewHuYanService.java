@@ -10,4 +10,6 @@ public interface NewHuYanService {
     List<String> getClazzList(String school, String cityName, String areaName, String checkType, String xuebu, String grade);
 
     String getClazzJSL(String school, String cityName, String areaName, String checkType, String xuebu, String grade, String clazz);
+
+    List<String> getClazzIdCards(String school, String cityName, String areaName, String checkType, String xuebu, String grade, String clazz);
 }

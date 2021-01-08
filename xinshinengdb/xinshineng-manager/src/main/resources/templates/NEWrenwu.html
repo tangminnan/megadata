@@ -447,6 +447,8 @@
 
 	var XueBu='';
 	var Grade='';
+	var Clazz='';
+	var idCards=[];
 	$.ajax({
 		cache: true,
 		type: "GET",
@@ -472,7 +474,7 @@
 			$("#JG").text(``);
 			XueBu='';
 			Grade='';
-
+			Clazz='';
 		}
 		if ('=请选择='!=xuebu){
 			XueBu=xuebu;
@@ -503,6 +505,7 @@
 			$("#JG").text(``);
 
 			Grade='';
+			Clazz='';
 		}
 		if ('=请选择='!=grade){
 			Grade=grade;
@@ -531,9 +534,11 @@
 			$("#JG").html(``);
 			$("#JSL").text(`0%`);
 			$("#JG").text(``);
+			Clazz='';
 		}
 		if ('=请选择='!=clazz){
 			$("#JG").text($("#XB").val()+$("#grade").val()+$("#clazz").val()+'统计结果');
+			Clazz=clazz;
 			$.ajax({
 				cache: true,
 				type: "GET",
@@ -544,9 +549,26 @@
 				},
 				success: function (data) {
 					$("#JSL").text(data+'%')
+					getClazzIdCards();
 				}
 			})
 		}
+	}
+
+	var getClazzIdCards = function (){
+			$("#JG").text($("#XB").val()+$("#grade").val()+$("#clazz").val()+'统计结果');
+			$.ajax({
+				cache: true,
+				type: "GET",
+				async: false,
+				url: '/Newhuyan/GetClazzIdCards?school='+school+'&CityName='+CityName+'&AreaName='+AreaName+'&checkType='+checkType+'&xuebu='+XueBu+'&grade='+Grade+'&clazz='+Clazz,
+				error: function (request) {
+					parent.layer.alert("网络超时");
+				},
+				success: function (data) {
+					idCards=data;
+				}
+			})
 	}
 </script>
 

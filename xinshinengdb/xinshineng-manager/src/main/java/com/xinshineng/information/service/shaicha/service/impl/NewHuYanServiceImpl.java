@@ -85,4 +85,10 @@ public class NewHuYanServiceImpl implements NewHuYanService {
         }
         return "0";
     }
+
+    @Override
+    public List<String> getClazzIdCards(String school, String cityName, String areaName, String checkType, String xuebu, String grade, String clazz) {
+        List<String> clazzIdCards = newHuYanDao.getClazzIdCards(school,cityName,areaName,xuebu,grade,clazz);
+        return clazzIdCards;
+    }
 }

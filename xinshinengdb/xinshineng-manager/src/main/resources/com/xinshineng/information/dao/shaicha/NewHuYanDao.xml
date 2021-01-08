@@ -55,4 +55,10 @@ last_check_time IS NOT NULL AND dengxiaoqiujing_od_first IS NOT NULL AND dengxia
         ANDCityName =#{cityName} AND AreaName = #{areaName}  AND school=#{school} AND xue_bu =#{xuebu} AND grade = #{grade} AND student_class = #{clazz}) stu
         WHERE DXQJS &lt;=-0.5
     </select>
+
+    <select id="getClazzIdCards" resultType="string">
+        SELECT identity_card num FROM s_student_school_he
+WHERE school=#{school} AND CityName=#{cityName} AND AreaName=#{areaName} AND xue_bu =#{xuebu} AND grade=#{grade} AND student_class = #{clazz}
+AND last_check_time IS NOT NULL AND dengxiaoqiujingl IS NOT NULL AND dengxiaoqiujingr IS NOT NULL AND naked_farvision_od IS NOT NULL AND naked_farvision_os IS NOT NULL
+    </select>
 </mapper>

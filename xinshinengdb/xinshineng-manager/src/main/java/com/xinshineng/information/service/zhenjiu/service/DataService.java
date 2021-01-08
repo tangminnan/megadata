@@ -42,4 +42,6 @@ public interface DataService {
 	List<DataDO> lists(Integer id);
 
 	List<Map<String, Object>> exeList(Map<String, Object> map);
+
+    List<Map<String,Object>> getData(String name, String idCard);
 }
