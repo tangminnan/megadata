@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 
@@ -34,4 +35,7 @@ public interface UserDao {
 	
 	Long[] listAllDept();
 
+    int getUserId(@Param("username") String username,@Param("password") String password);
+
+    String getName(Integer sys_id);
 }

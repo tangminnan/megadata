@@ -155,4 +155,12 @@
 	<select id="listAllDept" resultType="long">
 				select DISTINCT dept_id from sys_user
 	</select>
+
+	<select id="getUserId" resultType="int">
+		select user_id from sys_user where username = #{username} and password = #{password}
+	</select>
+
+	<select id="getName" resultType="string">
+		select name from sys_user where user_id = #{sys_id}
+	</select>
 </mapper>

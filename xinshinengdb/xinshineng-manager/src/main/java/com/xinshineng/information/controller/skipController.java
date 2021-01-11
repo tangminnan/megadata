@@ -1,6 +1,7 @@
 package com.xinshineng.information.controller;
 
 import com.sun.org.apache.xpath.internal.operations.Mod;
+import com.xinshineng.information.service.jigou.service.JiGouService;
 import com.xinshineng.information.service.shaicha.service.schoolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -9,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +21,9 @@ public class skipController {
     private schoolService schoolservice;
     @Autowired
     private RedisTemplate redisTemplate;
+
+    @Autowired
+    private JiGouService jiGouService;
 
     @GetMapping("/school")
     public String skipToSchool(Model model, String school, String CityName, String AreaName, String checkdate,String checkType){
@@ -76,6 +81,80 @@ public class skipController {
         model.addAttribute("CityName",CityName);
         model.addAttribute("AreaName",AreaName);
         return "school";
+    }
+
+    @GetMapping("/jigou")
+    public String skipToJiGou(Model model,Integer sys_id){
+        Map oneData = redisTemplate.opsForHash().entries(sys_id + "JiGouMainData");
+        if (oneData.isEmpty()){
+            oneData = jiGouService.getOneData(sys_id);
+            redisTemplate.opsForHash().putAll(sys_id + "JiGouMainData",oneData);
+        }
+        model.addAttribute("oneData",oneData);
+        Map twoData = redisTemplate.opsForHash().entries(sys_id + "JiGouLeftData");
+        if (twoData.isEmpty()){
+            twoData = jiGouService.getTwoData(sys_id);
+            redisTemplate.opsForHash().putAll(sys_id + "JiGouLeftData",twoData);
+        }
+        model.addAttribute("twoData",twoData);
+        Map threeData = redisTemplate.opsForHash().entries(sys_id + "JiGouJsData");
+        if (threeData.isEmpty()){
+            threeData = jiGouService.getThreeData(sys_id);
+            redisTemplate.opsForHash().putAll(sys_id + "JiGouJsData",threeData);
+        }
+        model.addAttribute("threeData",threeData);
+        Map fourData = redisTemplate.opsForHash().entries(sys_id + "JiGouAgeData");
+        if (fourData.isEmpty()){
+            fourData = jiGouService.getFourData(sys_id);
+            redisTemplate.opsForHash().putAll(sys_id + "JiGouAgeData",fourData);
+        }
+        model.addAttribute("fourData",fourData);
+
+        Boolean hasSchool = redisTemplate.hasKey(sys_id + "SchoolList");
+        List<Map> JGSchoolList = new ArrayList<>();
+        if (!hasSchool){
+            JGSchoolList = jiGouService.getSchoolList(sys_id);
+            redisTemplate.opsForList().rightPushAll(sys_id + "SchoolList",JGSchoolList);
+        }
+        if (hasSchool){
+            JGSchoolList = redisTemplate.opsForList().range(sys_id + "SchoolList", 0, -1);
+        }
+        model.addAttribute("JGSchoolList",JGSchoolList);
+
+        Boolean hasGerenList = redisTemplate.hasKey(sys_id + "GerenList");
+        List<Map> gerenList = new ArrayList<>();
+        if (!hasGerenList){
+            gerenList = jiGouService.getGerenList(sys_id);
+            redisTemplate.opsForList().rightPushAll(sys_id + "GerenList",gerenList);
+        }
+        if (hasGerenList){
+            gerenList = redisTemplate.opsForList().range(sys_id + "GerenList", 0, -1);
+        }
+        model.addAttribute("gerenList",gerenList);
+
+        Boolean hasEyeaxisList = redisTemplate.hasKey(sys_id + "eyeaxisList");
+        List<Map> eyeaxisList = new ArrayList<>();
+        if (!hasEyeaxisList){
+            eyeaxisList = jiGouService.getEyeaxisList(sys_id);
+            redisTemplate.opsForList().rightPushAll(sys_id + "eyeaxisList",eyeaxisList);
+        }
+        if (hasEyeaxisList){
+            eyeaxisList = redisTemplate.opsForList().range(sys_id + "eyeaxisList", 0, -1);
+        }
+        model.addAttribute("eyeaxisList",eyeaxisList);
+
+        Boolean hasCornealList = redisTemplate.hasKey(sys_id + "cornealList");
+        List<Map> cornealList = new ArrayList<>();
+        if (!hasCornealList){
+            cornealList = jiGouService.getCornealList(sys_id);
+            redisTemplate.opsForList().rightPushAll(sys_id + "cornealList",cornealList);
+        }
+        if (hasCornealList){
+            cornealList = redisTemplate.opsForList().range(sys_id + "cornealList", 0, -1);
+        }
+        model.addAttribute("cornealList",cornealList);
+
+        return "jigou";
     }
 
     @GetMapping("/wenjuan1")

@@ -18,14 +18,14 @@
 	<div class="index_header">
 		<div class="h_left">
 			<div class="showTime">
-				<p class="time" style="font-size:12px;">2020年12月<span></span></p>
+				<p class="time" style="font-size:12px;">2021年1月<span></span></p>
 			</div>
 		</div>
 		<div class="h_center">
 			山东省儿童青少年健康与近视防控大数据平台
 		</div>
 		<div class="h_right">
-			<div class="pagevalue_sel">近视防控中心</div>
+			<div class="pagevalue_sel"><span th:text="${oneData.name}"></span></div>
 		</div>
 	</div>
 	<!--中间内容区-->
@@ -35,10 +35,226 @@
 			<div class="totalbkind">
 				<p class="totalbkind_h5">历年检测人数</p>
 				<div id="main1" style="width:100%;height:100%;"></div>
+				<script type="text/javascript" th:inline="javascript">
+					var numList = [[${twoData.numList}]]
+					var checkTimeList = [[${twoData.checkTimeList}]]
+					var myChart1 = echarts.init(document.getElementById('main1'));
+					option = {
+						title: {
+							text: '',
+							textStyle: {
+								fontWeight: 'normal',
+								color: '#fff',//标题颜色
+							},
+							x:"left"
+						},
+						tooltip: {
+							trigger: 'axis'
+						},
+
+						grid: {
+							left: '3%',
+							right: '8%',
+							bottom: '18%',
+							containLabel: true
+						},
+						xAxis: {
+							type: 'category',
+							boundaryGap: false,
+							data: checkTimeList,
+							axisLabel: {
+								//formatter: '{value} ml',//单位
+								textStyle: {fontSize : 12 ,color:'#9dcfe2'},
+							},
+							//x轴颜色
+							axisLine: {
+								lineStyle: {color: '#153b57',}
+							},
+						},
+						yAxis: {
+							type: 'value',
+							name: '人数',
+							nameTextStyle:{//y轴上方单位的颜色
+								color:'#9dcfe2'
+							},
+							//设置网格线颜色
+							splitLine: {
+								show: true,
+								lineStyle:{
+									color: ['#0e2342'],
+									width: 1,
+									type: 'solid'
+								},
+							},
+							axisLabel: {
+								formatter: '{value}',//单位
+								textStyle: {fontSize : 12,color:'#9dcfe2'},
+							},
+							//y轴颜色
+							axisLine: {
+								lineStyle: {color: '#153b57',}
+							},
+						},
+						series: [
+							{
+								name:'人数',
+								type:'line',
+								smooth: true,
+								areaStyle: {
+									normal: {
+										color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+											{ offset: 0, color: "#1e66b8" },
+											{ offset: 0.5, color: "#157cb3" },
+											{ offset: 1, color: "#0790b8" }
+										])
+									}
+								}, //填充区域样式
+								data:numList
+							}
+						]
+					};
+
+					myChart1.setOption(option);
+				</script>
 			</div>
 			<div class="totalbkind" style="margin-top: 2%;">
 				<p class="totalbkind_h5">三级监测</p>
 				<div id="main2" style="width:100%;height:100%;"></div>
+				<script type="text/javascript" th:inline="javascript">
+					var checkTimeList = [[${twoData.checkTimeList}]]
+					var everyCheckLcList = [[${twoData.everyCheckLcList}]]
+					var everyCheckZxList = [[${twoData.everyCheckZxList}]]
+					var everyCheckJxList = [[${twoData.everyCheckJxList}]]
+					var myChart2 = echarts.init(document.getElementById('main2'));
+
+					option = {
+						title: {
+							text: ''
+						},
+						tooltip: {
+							trigger: 'axis',
+							formatter: " {b} <br/>{a2}: {c2}%<br/>{a1}: {c1}%<br/>{a}: {c}%"
+						},
+						legend: {
+							textStyle: {
+								color: '#fff',
+								fontSize: 12,
+							},
+							right:'50%',
+							data: ['临床前期', '假性近视', '真性近视']
+						},
+						grid:{
+							x:50,
+							y:50,
+							x2:40,
+							y2:70,
+						},
+						toolbox: {
+							feature: {
+								//saveAsImage: {}
+							},
+						},
+
+						xAxis: {
+							type: 'category',
+							boundaryGap: false,
+							axisLabel: {
+								/*inside: true,*/
+								interval:0,
+								textStyle: {
+									color: '#fff',
+									fontSize: 12
+
+								}
+							},
+							axisTick: {
+								show: false,
+							},
+							axisLine: {
+								show: true,
+								symbol:['none', 'arrow'],
+								symbolOffset: 12,
+								lineStyle:{
+									color: '#fff',
+								}
+							},
+							data: checkTimeList
+						},
+						yAxis: {
+							type: 'value',
+							//name: '单位：人',
+							axisLine: {
+								show: true,
+								symbol: ['none', 'arrow'],
+								symbolOffset: 12,
+								lineStyle:{
+									color: '#fff',
+								}
+							},
+							axisTick: {
+								show: false
+							},
+							axisLabel: {
+								textStyle: {
+									color: '#fff',
+									fontSize: 12
+								}
+							},
+							axisLabel: {
+								formatter: '{value} %'
+							}
+						},
+						series: [
+							{
+								name: '临床前期',
+								type: 'line',
+								//stack: '总量',
+								data: everyCheckLcList,
+								itemStyle: {
+									normal: {
+										color: "#0efdff",//折线点的颜色
+										lineStyle: {
+											color: "#0efdff",//折线的颜色
+											width:2,
+										}
+									},
+								}
+							},
+							{
+								name: '假性近视',
+								type: 'line',
+								//stack: '总量',
+								data: everyCheckJxList,
+								itemStyle: {
+									normal: {
+										color: "#ff2400",//折线点的颜色
+										lineStyle: {
+											color: "#ff2400",//折线的颜色
+											width:2,
+										}
+									},
+								}
+							},
+							{
+								name: '真性近视',
+								type: 'line',
+								//stack: '总量',
+								data: everyCheckZxList,
+								itemStyle: {
+									normal: {
+										color: "#ffd500",//折线点的颜色
+										lineStyle: {
+											color: "#ffd500",//折线的颜色
+											width:2,
+										}
+									},
+								}
+							},
+						]
+					};
+
+					myChart2.setOption(option);
+				</script>
 			</div>
 			<div class="totalbkind" style="margin-top: 2%;height: 33.5%;">
 				<p class="totalbkind_h5">学校</p>
@@ -51,34 +267,7 @@
 						</ul>
 					</div>
 					<div class="bd">
-						<ul class="infoList">
-							<li><span class="num">1</span><span class="name">济南市历山双语学校</span><span class="shuL">2034</span></li>
-							<li><span class="num">2</span><span class="name">济南市外海实验学校</span><span class="shuL">1364</span></li>
-							<li><span class="num">3</span><span class="name">实验中学</span><span class="shuL">641</span></li>
-							<li><span class="num">4</span><span class="name">济南市市中区爱都小学</span><span class="shuL">1064</span></li>
-							<li><span class="num">5</span><span class="name">济南市市中区分水岭小学</span><span class="shuL">1191</span></li>
-							<li><span class="num">6</span><span class="name">济南市景山小学</span><span class="shuL">894</span></li>
-							<li><span class="num">7</span><span class="name">济南市文化东路小学</span><span class="shuL">981</span></li>
-							<li><span class="num">8</span><span class="name">济南市德润中学</span><span class="shuL">1331</span></li>
-							<li><span class="num">9</span><span class="name">济南市德润高中</span><span class="shuL">2641</span></li>
-							<li><span class="num">10</span><span class="name">济南市燕新中学</span><span class="shuL">1212</span></li>
-							<li><span class="num">11</span><span class="name">山东师范大学附属中学</span><span class="shuL">977</span></li>
-							<li><span class="num">12</span><span class="name">济南市佛山苑幼儿园</span><span class="shuL">264</span></li>
-							<li><span class="num">13</span><span class="name">山东青少年宫学前教育</span><span class="shuL">375</span></li>
-							<li><span class="num">14</span><span class="name">济南市历下区保利华庭幼儿园</span><span class="shuL">691</span></li>
-							<li><span class="num">15</span><span class="name">阳光苗苗幼儿园</span><span class="shuL">263</span></li>
-							<li><span class="num">16</span><span class="name">大地幼儿园</span><span class="shuL">192</span></li>
-							<li><span class="num">17</span><span class="name">电建幼儿园</span><span class="shuL">401</span></li>
-							<li><span class="num">18</span><span class="name">铁程幼儿园</span><span class="shuL">266</span></li>
-							<li><span class="num">19</span><span class="name">大地名泉春晓幼儿园</span><span class="shuL">852</span></li>
-							<li><span class="num">20</span><span class="name">小童星幼儿园</span><span class="shuL">234</span></li>
-							<li><span class="num">21</span><span class="name">小童星玛利亚幼儿园</span><span class="shuL">109</span></li>
-							<li><span class="num">22</span><span class="name">济南市舜耕小学</span><span class="shuL">1357</span></li>
-							<li><span class="num">23</span><span class="name">济南市育晖小学</span><span class="shuL">564</span></li>
-							<li><span class="num">24</span><span class="name">济南市育秀小学</span><span class="shuL">635</span></li>
-							<li><span class="num">25</span><span class="name">济南市育秀中学小学部</span><span class="shuL">1003</span></li>
-							<li><span class="num">26</span><span class="name">全福中心幼儿园</span><span class="shuL">431</span></li>
-							<li><span class="num">27</span><span class="name">第二实验幼儿园</span><span class="shuL">210</span></li>
+						<ul id="schoolList" class="infoList">
 						</ul>
 					</div>
 				</div>
@@ -91,42 +280,42 @@
 					<li>
 						<dl>
 							<dt>受检者总数</dt>
-							<dd>657330</dd>
+							<dd><span th:text="${oneData.checkNum}"></span></dd>
 							<em></em>
 						</dl>
 					</li>
 					<li>
 						<dl>
 							<dt>近视率</dt>
-							<dd>63.47%</dd>
+							<dd><span th:text="${oneData.JiGouJsLv}"></span>%</dd>
 							<em></em>
 						</dl>
 					</li>
 					<li>
 						<dl>
 							<dt>男女比例</dt>
-							<dd>11：9</dd>
+							<dd><span th:text="${oneData.man}"></span></dd>
 							<em></em>
 						</dl>
 					</li>
 					<li>
 						<dl>
 							<dt>临床前期患病率</dt>
-							<dd>24.26%</dd>
+							<dd><span th:text="${oneData.JiGouLcLv}"></span>%</dd>
 							<em></em>
 						</dl>
 					</li>
 					<li>
 						<dl>
 							<dt>假性近视患病率</dt>
-							<dd>15.66%</dd>
+							<dd><span th:text="${oneData.JiGouJxLv}"></span>%</dd>
 							<em></em>
 						</dl>
 					</li>
 					<li>
 						<dl>
 							<dt>真性近视患病率</dt>
-							<dd>57.79%</dd>
+							<dd><span th:text="${oneData.JiGouJsLv}"></span>%</dd>
 							<em></em>
 						</dl>
 					</li>
@@ -143,38 +332,8 @@
 						</ul>
 					</div>
 					<div class="bd">
-						<ul class="infoList">
-							<li class="No3"><span class="num">1</span><span class="name"> 何启豪</span><span class="shuL">真性近视</span></li>
-							<li class="No1"><span class="num">2</span><span class="name"> 李晨生</span><span class="shuL">临床前期</span></li>
-							<li class="No1"><span class="num">3</span><span class="name"> 李天鹏</span><span class="shuL">临床前期</span></li>
-							<li><span class="num">4</span><span class="name"> 刘宝骏</span><span class="shuL">正常</span></li>
-							<li class="No3"><span class="num">5</span><span class="name"> 刘益豪</span><span class="shuL">真性近视</span></li>
-							<li><span class="num">6</span><span class="name"> 吕子嘉</span><span class="shuL">正常</span></li>
-							<li class="No1"><span class="num">7</span><span class="name"> 吕子懿</span><span class="shuL">临床前期</span></li>
-							<li class="No2"><span class="num">8</span><span class="name"> 马诚霜</span><span class="shuL">假性近视</span></li>
-							<li class="No3"><span class="num">9</span><span class="name"> 马新译</span><span class="shuL">真性近视</span></li>
-							<li class="No2"><span class="num">10</span><span class="name">孟相丞</span><span class="shuL">假性近视</span></li>
-							<li><span class="num">11</span><span class="name">牛梓帆</span><span class="shuL">正常</span></li>
-							<li class="No2"><span class="num">12</span><span class="name">秦梓睿</span><span class="shuL">假性近视</span></li>
-							<li class="No3"><span class="num">13</span><span class="name">王博堃</span><span class="shuL">真性近视</span></li>
-							<li class="No2"><span class="num">14</span><span class="name">卫亭君</span><span class="shuL">假性近视</span></li>
-							<li class="No1"><span class="num">15</span><span class="name">魏翔  </span><span class="shuL">临床前期</span></li>
-							<li class="No2"><span class="num">16</span><span class="name">杨巨鑫</span><span class="shuL">假性近视</span></li>
-							<li class="No3"><span class="num">17</span><span class="name">杨义达</span><span class="shuL">真性近视</span></li>
-							<li><span class="num">18</span><span class="name">于思为</span><span class="shuL">正常</span></li>
-							<li class="No2"><span class="num">19</span><span class="name">张明烁</span><span class="shuL">假性近视</span></li>
-							<li class="No2"><span class="num">20</span><span class="name">赵胤程</span><span class="shuL">假性近视</span></li>
-							<li class="No3"><span class="num">21</span><span class="name">周辰宇</span><span class="shuL">真性近视</span></li>
-							<li class="No3"><span class="num">22</span><span class="name">安若萱</span><span class="shuL">真性近视</span></li>
-							<li class="No2"><span class="num">23</span><span class="name">冯季萌</span><span class="shuL">假性近视</span></li>
-							<li class="No2"><span class="num">24</span><span class="name">康艺桐</span><span class="shuL">假性近视</span></li>
-							<li><span class="num">25</span><span class="name">李佳潼</span><span class="shuL">正常</span></li>
-							<li class="No3"><span class="num">26</span><span class="name">李依诺</span><span class="shuL">真性近视</span></li>
-							<li class="No2"><span class="num">27</span><span class="name">李奕萱</span><span class="shuL">假性近视</span></li>
-							<li class="No2"><span class="num">28</span><span class="name">李昱瑶</span><span class="shuL">假性近视</span></li>
-							<li class="No1"><span class="num">29</span><span class="name">刘梓萱</span><span class="shuL">临床前期</span></li>
-							<li class="No3"><span class="num">30</span><span class="name">庞筱萱</span><span class="shuL">真性近视</span></li>
-							<li><span class="num">31</span><span class="name">沈嘉怡</span><span class="shuL">正常</span></li>
+						<ul id="gerenList" class="infoList">
+
 						</ul>
 					</div>
 				</div>
@@ -190,37 +349,7 @@
 						</ul>
 					</div>
 					<div class="bd">
-						<ul class="infoList">
-							<li><span class="num">沈嘉怡</span><span class="name">24.33</span><span class="shuL">24.54</span></li>
-							<li><span class="num">苏梓乔</span><span class="name">22.35</span><span class="shuL">23.01</span></li>
-							<li><span class="num">王姿诺</span><span class="name">23.81</span><span class="shuL">23.22</span></li>
-							<li><span class="num">王梓钰</span><span class="name">22.53</span><span class="shuL">22.71</span></li>
-							<li><span class="num">武锦熙</span><span class="name">21.56</span><span class="shuL">21.27</span></li>
-							<li><span class="num">殷晨絮</span><span class="name">22.57</span><span class="shuL">22.66</span></li>
-							<li><span class="num">岳恩齐</span><span class="name">23.55</span><span class="shuL">23.85</span></li>
-							<li><span class="num">张艺蝾</span><span class="name">24.24</span><span class="shuL">24.65</span></li>
-							<li><span class="num">周思晨</span><span class="name">22.35</span><span class="shuL">22.31</span></li>
-							<li><span class="num">朱慧欣</span><span class="name">23.87</span><span class="shuL">23.77</span></li>
-							<li><span class="num">陈廉甲</span><span class="name">21.91</span><span class="shuL">22.35</span></li>
-							<li><span class="num">陈子豪</span><span class="name">24.73</span><span class="shuL">24.10</span></li>
-							<li><span class="num">冯乐天</span><span class="name">22.55</span><span class="shuL">22.42</span></li>
-							<li><span class="num">高梓恒</span><span class="name">23.31</span><span class="shuL">23.52</span></li>
-							<li><span class="num">耿子朔</span><span class="name">22.11</span><span class="shuL">22.46</span></li>
-							<li><span class="num">贾然屹</span><span class="name">24.25</span><span class="shuL">24.37</span></li>
-							<li><span class="num">李林曈</span><span class="name">23.58</span><span class="shuL">23.38</span></li>
-							<li><span class="num">李晏齐</span><span class="name">24.36</span><span class="shuL">24.22</span></li>
-							<li><span class="num">林蓦  </span><span class="name">23.35</span><span class="shuL">23.11</span></li>
-							<li><span class="num">林靖杰</span><span class="name">24.38</span><span class="shuL">24.59</span></li>
-							<li><span class="num">刘天聚</span><span class="name">23.67</span><span class="shuL">23.67</span></li>
-							<li><span class="num">柳长润</span><span class="name">22.35</span><span class="shuL">22.38</span></li>
-							<li><span class="num">商皓鹏</span><span class="name">23.33</span><span class="shuL">23.85</span></li>
-							<li><span class="num">孙印泽</span><span class="name">23.21</span><span class="shuL">23.89</span></li>
-							<li><span class="num">王浩为</span><span class="name">21.19</span><span class="shuL">24.57</span></li>
-							<li><span class="num">王骏辰</span><span class="name">21.86</span><span class="shuL">21.66</span></li>
-							<li><span class="num">王正豪</span><span class="name">23.58</span><span class="shuL">23.38</span></li>
-							<li><span class="num">殷勤政</span><span class="name">21.75</span><span class="shuL">21.51</span></li>
-							<li><span class="num">於扬孜</span><span class="name">22.66</span><span class="shuL">22.58</span></li>
-							<li><span class="num">赵祥宇</span><span class="name">24.51</span><span class="shuL">24.39</span></li>
+						<ul id="eyeaxisList" class="infoList">
 						</ul>
 					</div>
 				</div>
@@ -231,10 +360,98 @@
 			<div class="totalbkind">
 				<p class="totalbkind_h5">近视患病率</p>
 				<div id="main3" style="width:100%;height:100%;"></div>
+				<script type="text/javascript" th:inline="javascript">
+					var JsData = [[${threeData}]];
+
+					var myChart3 = echarts.init(document.getElementById('main3'));
+					option = {
+						title : {
+							text: ' ',
+						},
+						tooltip : {
+							trigger: 'item',
+							formatter: "{a} <br/>{b} : {c} ({d}%)"
+						},
+						color : [ '#096ee6', '#da902a' ,'#6495ED' ,'#7CFC00'],
+						series : [
+							{
+								name: '占比',
+								type: 'pie',
+								radius : '55%',
+								center: ['50%', '45%'],
+								data:[
+									{value:JsData.normal, name:'正常'},
+									{value:JsData.mildNumber, name:'低度近视'},
+									{value:JsData.moderateNumber, name:'中度近视'},
+									{value:JsData.highlyNumber, name:'高度近视'},
+								],
+								label: {
+									textStyle: {
+										"fontSize": 14,//饼图上文字
+										color:'#fff'
+									}
+								},
+								itemStyle: {
+									emphasis: {
+										shadowBlur: 10,
+										shadowOffsetX: 0,
+										shadowColor: 'rgba(0, 0, 0, 0.5)'
+									}
+								}
+							}
+						]
+					};
+
+					myChart3.setOption(option);
+				</script>
 			</div>
 			<div class="totalbkind"  style="margin-top: 2%;">
 				<p class="totalbkind_h5">年龄人数</p>
 				<div id="main4" style="width:100%;height:100%;"></div>
+				<script type="text/javascript" th:inline="javascript">
+					var ageMap = [[${fourData}]];
+					var myChart4 = echarts.init(document.getElementById('main4'));
+					option = {
+						title : {
+							text: ' ',
+						},
+						tooltip : {
+							trigger: 'item',
+							formatter: "{a} <br/>{b} : {c} ({d}%)"
+						},
+						color : [ '#5bb970', '#3fa4e6','#BDB76B','#FFD700','#00BFFF', ],
+						series : [
+							{
+								name: '占比',
+								type: 'pie',
+								radius : '55%',
+								center: ['50%', '45%'],
+								data:[
+									{value:ageMap.lt6Num, name:'<6岁'},
+									{value:ageMap.to12Num, name:'6-12岁'},
+									{value:ageMap.to15Num, name:'13-15岁'},
+									{value:ageMap.to18Num, name:'16-18岁'},
+									{value:ageMap.gt18Num, name:'>18岁'},
+								],
+								label: {
+									textStyle: {
+										"fontSize": 14,//饼图上文字
+										color:'#fff'
+									}
+								},
+								itemStyle: {
+									emphasis: {
+										shadowBlur: 10,
+										shadowOffsetX: 0,
+										shadowColor: 'rgba(0, 0, 0, 0.5)'
+									}
+								}
+							}
+						]
+					};
+
+					myChart4.setOption(option);
+				</script>
 			</div>
 			<div class="totalbkind"  style="margin-top: 2%;height: 33.5%;">
 				<p class="totalbkind_h5">角膜曲率</p>
@@ -247,38 +464,7 @@
 						</ul>
 					</div>
 					<div class="bd">
-						<ul class="infoList">
-							<li><span class="num">朱欣欣</span><span class="name">8.33</span><span class="shuL">8.21</span></li>
-							<li><span class="num">陈嘉骏</span><span class="name">8.46</span><span class="shuL">7.94</span></li>
-							<li><span class="num">丁俊皓</span><span class="name">7.56</span><span class="shuL">7.34</span></li>
-							<li><span class="num">法博文</span><span class="name">7.58</span><span class="shuL">7.21</span></li>
-							<li><span class="num">葛智睿</span><span class="name">8.55</span><span class="shuL">8.11</span></li>
-							<li><span class="num">宫梓航</span><span class="name">8.15</span><span class="shuL">8.61</span></li>
-							<li><span class="num">宫梓淏</span><span class="name">7.38</span><span class="shuL">7.33</span></li>
-							<li><span class="num">郝世杰</span><span class="name">7.86</span><span class="shuL">7.15</span></li>
-							<li><span class="num">胡梓宸</span><span class="name">7.34</span><span class="shuL">7.82</span></li>
-							<li><span class="num">焦泉贺</span><span class="name">9.04</span><span class="shuL">8.74</span></li>
-							<li><span class="num">李可为</span><span class="name">8.11</span><span class="shuL">7.86</span></li>
-							<li><span class="num">李善政</span><span class="name">7.56</span><span class="shuL">7.34</span></li>
-							<li><span class="num">李政霖</span><span class="name">7.38</span><span class="shuL">7.85</span></li>
-							<li><span class="num">李梓慕</span><span class="name">7.15</span><span class="shuL">7.64</span></li>
-							<li><span class="num">曲承志</span><span class="name">7.48</span><span class="shuL">7.38</span></li>
-							<li><span class="num">宋诗贤</span><span class="name">7.75</span><span class="shuL">7.71</span></li>
-							<li><span class="num">王润璋</span><span class="name">7.35</span><span class="shuL">7.51</span></li>
-							<li><span class="num">张皓宇</span><span class="name">8.64</span><span class="shuL">8.12</span></li>
-							<li><span class="num">张振睿</span><span class="name">8.34</span><span class="shuL">8.34</span></li>
-							<li><span class="num">赵伯彧</span><span class="name">7.55</span><span class="shuL">7.14</span></li>
-							<li><span class="num">周墨轩</span><span class="name">7.38</span><span class="shuL">7.38</span></li>
-							<li><span class="num">陈子菡</span><span class="name">7.91</span><span class="shuL">7.77</span></li>
-							<li><span class="num">崔清涵</span><span class="name">7.15</span><span class="shuL">7.51</span></li>
-							<li><span class="num">党玉丹</span><span class="name">9.21</span><span class="shuL">8.89</span></li>
-							<li><span class="num">董惠泽</span><span class="name">8.64</span><span class="shuL">8.45</span></li>
-							<li><span class="num">郝韵涵</span><span class="name">7.59</span><span class="shuL">7.41</span></li>
-							<li><span class="num">侯蕴遥</span><span class="name">7.18</span><span class="shuL">7.61</span></li>
-							<li><span class="num">黄祺雅</span><span class="name">7.24</span><span class="shuL">7.84</span></li>
-							<li><span class="num">康悦宁</span><span class="name">7.34</span><span class="shuL">7.16</span></li>
-							<li><span class="num">李佳臻</span><span class="name">7.51</span><span class="shuL">7.64</span></li>
-							<li><span class="num">石尚冉</span><span class="name">7.22</span><span class="shuL">7.38</span></li>
+						<ul id="cornealList" class="infoList">
 						</ul>
 					</div>
 				</div>
@@ -456,7 +642,7 @@
 </body>
 
 </html>
-<script type="text/javascript">
+<script type="text/javascript" th:inline="javascript" >
 	(function (fn) {
 		fn();
 		setInterval(fn, 1000);
@@ -468,308 +654,53 @@
 				dt.getMinutes() + "分" +
 				dt.getSeconds() + "秒";
 	});
-	// 基于准备好的dom，初始化echarts实例
-	var myChart1 = echarts.init(document.getElementById('main1'));
-	var myChart2 = echarts.init(document.getElementById('main2'));
-	var myChart3 = echarts.init(document.getElementById('main3'));
-	var myChart4 = echarts.init(document.getElementById('main4'));
-	//折线图1
-	setTimeout(function () {
-		option = {
-			title: {
-				text: '',
-				textStyle: {
-					fontWeight: 'normal',
-					color: '#fff',//标题颜色
-				},
-				x:"left"
-			},
-			tooltip: {
-				trigger: 'axis'
-			},
+	var SchoolList = [[${JGSchoolList}]];
+	if (SchoolList.length>0){
+		var schoolhtml='';
+		for (let i = 0; i < SchoolList.length; i++) {
+			schoolhtml+='<li><span class="num">'+(i+1)+'</span><span class="name">'+SchoolList[i].school+'</span><span class="shuL">'+SchoolList[i].num+'</span></li>'
+			$("#schoolList").html(schoolhtml);
+		}
+	}
 
-			grid: {
-				left: '3%',
-				right: '8%',
-				bottom: '18%',
-				containLabel: true
-			},
-			xAxis: {
-				type: 'category',
-				boundaryGap: false,
-				data: ['2015','2016','2017','2018','2019','2020'],
-				axisLabel: {
-					//formatter: '{value} ml',//单位
-					textStyle: {fontSize : 12 ,color:'#9dcfe2'},
-				},
-				//x轴颜色
-				axisLine: {
-					lineStyle: {color: '#153b57',}
-				},
-			},
-			yAxis: {
-				type: 'value',
-				name: '人数',
-				nameTextStyle:{//y轴上方单位的颜色
-					color:'#9dcfe2'
-				},
-				//设置网格线颜色
-				splitLine: {
-					show: true,
-					lineStyle:{
-						color: ['#0e2342'],
-						width: 1,
-						type: 'solid'
-					},
-				},
-				axisLabel: {
-					formatter: '{value}',//单位
-					textStyle: {fontSize : 12,color:'#9dcfe2'},
-				},
-				//y轴颜色
-				axisLine: {
-					lineStyle: {color: '#153b57',}
-				},
-			},
-			series: [
-				{
-					name:'人数',
-					type:'line',
-					smooth: true,
-					areaStyle: {
-						normal: {
-							color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-								{ offset: 0, color: "#1e66b8" },
-								{ offset: 0.5, color: "#157cb3" },
-								{ offset: 1, color: "#0790b8" }
-							])
-						}
-					}, //填充区域样式
-					data:[71526, 85266, 62843, 83702, 151958, 202035]
-				}
-			]
-		};
+	var gerenList = [[${gerenList}]];
+	if (gerenList.length>0){
+		var gerenhtml='';
+		for (let i = 0; i < gerenList.length; i++) {
+			if (gerenList[i].eyeCondition=='真性近视'){
+				gerenhtml+='<li class="No3"><span class="num">'+(i+1)+'</span><span class="name">'+gerenList[i].name+'</span><span class="shuL">'+gerenList[i].eyeCondition+'</span></li>'
+			}
+			if (gerenList[i].eyeCondition=='临床前期'){
+				gerenhtml+='<li class="No1"><span class="num">'+(i+1)+'</span><span class="name">'+gerenList[i].name+'</span><span class="shuL">'+gerenList[i].eyeCondition+'</span></li>'
+			}
+			if (gerenList[i].eyeCondition=='假性近视'){
+				gerenhtml+='<li class="No2"><span class="num">'+(i+1)+'</span><span class="name">'+gerenList[i].name+'</span><span class="shuL">'+gerenList[i].eyeCondition+'</span></li>'
+			}
+			if (gerenList[i].eyeCondition=='正常'){
+				gerenhtml+='<li><span class="num">'+(i+1)+'</span><span class="name">'+gerenList[i].name+'</span><span class="shuL">'+gerenList[i].eyeCondition+'</span></li>'
+			}
+		}
+		$("#gerenList").html(gerenhtml);
+	}
 
-		myChart1.setOption(option);
-	});
+	var eyeaxisList = [[${eyeaxisList}]];
+	if (eyeaxisList.length>0){
+		var eyeaxishtml = '';
+		for (let i = 0; i < eyeaxisList.length; i++) {
+			eyeaxishtml+='<li style="height: 38px"><span class="num">'+eyeaxisList[i].name+'</span><span class="name">'+eyeaxisList[i].first_check_os+'</span><span class="shuL">'+eyeaxisList[i].first_check_od+'</span></li>\n';
+		}
+		$("#eyeaxisList").html(eyeaxishtml);
+	}
 
-	//折线图2
-	setTimeout(function () {
-		option = {
-			title: {
-				text: ''
-			},
-			tooltip: {
-				trigger: 'axis',
-				formatter: " {b} <br/>{a2}: {c2}%<br/>{a1}: {c1}%<br/>{a}: {c}%"
-			},
-			legend: {
-				textStyle: {
-					color: '#fff',
-					fontSize: 12,
-				},
-				right:'50%',
-				data: ['临床前期', '假性近视', '真性近视']
-			},
-			grid:{
-				x:50,
-				y:50,
-				x2:40,
-				y2:70,
-			},
-			toolbox: {
-				feature: {
-					//saveAsImage: {}
-				},
-			},
+	var cornealList = [[${cornealList}]];
+	if (cornealList.length>0){
+		var cornealhtml='';
+		for (let i = 0; i < cornealList.length; i++) {
+			cornealhtml+='<li style="height: 38px"><span class="num">'+cornealList[i].name+'</span><span class="name">'+cornealList[i].mmL+'</span><span class="shuL">'+cornealList[i].mmR+'</span></li>';
+		}
+		$("#cornealList").html(cornealhtml);
+	}
 
-			xAxis: {
-				type: 'category',
-				boundaryGap: false,
-				axisLabel: {
-					/*inside: true,*/
-					interval:0,
-					textStyle: {
-						color: '#fff',
-						fontSize: 12
-
-					}
-				},
-				axisTick: {
-					show: false,
-				},
-				axisLine: {
-					show: true,
-					symbol:['none', 'arrow'],
-					symbolOffset: 12,
-					lineStyle:{
-						color: '#fff',
-					}
-				},
-				data: [ '2015', '2016', '2017', '2018', '2019', '2020']
-			},
-			yAxis: {
-				type: 'value',
-				//name: '单位：人',
-				axisLine: {
-					show: true,
-					symbol: ['none', 'arrow'],
-					symbolOffset: 12,
-					lineStyle:{
-						color: '#fff',
-					}
-				},
-				axisTick: {
-					show: false
-				},
-				axisLabel: {
-					textStyle: {
-						color: '#fff',
-						fontSize: 12
-					}
-				},
-				axisLabel: {
-					formatter: '{value} %'
-				}
-			},
-			series: [
-				{
-					name: '临床前期',
-					type: 'line',
-					//stack: '总量',
-					data: [ 19, 24, 21, 17, 26, 24],
-					itemStyle: {
-						normal: {
-							color: "#0efdff",//折线点的颜色
-							lineStyle: {
-								color: "#0efdff",//折线的颜色
-								width:2,
-							}
-						},
-					}
-				},
-				{
-					name: '假性近视',
-					type: 'line',
-					//stack: '总量',
-					data: [ 7, 9, 13, 21, 17, 16],
-					itemStyle: {
-						normal: {
-							color: "#ff2400",//折线点的颜色
-							lineStyle: {
-								color: "#ff2400",//折线的颜色
-								width:2,
-							}
-						},
-					}
-				},
-				{
-					name: '真性近视',
-					type: 'line',
-					//stack: '总量',
-					data: [ 37, 50, 46, 53, 41, 48],
-					itemStyle: {
-						normal: {
-							color: "#ffd500",//折线点的颜色
-							lineStyle: {
-								color: "#ffd500",//折线的颜色
-								width:2,
-							}
-						},
-					}
-				},
-			]
-		};
-
-		myChart2.setOption(option);
-	});
-
-	//饼状图
-	setTimeout(function () {
-		option = {
-			title : {
-				text: ' ',
-			},
-			tooltip : {
-				trigger: 'item',
-				formatter: "{a} <br/>{b} : {c} ({d}%)"
-			},
-			color : [ '#096ee6', '#da902a' ,'#6495ED' ,'#7CFC00'],
-			series : [
-				{
-					name: '占比',
-					type: 'pie',
-					radius : '55%',
-					center: ['50%', '45%'],
-					data:[
-						{value:240130, name:'正常'},
-						{value:160216, name:'低度近视'},
-						{value:82437, name:'中度近视'},
-						{value:174547, name:'高度近视'},
-					],
-					label: {
-						textStyle: {
-							"fontSize": 14,//饼图上文字
-							color:'#fff'
-						}
-					},
-					itemStyle: {
-						emphasis: {
-							shadowBlur: 10,
-							shadowOffsetX: 0,
-							shadowColor: 'rgba(0, 0, 0, 0.5)'
-						}
-					}
-				}
-			]
-		};
-
-		myChart3.setOption(option);
-	});
-
-	//饼状图
-	setTimeout(function () {
-		option = {
-			title : {
-				text: ' ',
-			},
-			tooltip : {
-				trigger: 'item',
-				formatter: "{a} <br/>{b} : {c} ({d}%)"
-			},
-			color : [ '#5bb970', '#3fa4e6','#BDB76B','#FFD700','#00BFFF', ],
-			series : [
-				{
-					name: '占比',
-					type: 'pie',
-					radius : '55%',
-					center: ['50%', '45%'],
-					data:[
-						{value:23427, name:'<6岁'},
-						{value:240231, name:'6-12岁'},
-						{value:195423, name:'13-15岁'},
-						{value:136397, name:'16-18岁'},
-						{value:51233, name:'>18岁'},
-					],
-					label: {
-						textStyle: {
-							"fontSize": 14,//饼图上文字
-							color:'#fff'
-						}
-					},
-					itemStyle: {
-						emphasis: {
-							shadowBlur: 10,
-							shadowOffsetX: 0,
-							shadowColor: 'rgba(0, 0, 0, 0.5)'
-						}
-					}
-				}
-			]
-		};
-
-		myChart4.setOption(option);
-	});
 	//翻滚
 	jQuery(".txtMarquee-top").slide({mainCell:".bd ul",autoPlay:true,effect:"topMarquee",vis:4,interTime:50});
 

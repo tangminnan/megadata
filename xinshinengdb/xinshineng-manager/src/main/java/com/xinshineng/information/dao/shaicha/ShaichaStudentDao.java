@@ -199,4 +199,42 @@ public interface ShaichaStudentDao {
 
 	String getLastCheckDate(@Param("username") String username, @Param("password") String password);
 
+    Integer getCheckNum(Integer sys_id);
+
+	Integer getJiGouJSNum(Integer sys_id);
+
+	Integer getJiGouManNum(Integer sys_id);
+
+	Integer getJiGouWomenNum(Integer sys_id);
+
+	Integer getJiGouLcNum(Integer sys_id);
+
+	Integer getJiGouJxNum(Integer sys_id);
+
+	List<Map<String, Object>> getEveryCheckNum(Integer sys_id);
+
+
+	Integer getEveryCheckLcNum(@Param("sys_id") Integer sys_id,@Param("check_time") String check_time);
+	Integer getEveryCheckZxNum(@Param("sys_id") Integer sys_id,@Param("check_time") String check_time);
+	Integer getEveryCheckJxNum(@Param("sys_id") Integer sys_id,@Param("check_time") String check_time);
+
+	Integer mildNumberForJG(Integer sys_id);
+
+	Integer moderateNumberForJG(Integer sys_id);
+
+	Integer highlyNumberForJG(Integer sys_id);
+
+	Integer getJiGouLt6Num(Integer sys_id);
+	Integer getJiGou6To12Num(Integer sys_id);
+	Integer getJiGou13To15Num(Integer sys_id);
+	Integer getJiGou16To18Num(Integer sys_id);
+	Integer getJiGouGt18Num(Integer sys_id);
+
+	List<Map> getJGSchoolList(Integer sys_id);
+
+	List<Map> getGeRenList(Integer sys_id);
+
+	List<Map> getJGEyeaxisList(Integer sys_id);
+
+	List<Map> getJGCornealList(Integer sys_id);
 }

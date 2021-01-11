@@ -1158,6 +1158,7 @@ WHERE identity_card IN
 	<select id="schoolThisNumber" resultType="int">
 		SELECT COUNT(*) FROM s_student_school_he where	school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate}
 	</select>
+
 	<select id="schoolThisNumberld" resultType="int">
 		SELECT COUNT(*) FROM y_student_school_he where	school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate}
 	</select>
@@ -1265,6 +1266,30 @@ WHERE identity_card IN
 		AND naked_farvision &lt; '5.0'
 		AND dengxiaoqiujing >= '-3.0'
 	</select>
+	<select id="mildNumberForJG" resultType="int">
+		SELECT
+		COUNT(dengxiaoqiujing) num
+		FROM
+		(
+		SELECT
+		LEAST(
+		dengxiaoqiujingl,
+		dengxiaoqiujingr
+		) AS dengxiaoqiujing,
+		LEAST(
+		naked_farvision_od,
+		naked_farvision_os
+		) AS naked_farvision
+		FROM
+		s_student_new
+		WHERE
+		sys_id = #{sys_id} and dengxiaoqiujingl is not NULL and dengxiaoqiujingr is not NULL and naked_farvision_od is not NULL and naked_farvision_os is not NULL
+		) AS one
+		WHERE
+		dengxiaoqiujing &lt; '-0.5'
+		AND naked_farvision &lt; '5.0'
+		AND dengxiaoqiujing >= '-3.0'
+	</select>
 	<select id="moderateNumber" resultType="int">
 		SELECT
 		COUNT(dengxiaoqiujing) num
@@ -1290,6 +1315,30 @@ WHERE identity_card IN
 		AND naked_farvision &lt; '5.0'
 		AND dengxiaoqiujing >= '-6.0'
 	</select>
+	<select id="moderateNumberForJG" resultType="int">
+		SELECT
+		COUNT(dengxiaoqiujing) num
+		FROM
+		(
+		SELECT
+		LEAST(
+		dengxiaoqiujingl,
+		dengxiaoqiujingr
+		) AS dengxiaoqiujing,
+		LEAST(
+		naked_farvision_od,
+		naked_farvision_os
+		) AS naked_farvision
+		FROM
+		s_student_new
+		WHERE
+		sys_id = #{sys_id} and dengxiaoqiujingl is not NULL and dengxiaoqiujingr is not NULL and naked_farvision_od is not NULL and naked_farvision_os is not NULL
+		) AS one
+		WHERE
+		dengxiaoqiujing &lt; '-3.0'
+		AND naked_farvision &lt; '5.0'
+		AND dengxiaoqiujing >= '-6.0'
+	</select>
 	<select id="highlyNumber" resultType="int">
 		SELECT
 		COUNT(dengxiaoqiujing) num
@@ -1309,6 +1358,29 @@ WHERE identity_card IN
 		WHERE
 		school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and
 		DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate} and dengxiaoqiujingl is not NULL and dengxiaoqiujingr is not NULL and naked_farvision_od is not NULL and naked_farvision_os is not NULL
+		) AS one
+		WHERE
+		dengxiaoqiujing &lt; '-6.0'
+		AND naked_farvision &lt; '5.0'
+	</select>
+	<select id="highlyNumberForJG" resultType="int">
+		SELECT
+		COUNT(dengxiaoqiujing) num
+		FROM
+		(
+		SELECT
+		LEAST(
+		dengxiaoqiujingl,
+		dengxiaoqiujingr
+		) AS dengxiaoqiujing,
+		LEAST(
+		naked_farvision_od,
+		naked_farvision_os
+		) AS naked_farvision
+		FROM
+		s_student_new
+		WHERE
+		sys_id = #{sys_id} and dengxiaoqiujingl is not NULL and dengxiaoqiujingr is not NULL and naked_farvision_od is not NULL and naked_farvision_os is not NULL
 		) AS one
 		WHERE
 		dengxiaoqiujing &lt; '-6.0'
@@ -1508,5 +1580,125 @@ WHERE identity_card IN
 	</select>
 	<select id="getLastCheckDate" resultType="string">
 		SELECT MAX(DATE_FORMAT(last_check_time,'%Y-%m')) checkdate FROM s_student_school_he WHERE student_name = #{username} AND identity_card =#{password}
+	</select>
+
+
+	<select id="getCheckNum" resultType="int">
+		select count(id) from s_student_new where sys_id = #{sys_id}
+	</select>
+	<select id="getJiGouJSNum" resultType="int">
+		SELECT COUNT(DXQJ) FROM
+		(SELECT LEAST(dengxiaoqiujingr,dengxiaoqiujingl) DXQJ,LEAST(naked_farvision_od,naked_farvision_os) Naked
+		FROM s_student_new WHERE sys_id=#{sys_id} AND dengxiaoqiujingr IS NOT NULL AND dengxiaoqiujingl IS NOT NULL AND naked_farvision_od IS NOT NULL AND naked_farvision_os IS NOT NULL) stu
+		WHERE DXQJ &lt;-0.5 AND Naked &lt; 5.0
+	</select>
+
+	<select id="getJiGouManNum" resultType="int">
+		select count(id) from s_student_new where sys_id = #{sys_id} and student_sex = 1
+	</select>
+	<select id="getJiGouWomenNum" resultType="int">
+		select count(id) from s_student_new where sys_id = #{sys_id} and student_sex = 2
+	</select>
+
+	<select id="getJiGouLcNum" resultType="int">
+		SELECT COUNT(DXQJ) FROM
+		(SELECT LEAST(dengxiaoqiujingr,dengxiaoqiujingl) DXQJ,LEAST(naked_farvision_od,naked_farvision_os) Naked
+		FROM s_student_new WHERE sys_id=#{sys_id} AND dengxiaoqiujingr IS NOT NULL AND dengxiaoqiujingl IS NOT NULL AND naked_farvision_od IS NOT NULL AND naked_farvision_os IS NOT NULL) stu
+		WHERE   DXQJ &gt;=-0.5 AND DXQJ &lt;0.75
+	</select>
+	<select id="getJiGouJxNum" resultType="int">
+		SELECT COUNT(DXQJ) FROM
+		(SELECT LEAST(dengxiaoqiujingr,dengxiaoqiujingl) DXQJ,LEAST(naked_farvision_od,naked_farvision_os) Naked
+		FROM s_student_new WHERE sys_id=#{sys_id} AND dengxiaoqiujingr IS NOT NULL AND dengxiaoqiujingl IS NOT NULL AND naked_farvision_od IS NOT NULL AND naked_farvision_os IS NOT NULL) stu
+		WHERE  Naked &gt;= 5.0 AND  DXQJ &lt;-0.5
+	</select>
+
+	<select id="getEveryCheckNum" resultType="map">
+		SELECT DATE_FORMAT(last_check_time,'%Y-%m') check_time,COUNT(id) num FROM s_student_new WHERE sys_id = #{sys_id} AND last_check_time IS NOT NULL GROUP BY check_time ORDER BY check_time
+	</select>
+
+	<select id="getEveryCheckLcNum" resultType="int">
+		SELECT COUNT(DXQJ) num FROM
+		(SELECT LEAST(dengxiaoqiujingr,dengxiaoqiujingl) DXQJ,LEAST(naked_farvision_od,naked_farvision_os) Naked ,DATE_FORMAT(last_check_time,'%Y-%m') check_time
+		FROM s_student_new WHERE sys_id=#{sys_id} AND dengxiaoqiujingr IS NOT NULL AND dengxiaoqiujingl IS NOT NULL AND naked_farvision_od IS NOT NULL AND naked_farvision_os IS NOT NULL) stu
+		WHERE   DXQJ &gt;=-0.5 AND DXQJ &lt;=0.75 AND check_time = #{check_time}
+	</select>
+	<select id="getEveryCheckZxNum" resultType="int">
+		SELECT COUNT(DXQJ) num FROM
+		(SELECT LEAST(dengxiaoqiujingr,dengxiaoqiujingl) DXQJ,LEAST(naked_farvision_od,naked_farvision_os) Naked ,DATE_FORMAT(last_check_time,'%Y-%m') check_time
+		FROM s_student_new WHERE sys_id=#{sys_id} AND dengxiaoqiujingr IS NOT NULL AND dengxiaoqiujingl IS NOT NULL AND naked_farvision_od IS NOT NULL AND naked_farvision_os IS NOT NULL) stu
+		WHERE   DXQJ &lt;=-0.5 AND Naked &lt; 5.0 AND check_time = #{check_time}
+	</select>
+	<select id="getEveryCheckJxNum" resultType="int">
+		SELECT COUNT(DXQJ) num FROM
+		(SELECT LEAST(dengxiaoqiujingr,dengxiaoqiujingl) DXQJ,LEAST(naked_farvision_od,naked_farvision_os) Naked ,DATE_FORMAT(last_check_time,'%Y-%m') check_time
+		FROM s_student_new WHERE sys_id=#{sys_id} AND dengxiaoqiujingr IS NOT NULL AND dengxiaoqiujingl IS NOT NULL AND naked_farvision_od IS NOT NULL AND naked_farvision_os IS NOT NULL) stu
+		WHERE   DXQJ &lt;=-0.5 AND Naked &gt;= 5.0  AND check_time = #{check_time}
+	</select>
+	<select id="getJiGouLt6Num" resultType="int">
+		SELECT COUNT(id) num FROM s_student_new
+		WHERE sys_id = #{sys_id} AND last_check_time IS NOT NULL
+		AND  identity_card REGEXP '^[1-9][[:digit:]]{7}((0[[:digit:]])|(1[0-2]))(([0|1|2][[:digit:]])|3[0-1])[[:digit:]]{3}$|^[1-9][[:digit:]]{5}[1-9][[:digit:]]{3}((0[[:digit:]])|(1[0-2]))(([0|1|2][[:digit:]])|3[0-1])[[:digit:]]{3}([0-9]|X)$'
+		AND SUBSTRING(identity_card,7,4) &lt;= YEAR(NOW()) AND DATE_FORMAT(last_check_time,'%Y')-SUBSTRING(identity_card,7,4) &lt;6
+	</select>
+	<select id="getJiGou6To12Num" resultType="int">
+		SELECT COUNT(id) num FROM s_student_new
+		WHERE sys_id = #{sys_id} AND last_check_time IS NOT NULL
+		AND  identity_card REGEXP '^[1-9][[:digit:]]{7}((0[[:digit:]])|(1[0-2]))(([0|1|2][[:digit:]])|3[0-1])[[:digit:]]{3}$|^[1-9][[:digit:]]{5}[1-9][[:digit:]]{3}((0[[:digit:]])|(1[0-2]))(([0|1|2][[:digit:]])|3[0-1])[[:digit:]]{3}([0-9]|X)$'
+		AND SUBSTRING(identity_card,7,4) &lt;= YEAR(NOW()) AND DATE_FORMAT(last_check_time,'%Y')-SUBSTRING(identity_card,7,4) &gt;=6 AND DATE_FORMAT(last_check_time,'%Y')-SUBSTRING(identity_card,7,4) &lt;=12
+	</select>
+	<select id="getJiGou13To15Num" resultType="int">
+		SELECT COUNT(id) num FROM s_student_new
+		WHERE sys_id = #{sys_id} AND last_check_time IS NOT NULL
+		AND  identity_card REGEXP '^[1-9][[:digit:]]{7}((0[[:digit:]])|(1[0-2]))(([0|1|2][[:digit:]])|3[0-1])[[:digit:]]{3}$|^[1-9][[:digit:]]{5}[1-9][[:digit:]]{3}((0[[:digit:]])|(1[0-2]))(([0|1|2][[:digit:]])|3[0-1])[[:digit:]]{3}([0-9]|X)$'
+		AND SUBSTRING(identity_card,7,4) &lt;= YEAR(NOW()) AND
+		DATE_FORMAT(last_check_time,'%Y')-SUBSTRING(identity_card,7,4) &gt;=13 AND DATE_FORMAT(last_check_time,'%Y')-SUBSTRING(identity_card,7,4) &lt;=15
+	</select>
+	<select id="getJiGou16To18Num" resultType="int">
+		SELECT COUNT(id) num FROM s_student_new
+		WHERE sys_id = #{sys_id} AND last_check_time IS NOT NULL
+		AND  identity_card REGEXP '^[1-9][[:digit:]]{7}((0[[:digit:]])|(1[0-2]))(([0|1|2][[:digit:]])|3[0-1])[[:digit:]]{3}$|^[1-9][[:digit:]]{5}[1-9][[:digit:]]{3}((0[[:digit:]])|(1[0-2]))(([0|1|2][[:digit:]])|3[0-1])[[:digit:]]{3}([0-9]|X)$'
+		AND SUBSTRING(identity_card,7,4) &lt;= YEAR(NOW()) AND DATE_FORMAT(last_check_time,'%Y')-SUBSTRING(identity_card,7,4) &gt;=16 AND DATE_FORMAT(last_check_time,'%Y')-SUBSTRING(identity_card,7,4) &lt;=18
+	</select>
+	<select id="getJiGouGt18Num" resultType="int">
+		SELECT COUNT(id) num FROM s_student_new
+		WHERE sys_id = #{sys_id} AND last_check_time IS NOT NULL
+		AND  identity_card REGEXP '^[1-9][[:digit:]]{7}((0[[:digit:]])|(1[0-2]))(([0|1|2][[:digit:]])|3[0-1])[[:digit:]]{3}$|^[1-9][[:digit:]]{5}[1-9][[:digit:]]{3}((0[[:digit:]])|(1[0-2]))(([0|1|2][[:digit:]])|3[0-1])[[:digit:]]{3}([0-9]|X)$'
+		AND SUBSTRING(identity_card,7,4) &lt;= YEAR(NOW()) AND DATE_FORMAT(last_check_time,'%Y')-SUBSTRING(identity_card,7,4) &gt;18
+	</select>
+
+	<select id="getJGSchoolList" resultType="map">
+		SELECT school,COUNT(id) num FROM s_student_new WHERE sys_id = #{sys_id} GROUP BY school ORDER BY num DESC
+	</select>
+	<select id="getGeRenList" resultType="map">
+		SELECT NAME,DXQJ,NAKED FROM
+(SELECT
+DISTINCT student_name NAME,last_check_time,
+LEAST(
+dengxiaoqiujingl,
+dengxiaoqiujingr
+) DXQJ,
+LEAST(
+naked_farvision_od,
+naked_farvision_os
+) AS NAKED
+FROM
+s_student_new
+WHERE
+sys_id = #{sys_id} AND dengxiaoqiujingl IS NOT NULL AND dengxiaoqiujingr IS NOT NULL AND naked_farvision_od IS NOT NULL AND naked_farvision_os IS NOT NULL GROUP BY identity_card HAVING last_check_time = MAX(last_check_time)) stu
+WHERE NAKED != '塑形镜' AND NAKED !='其他' AND NAKED !='' LIMIT 0,50
+	</select>
+
+	<select id="getJGEyeaxisList" resultType="map">
+		SELECT stu.student_name `name`,axis.first_check_od,axis.first_check_os FROM s_student_new stu,s_result_eyeaxis axis WHERE stu.id = axis.student_id AND stu.sys_id = #{sys_id} LIMIT 0,30
+	</select>
+
+	<select id="getJGCornealList" resultType="map">
+		select stu1.name,stu1.mmL,stu2.mmR from
+(SELECT stu.id,stu.student_name `name`,cor.corneal_mm mmL FROM s_student_new stu,s_result_optometry_new opt,s_result_corneal_new cor WHERE stu.id = opt.student_id AND opt.t_optometry_id = cor.t_optometry_id AND stu.sys_id =#{sys_id} AND cor.type='AVG' AND cor.ifRL='L'
+) stu1,
+(SELECT stu.id,cor.corneal_mm mmR FROM s_student_new stu,s_result_optometry_new opt,s_result_corneal_new cor WHERE stu.id = opt.student_id AND opt.t_optometry_id = cor.t_optometry_id AND stu.sys_id =#{sys_id} AND cor.type='AVG' AND cor.ifRL='R'
+) stu2
+where stu1.id=stu2.id limit 0,30
 	</select>
 </mapper>
