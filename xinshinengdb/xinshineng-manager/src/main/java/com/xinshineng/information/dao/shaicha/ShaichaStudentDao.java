@@ -176,23 +176,40 @@ public interface ShaichaStudentDao {
 	List<Map> everyCheck(@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName);
 	List<Map> everyCheckld(@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName);
 	Integer mildNumber (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate);
+	Integer mildNumberld (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate);
 	Integer moderateNumber (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate);
+	Integer moderateNumberld (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate);
 	Integer highlyNumber (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate);
+	Integer highlyNumberld (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate);
 	Integer lcqqNumber (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate);
+	Integer lcqqNumberld (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate);
 	Integer jxjsNumber (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate);
+	Integer jxjsNumberld (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate);
 	List<Map> studentList (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate);
+	List<Map> studentListld (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate);
 	String getXueBu (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate);
+	String getXueBuld (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate);
 	List<Map> gradeNumber (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate);
+	List<Map> gradeNumberld (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate);
 	List<Map> paiMing (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate);
+	List<Map> paiMingld (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate);
 	List<Map> gradeLv (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate);
+	List<Map> gradeLvld (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate);
 	Map advice (@Param("name")String name, @Param("idCard")String idCard,@Param("checkdate")String checkdate);
+	Map adviceld (@Param("name")String name, @Param("idCard")String idCard,@Param("checkdate")String checkdate);
 	Map report (@Param("name")String name, @Param("idCard")String idCard,@Param("checkdate")String checkdate);
+	Map reportld (@Param("name")String name, @Param("idCard")String idCard,@Param("checkdate")String checkdate);
 	List<Map> table (@Param("name")String name, @Param("idCard")String idCard);
+	List<Map> tableld (@Param("name")String name, @Param("idCard")String idCard);
 	List<Map> yanzhou (@Param("name")String name, @Param("idCard")String idCard);
+	List<Map> yanzhould (@Param("name")String name, @Param("idCard")String idCard);
 	List<Map> luoyan (@Param("name")String name, @Param("idCard")String idCard);
+	List<Map> luoyanld (@Param("name")String name, @Param("idCard")String idCard);
 	List<Map> dengxiaoqiujing (@Param("name")String name, @Param("idCard")String idCard);
+	List<Map> dengxiaoqiujingld (@Param("name")String name, @Param("idCard")String idCard);
 
 	String maxcheckdate (@Param("name")String name, @Param("idCard")String idCard);
+	String maxcheckdateld (@Param("name")String name, @Param("idCard")String idCard);
 
 
     int login(@Param("username") String username, @Param("password") String password);

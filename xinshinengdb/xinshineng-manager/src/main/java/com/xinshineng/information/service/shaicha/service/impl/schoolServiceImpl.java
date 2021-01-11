@@ -3,6 +3,7 @@ package com.xinshineng.information.service.shaicha.service.impl;
 import com.xinshineng.common.utils.ShiroUtils;
 import com.xinshineng.common.utils.TimeUtils;
 import com.xinshineng.information.dao.shaicha.ShaichaStudentDao;
+import com.xinshineng.information.domain.yanke.ResultDiopterDO;
 import com.xinshineng.information.service.shaicha.service.schoolService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,15 +26,25 @@ public class schoolServiceImpl implements schoolService {
 
 
     @Override
-    public Map<String, String> dataOne(String school, String CityName, String AreaName, String checkdate) {
+    public Map<String, String> dataOne(String school, String CityName, String AreaName, String checkdate,String checkType) {
         Map<String, String> map = new HashMap<>();
-        Integer schoolAllNumber = shaichaStudentDao.schoolAllNumber(school,CityName,AreaName);
-        Integer schoolThisNumber = shaichaStudentDao.schoolThisNumber(school, CityName, AreaName, checkdate);
-        Integer illNumber = shaichaStudentDao.illNumber(school, CityName, AreaName, checkdate);
-        Integer manNumber = shaichaStudentDao.sexThisNumber(school, CityName, AreaName, checkdate, 1);
-        Integer wumanNumber = shaichaStudentDao.sexThisNumber(school, CityName, AreaName, checkdate, 2);
+        Integer schoolAllNumber,schoolThisNumber,illNumber;
+        Integer manNumber,wumanNumber;
+        if ("sc".equals(checkType)) {
+            schoolAllNumber = shaichaStudentDao.schoolAllNumber(school, CityName, AreaName);
+            schoolThisNumber = shaichaStudentDao.schoolThisNumber(school, CityName, AreaName, checkdate);
+            illNumber = shaichaStudentDao.illNumber(school, CityName, AreaName, checkdate);
+            manNumber = shaichaStudentDao.sexThisNumber(school, CityName, AreaName, checkdate, 1);
+            wumanNumber = shaichaStudentDao.sexThisNumber(school, CityName, AreaName, checkdate, 2);
+        }else {
+            schoolAllNumber = shaichaStudentDao.schoolAllNumberld(school, CityName, AreaName);
+            schoolThisNumber = shaichaStudentDao.schoolThisNumberld(school, CityName, AreaName, checkdate);
+            illNumber = shaichaStudentDao.illNumberld(school, CityName, AreaName, checkdate);
+            manNumber = shaichaStudentDao.sexThisNumberld(school, CityName, AreaName, checkdate, 1);
+            wumanNumber = shaichaStudentDao.sexThisNumberld(school, CityName, AreaName, checkdate, 2);
+        }
         Double illLv = getLv(illNumber,schoolThisNumber);
-        BigDecimal le = null;
+        BigDecimal le;
         if(manNumber>wumanNumber){
             le = new BigDecimal((float) wumanNumber / manNumber);
         }else{
@@ -46,31 +57,44 @@ public class schoolServiceImpl implements schoolService {
         map.put("illLv",format(illLv));
         if (manNumber>wumanNumber){
             map.put("man",bl.get(1).toString() +" : "+ bl.get(0).toString());
-//            map.put("wuman",bl.get(0).toString());
         }else {
-            map.put("man",bl.get(0).toString() +":"+bl.get(1).toString());
-//            map.put("wuman",bl.get(1).toString());
+            map.put("man",bl.get(0).toString() +" : "+bl.get(1).toString());
         }
+        if ("1 : 0".equals(map.get("man"))) map.put("man","1:1");
+        if ("0 : 1".equals(map.get("man"))) map.put("man","1:1");
         map.put("school",school);
         map.put("checkdate",checkdate);
-        redisTemplate.opsForHash().putAll(school+AreaName+checkdate+"dataOne",map);
+        redisTemplate.opsForHash().putAll(school+AreaName+checkdate+checkType+"dataOne",map);
         return map;
     }
 
     @Override
-    public Map<String, List> dataTwo(String school, String CityName, String AreaName,String checkdate) {
+    public Map<String, List> dataTwo(String school, String CityName, String AreaName,String checkdate,String checkType) {
         Map<String, List> listMap = new HashMap<>();
         List zxjsLv = new ArrayList();
         List everyTime = new ArrayList();
         List myopia = new ArrayList();
         List lcqqLv = new ArrayList();
         List jxjsLv = new ArrayList();
-        List<Map> everyCheck = shaichaStudentDao.everyCheck(school, CityName, AreaName);
+        List<Map> everyCheck;
+        if ("sc".equals(checkType)){
+            everyCheck = shaichaStudentDao.everyCheck(school, CityName, AreaName);
+        }else {
+            everyCheck = shaichaStudentDao.everyCheckld(school, CityName, AreaName);
+        }
         //轻度，中度，高度，正常
-        Integer mildNumber = shaichaStudentDao.mildNumber(school, CityName, AreaName, checkdate);
-        Integer moderateNumber = shaichaStudentDao.moderateNumber(school, CityName, AreaName, checkdate);
-        Integer highlyNumber = shaichaStudentDao.highlyNumber(school, CityName, AreaName, checkdate);
-        Integer thisNumber1 = shaichaStudentDao.schoolThisNumber(school, CityName, AreaName, checkdate);
+        Integer mildNumber,moderateNumber,highlyNumber,thisNumber1;
+        if ("sc".equals(checkType)){
+            mildNumber = shaichaStudentDao.mildNumber(school, CityName, AreaName, checkdate);
+            moderateNumber = shaichaStudentDao.moderateNumber(school, CityName, AreaName, checkdate);
+            highlyNumber = shaichaStudentDao.highlyNumber(school, CityName, AreaName, checkdate);
+            thisNumber1 = shaichaStudentDao.schoolThisNumber(school, CityName, AreaName, checkdate);
+        }else {
+            mildNumber = shaichaStudentDao.mildNumberld(school, CityName, AreaName, checkdate);
+            moderateNumber = shaichaStudentDao.moderateNumberld(school, CityName, AreaName, checkdate);
+            highlyNumber = shaichaStudentDao.highlyNumberld(school, CityName, AreaName, checkdate);
+            thisNumber1 = shaichaStudentDao.schoolThisNumberld(school, CityName, AreaName, checkdate);
+        }
         Integer normal = thisNumber1-mildNumber-moderateNumber-highlyNumber;
         myopia.add(normal);
         myopia.add(mildNumber);
@@ -81,24 +105,40 @@ public class schoolServiceImpl implements schoolService {
             String checkTime = map.get("checkTime").toString();
             String allNumber = map.get("checkNumber").toString();
             everyTime.add(checkTime);
-            Integer thisNumber = shaichaStudentDao.illNumber(school, CityName, AreaName, checkTime);
-            zxjsLv.add(format(getLv(thisNumber,Integer.parseInt(allNumber))));
-            Integer lcqqNumber = shaichaStudentDao.lcqqNumber(school, CityName, AreaName, checkTime);
-            lcqqLv.add(format(getLv(lcqqNumber,Integer.parseInt(allNumber))));
-            Integer jxjsNumber = shaichaStudentDao.jxjsNumber(school, CityName, AreaName, checkTime);
+            Integer thisNumber,lcqqNumber,jxjsNumber;
+            if ("sc".equals(checkType)){
+                thisNumber = shaichaStudentDao.illNumber(school, CityName, AreaName, checkTime);
+                lcqqNumber = shaichaStudentDao.lcqqNumber(school, CityName, AreaName, checkTime);
+                jxjsNumber = shaichaStudentDao.jxjsNumber(school, CityName, AreaName, checkTime);
+            }else {
+                thisNumber = shaichaStudentDao.illNumberld(school, CityName, AreaName, checkTime);
+                lcqqNumber = shaichaStudentDao.lcqqNumberld(school, CityName, AreaName, checkTime);
+                jxjsNumber = shaichaStudentDao.jxjsNumberld(school, CityName, AreaName, checkTime);
+            }
             jxjsLv.add(format(getLv(jxjsNumber,Integer.parseInt(allNumber))));
-
+            zxjsLv.add(format(getLv(thisNumber,Integer.parseInt(allNumber))));
+            lcqqLv.add(format(getLv(lcqqNumber,Integer.parseInt(allNumber))));
         }
         //年级，年级人数
         List grade = new ArrayList();
         List gradeNumber = new ArrayList();
-        String xueBu = shaichaStudentDao.getXueBu(school, CityName, AreaName, checkdate);
-        List<Map> gradeNumberList = shaichaStudentDao.gradeNumber(school, CityName, AreaName, checkdate);
+        String xueBu;
+        List<Map> gradeNumberList;
+        if ("sc".equals(checkType)){
+            xueBu = shaichaStudentDao.getXueBu(school, CityName, AreaName, checkdate);
+            gradeNumberList = shaichaStudentDao.gradeNumber(school, CityName, AreaName, checkdate);
+        }else {
+            xueBu = shaichaStudentDao.getXueBuld(school, CityName, AreaName, checkdate);
+            gradeNumberList = shaichaStudentDao.gradeNumberld(school, CityName, AreaName, checkdate);
+        }
         for(Map map : gradeNumberList){
             grade.add(map.get("name")==null ? "" :xueBu(xueBu,map.get("name").toString()));
             gradeNumber.add(map.get("value"));
         }
-
+        fixlist(everyTime);
+        fixTheList(zxjsLv);
+        fixTheList(lcqqLv);
+        fixTheList(jxjsLv);
         listMap.put("grade",grade);
         listMap.put("gradeNumber",gradeNumber);
         listMap.put("zxjsLv",zxjsLv);
@@ -106,14 +146,21 @@ public class schoolServiceImpl implements schoolService {
         listMap.put("jxjsLv",jxjsLv);
         listMap.put("myopia",myopia);
         listMap.put("everyTime",everyTime);
-        redisTemplate.opsForHash().putAll(school+AreaName+checkdate+"dataTwo",listMap);
+        redisTemplate.opsForHash().putAll(school+AreaName+checkdate+checkType+"dataTwo",listMap);
         return listMap;
     }
 
     @Override
     public List<Map> dataThree(String school, String CityName, String AreaName, String checkdate,String checkType) {
-        List<Map> studentList = shaichaStudentDao.studentList(school, CityName, AreaName, checkdate);
-        String xueBu = shaichaStudentDao.getXueBu(school, CityName, AreaName, checkdate);
+        List<Map> studentList;
+        String xueBu;
+        if ("sc".equals(checkType)) {
+            studentList = shaichaStudentDao.studentList(school, CityName, AreaName, checkdate);
+            xueBu = shaichaStudentDao.getXueBu(school, CityName, AreaName, checkdate);
+        }else {
+            studentList = shaichaStudentDao.studentListld(school, CityName, AreaName, checkdate);
+            xueBu = shaichaStudentDao.getXueBuld(school, CityName, AreaName, checkdate);
+        }
         for (int a = 0; a<studentList.size();a++){
             Map student = studentList.get(a);
             String grade = student.get("grade")==null ? "" :xueBu(xueBu,student.get("grade").toString());
@@ -121,149 +168,111 @@ public class schoolServiceImpl implements schoolService {
             studentList.get(a).put("checkdate",checkdate);
             studentList.get(a).put("checkType",checkType);
         }
-        redisTemplate.opsForList().rightPushAll(school+AreaName+checkdate+"dataThree",studentList);
+        redisTemplate.opsForList().rightPushAll(school+AreaName+checkdate+checkType+"dataThree",studentList);
         return studentList;
     }
 
     @Override
-    public List<Map> dataFour(String school, String CityName, String AreaName, String checkdate) {
-        String xueBu = shaichaStudentDao.getXueBu(school, CityName, AreaName, checkdate);
-        List<Map> paiMing = shaichaStudentDao.paiMing(school, CityName, AreaName, checkdate);
+    public List<Map> dataFour(String school, String CityName, String AreaName, String checkdate,String checkType) {
+        String xueBu;
+        List<Map> paiMing;
+        if ("sc".equals(checkType)) {
+            xueBu = shaichaStudentDao.getXueBu(school, CityName, AreaName, checkdate);
+            paiMing = shaichaStudentDao.paiMing(school, CityName, AreaName, checkdate);
+        }else {
+            xueBu = shaichaStudentDao.getXueBuld(school, CityName, AreaName, checkdate);
+            paiMing = shaichaStudentDao.paiMingld(school, CityName, AreaName, checkdate);
+        }
         for (int b = 0;b<paiMing.size();b++){
             Map gradeClass = paiMing.get(b);
             String grade = gradeClass.get("年级")==null?"":xueBu(xueBu,gradeClass.get("年级").toString());
             paiMing.get(b).put("gradeClass",grade+gradeClass.get("班级"));
         }
-        redisTemplate.opsForList().rightPushAll(school+AreaName+checkdate+"dataFour",paiMing);
+        redisTemplate.opsForList().rightPushAll(school+AreaName+checkdate+checkType+"dataFour",paiMing);
         return paiMing;
     }
 
     @Override
-    public List<Map> dataFive(String school, String CityName, String AreaName, String checkdate) {
-        String xueBu = shaichaStudentDao.getXueBu(school, CityName, AreaName, checkdate);
-        List<Map> gradeLv = shaichaStudentDao.gradeLv(school, CityName, AreaName, checkdate);
+    public List<Map> dataFive(String school, String CityName, String AreaName, String checkdate,String checkType) {
+        String xueBu;
+        List<Map> gradeLv;
+        if ("sc".equals(checkType)) {
+            xueBu = shaichaStudentDao.getXueBu(school, CityName, AreaName, checkdate);
+            gradeLv = shaichaStudentDao.gradeLv(school, CityName, AreaName, checkdate);
+        }else {
+            xueBu = shaichaStudentDao.getXueBuld(school, CityName, AreaName, checkdate);
+            gradeLv = shaichaStudentDao.gradeLvld(school, CityName, AreaName, checkdate);
+        }
         for (int i = 0; i <gradeLv.size() ; i++) {
             Map map = gradeLv.get(i);
             gradeLv.get(i).put("grade",map.get("grade")==null?"":xueBu(xueBu,map.get("grade").toString()));
         }
-        redisTemplate.opsForList().rightPushAll(school+AreaName+checkdate+"dataFive",gradeLv);
+        redisTemplate.opsForList().rightPushAll(school+AreaName+checkdate+checkType+"dataFive",gradeLv);
         return gradeLv;
     }
 
     @Override
-    public List<Map> dataSix(String school, String CityName, String AreaName, String checkdate) {
-        String xueBu = shaichaStudentDao.getXueBu(school, CityName, AreaName, checkdate);
-        List<Map> gradeNumberList = shaichaStudentDao.gradeNumber(school, CityName, AreaName, checkdate);
+    public List<Map> dataSix(String school, String CityName, String AreaName, String checkdate,String checkType) {
+        String xueBu;
+        List<Map> gradeNumberList;
+        if ("sc".equals(checkType)) {
+            xueBu = shaichaStudentDao.getXueBu(school, CityName, AreaName, checkdate);
+            gradeNumberList = shaichaStudentDao.gradeNumber(school, CityName, AreaName, checkdate);
+        }else {
+            xueBu = shaichaStudentDao.getXueBuld(school, CityName, AreaName, checkdate);
+            gradeNumberList = shaichaStudentDao.gradeNumberld(school, CityName, AreaName, checkdate);
+        }
         for(int s = 0;s<gradeNumberList.size();s++){
             Map map = gradeNumberList.get(s);
             gradeNumberList.get(s).put("name",map.get("name")==null ? "" :xueBu(xueBu,map.get("name").toString()));
         }
-        redisTemplate.opsForList().rightPushAll(school+AreaName+checkdate+"dataSix",gradeNumberList);
+        redisTemplate.opsForList().rightPushAll(school+AreaName+checkdate+checkType+"dataSix",gradeNumberList);
         return gradeNumberList;
     }
 
     @Override
-    public Map gerenAdvice(String name, String idCard, String checkdate) {
+    public Map gerenAdvice(String name, String idCard, String checkdate,String age,String checkType) {
         Map<String, Object> params = new HashMap<String, Object>();
-        String maxcheckdate = shaichaStudentDao.maxcheckdate(name, idCard);
-        Map advice = shaichaStudentDao.advice(name, idCard, maxcheckdate);
-        Double luoyanr = Double.parseDouble(advice.get("luoyanr").toString());
-        Double luoyanl = Double.parseDouble(advice.get("luoyanl").toString());
-        Double daijingr = Double.parseDouble(advice.get("daijingr")==null?"0.0":advice.get("daijingr").toString());
-        Double daijingl = Double.parseDouble(advice.get("daijingl")==null?"0.0":advice.get("daijingl").toString());
-        Double dengxiaoqiujingr = (double)advice.get("dengxiaoqiujingr");
-        Double dengxiaoqiujingl = (double)advice.get("dengxiaoqiujingl");
-        Double zhujingr = advice.get("zhujingr")==null?0.0:(double)advice.get("zhujingr");
-        Double zhujingl = advice.get("zhujingl")==null?0.0:(double)advice.get("zhujingl");
-        advice(params,luoyanr,luoyanl,dengxiaoqiujingr,dengxiaoqiujingl,zhujingr,zhujingl,daijingr,daijingl);
-        return params;
+        if ("sc".equals(checkType)) {
+            String maxcheckdate = shaichaStudentDao.maxcheckdate(name, idCard);
+            Map advice = shaichaStudentDao.advice(name, idCard, maxcheckdate);
+            Double luoyanr = Double.parseDouble(advice.get("luoyanr").toString());
+            Double luoyanl = Double.parseDouble(advice.get("luoyanl").toString());
+            Double daijingr = Double.parseDouble(advice.get("daijingr") == null ? "0.0" : advice.get("daijingr").toString());
+            Double daijingl = Double.parseDouble(advice.get("daijingl") == null ? "0.0" : advice.get("daijingl").toString());
+            Double dengxiaoqiujingr = (double) advice.get("dengxiaoqiujingr");
+            Double dengxiaoqiujingl = (double) advice.get("dengxiaoqiujingl");
+            Double zhujingr = advice.get("zhujingr") == null ? 0.0 : (double) advice.get("zhujingr");
+            Double zhujingl = advice.get("zhujingl") == null ? 0.0 : (double) advice.get("zhujingl");
+            advice(params, luoyanr, luoyanl, dengxiaoqiujingr, dengxiaoqiujingl, zhujingr, zhujingl, daijingr, daijingl);
+            return params;
+        }else {
+            String maxcheckdate = shaichaStudentDao.maxcheckdateld(name, idCard);
+            Map advice = shaichaStudentDao.adviceld(name, idCard, maxcheckdate);
+            Double daijingr = Double.parseDouble(advice.get("daijingr") == null ? "0.0" : advice.get("daijingr").toString());
+            Double daijingl = Double.parseDouble(advice.get("daijingl") == null ? "0.0" : advice.get("daijingl").toString());
+            Double dengxiaoqiujingr = (double) advice.get("dengxiaoqiujingr");
+            Double dengxiaoqiujingl = (double) advice.get("dengxiaoqiujingl");
+            Double zhujingr = advice.get("zhujingr") == null ? 0.0 : (double) advice.get("zhujingr");
+            Double zhujingl = advice.get("zhujingl") == null ? 0.0 : (double) advice.get("zhujingl");
+            adviceld(params,Integer.parseInt(age),dengxiaoqiujingr,dengxiaoqiujingl,zhujingr,zhujingl,daijingr,daijingl);
+            return params;
+        }
     }
 
     @Override
-    public List<Map> table(String name, String idCard,String checkType) {
-        List<Map> table = shaichaStudentDao.table(name, idCard);
+    public List<Map> table(String name, String idCard,String checkType,String age) {
+        List<Map> table;
+        if ("sc".equals(checkType)) {
+            table = shaichaStudentDao.table(name, idCard);
+        }else {
+            table = shaichaStudentDao.tableld(name, idCard);
+        }
         for (int i = 0;i<table.size();i++) {
             table.get(i).put("checkType",checkType);
+            table.get(i).put("age",age);
         }
         return table;
-    }
-
-    @Override
-    public Map<String,List> echarts(String name, String idCard) {
-        List<Map> yanzhou = shaichaStudentDao.yanzhou(name, idCard);
-        List<Map> luoyan = shaichaStudentDao.luoyan(name, idCard);
-        List<Map> dengxiaoqiujing = shaichaStudentDao.dengxiaoqiujing(name, idCard);
-        fixList(yanzhou);
-        fixList(luoyan);
-        fixList(dengxiaoqiujing);
-        Map<String,List> map = new HashMap<>();
-        List yanzhour = new ArrayList();
-        List yanzhoul = new ArrayList();
-        List yanzhoutime = new ArrayList();
-        List luoyanr = new ArrayList();
-        List luoyanl = new ArrayList();
-        List luoyantime = new ArrayList();
-        List dengxiaoqiujingr = new ArrayList();
-        List dengxiaoqiujingl = new ArrayList();
-        List dengxiaoqiujingtime = new ArrayList();
-        for (int i = 3; i >=0 ; i--) {
-            luoyanr.add(luoyan.get(i).get("youyan"));
-            luoyanl.add(luoyan.get(i).get("zuoyan"));
-            luoyantime.add(luoyan.get(i).get("checkdate"));
-        }
-        for (int i = 3; i >=0 ; i--) {
-            yanzhour.add(yanzhou.get(i).get("youyan"));
-            yanzhoul.add(yanzhou.get(i).get("zuoyan"));
-            yanzhoutime.add(yanzhou.get(i).get("checkdate"));
-        }
-        for (int i = 3; i >=0 ; i--) {
-            dengxiaoqiujingr.add(dengxiaoqiujing.get(i).get("youyan"));
-            dengxiaoqiujingl.add(dengxiaoqiujing.get(i).get("zuoyan"));
-            dengxiaoqiujingtime.add(dengxiaoqiujing.get(i).get("checkdate"));
-        }
-        map.put("yanzhour",yanzhour);
-        map.put("yanzhoul",yanzhoul);
-        map.put("yanzhoutime",yanzhoutime);
-        map.put("dengxiaoqiujingr",dengxiaoqiujingr);
-        map.put("dengxiaoqiujingl",dengxiaoqiujingl);
-        map.put("dengxiaoqiujingtime",dengxiaoqiujingtime);
-        map.put("luoyanr",luoyanr);
-        map.put("luoyanl",luoyanl);
-        map.put("luoyantime",luoyantime);
-        return map;
-    }
-
-    @Override
-    public Map<String, String> dataOneld(String school, String CityName, String AreaName, String checkdate) {
-        Map<String, String> map = new HashMap<>();
-        Integer schoolAllNumber = shaichaStudentDao.schoolAllNumberld(school,CityName,AreaName);
-        Integer schoolThisNumber = shaichaStudentDao.schoolThisNumberld(school, CityName, AreaName, checkdate);
-        Integer illNumber = shaichaStudentDao.illNumberld(school, CityName, AreaName, checkdate);
-        Integer manNumber = shaichaStudentDao.sexThisNumberld(school, CityName, AreaName, checkdate, 1);
-        Integer wumanNumber = shaichaStudentDao.sexThisNumberld(school, CityName, AreaName, checkdate, 2);
-        Double illLv = getLv(illNumber,schoolThisNumber);
-        BigDecimal le = null;
-        if(manNumber>wumanNumber){
-            le = new BigDecimal((float) wumanNumber / manNumber);
-        }else{
-            le = new BigDecimal((float) manNumber / wumanNumber);
-        }
-        Double humanLv = le.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue();
-        List bl = BL(humanLv);
-        map.put("schoolAllNumber",schoolAllNumber.toString());
-        map.put("schoolThisNumber",schoolThisNumber.toString());
-        map.put("illLv",format(illLv));
-        if (manNumber>wumanNumber){
-            map.put("man",bl.get(1).toString() +" : "+ bl.get(0).toString());
-//            map.put("wuman",bl.get(0).toString());
-        }else {
-            map.put("man",bl.get(0).toString() +":"+bl.get(1).toString());
-//            map.put("wuman",bl.get(1).toString());
-        }
-        map.put("school",school);
-        map.put("checkdate",checkdate);
-        redisTemplate.opsForHash().putAll(school+AreaName+checkdate+"dataOneld",map);
-        return map;
     }
 
     @Override
@@ -278,7 +287,6 @@ public class schoolServiceImpl implements schoolService {
         params.put("studentSex", report.get("student_sex")==null?"":(int)report.get("student_sex")==1? "男":"女");
         params.put("lastCheckTime", new SimpleDateFormat("yyyy-MM-dd").format(report.get("last_check_time")));
         DecimalFormat df = new DecimalFormat("0.00");
-        DecimalFormat df1 = new DecimalFormat("0.0");
 
         //视力检查结果获取
         String nakedFarvisionOd="";
@@ -349,14 +357,186 @@ public class schoolServiceImpl implements schoolService {
             yuanjingshiliR=Double.parseDouble(correctionFarvisionOd);
         }
         if(!StringUtils.isBlank(correctionFarvisionOs) && isDouble(correctionFarvisionOs)){
-             yuanjingshiliL=Double.parseDouble(correctionFarvisionOs);
+            yuanjingshiliL=Double.parseDouble(correctionFarvisionOs);
         }
+        params.put("ydoctorchubu","");
+        params.put("zdoctorchubu","");
         advice(params,od,os,dengxiaoqiujingR,dengxiaoqiujingL,zhujingqR,zhujingqL,yuanjingshiliR,yuanjingshiliL);
         return params;
     }
 
+    @Override
+    public Map reportld(String name, String idCard, String checkdate, String checkType,String age) {
+        Map report = shaichaStudentDao.reportld(name, idCard, checkdate);
+        Map<String, Object> params = new HashMap<String, Object>();
+        //基本信息获取
+        params.put("school", report.get("school"));
+        params.put("grade",report.get("grade"));
+        params.put("studentClass",report.get("student_class"));
+        params.put("studentName",report.get("student_name"));
+        params.put("studentSex", report.get("student_sex")==null?"":(int)report.get("student_sex")==1? "男":"女");
+        params.put("lastCheckTime", new SimpleDateFormat("yyyy-MM-dd").format(report.get("last_check_time")));
+        params.put("height",report.get("height")==null?"":report.get("height"));
+        params.put("weight",report.get("weight")==null?"":report.get("weight"));
+        DecimalFormat df = new DecimalFormat("0.00");
 
+        //视力检查结果获取
+        String nakedFarvisionOd="";
+        String nakedFarvisionOs="";
+        String correctionFarvisionOd="5.0";
+        String correctionFarvisionOs="5.0";
 
+        nakedFarvisionOd=report.get("naked_farvision_od")==null?"":report.get("naked_farvision_od").toString();
+        nakedFarvisionOs=report.get("naked_farvision_os")==null?"":report.get("naked_farvision_os").toString();
+        correctionFarvisionOd=report.get("correction_farvision_od")==null?"":report.get("correction_farvision_od").toString();
+        correctionFarvisionOs=report.get("correction_farvision_os")==null?"":report.get("correction_farvision_os").toString();
+
+        params.put("nakedFarvisionOd",zhuanhuan1(nakedFarvisionOd)==""?"":zhuanhuan1(nakedFarvisionOd));
+        params.put("nakedFarvisionOs",zhuanhuan1(nakedFarvisionOs)==""?"":zhuanhuan1(nakedFarvisionOs));
+        params.put("glassvisionOd",zhuanhuan1(correctionFarvisionOd)==""?"":zhuanhuan1(correctionFarvisionOd));
+        params.put("glassvisionOs",zhuanhuan1(correctionFarvisionOd)==""?"":zhuanhuan1(correctionFarvisionOs));
+
+        //眼轴长度数据拼装
+        params.put("secondCheckOd",report.get("first_check_od")==null?"":zhuanhuan(report.get("first_check_od").toString()));
+        params.put("secondCheckOs", report.get("first_check_os")==null?"":zhuanhuan(report.get("first_check_os").toString()));
+
+        //散瞳前电脑验光结果(左眼)
+        String diopterSL="";
+        if(report.get("diopter_s_os_first")!=null){
+            diopterSL = df.format(zhuanhuan(report.get("diopter_s_os_first").toString()));
+            if(Double.valueOf(diopterSL)>0){
+                diopterSL="+"+diopterSL;
+            }
+        }
+        params.put("diopterSL",diopterSL);
+        params.put("diopterCL",report.get("diopter_c_os_first")==null?"":df.format(zhuanhuan(report.get("diopter_c_os_first").toString())));
+        params.put("diopterAL",report.get("diopter_a_os_first")==null?"":zhuanhuan(report.get("diopter_a_os_first").toString()));
+        double zhujingqL = report.get("diopter_c_os_first") == null ? 0.0 : (double)report.get("diopter_c_os_first");
+        //散瞳前电脑验光结果(右眼)
+        String diopterSR="";
+        if(report.get("diopter_s_od_first")!=null){
+            diopterSR = df.format(zhuanhuan(report.get("diopter_s_od_first").toString()));
+            if(Double.valueOf(diopterSR)>0){
+                diopterSR="+"+diopterSR;
+            }
+        }
+        params.put("diopterSR",diopterSR);
+        params.put("diopterCR",report.get("diopter_c_od_first")==null?"":df.format(zhuanhuan(report.get("diopter_c_od_first").toString())));
+        params.put("diopterAR",report.get("diopter_a_od_first")==null?"":zhuanhuan(report.get("diopter_a_od_first").toString()));
+        double zhujingqR = report.get("diopter_c_od_first") == null ? 0.0 : (double)report.get("diopter_c_od_first");
+        /**
+         * 散瞳后(球镜、柱镜、轴位) 数据获取
+         */
+        String hdiopterSR="";
+        if(report.get("diopter_s_od_second")!=null){
+            hdiopterSR = df.format(zhuanhuan(report.get("diopter_s_od_second").toString()));
+            if(Double.valueOf(hdiopterSR)>0){
+                hdiopterSR="+"+hdiopterSR;
+            }
+        }
+        String hdiopterSL="";
+        if(report.get("diopter_s_os_second")!=null){
+            hdiopterSL = df.format(zhuanhuan(report.get("diopter_s_os_second").toString()));
+            if(Double.valueOf(hdiopterSL)>0){
+                hdiopterSL="+"+hdiopterSL;
+            }
+        }
+        double hdengxiaoqiujingL = 0.0, hdengxiaoqiujingR = 0.0;//散瞳后验光等效球镜
+        params.put("hdiopterSL", hdiopterSL);
+        params.put("hdiopterCL", report.get("diopter_c_os_second")==null?"":df.format(zhuanhuan(report.get("diopter_c_os_second").toString())));
+        params.put("hdiopterAL", report.get("diopter_a_os_second")==null?"":zhuanhuan(report.get("diopter_a_os_second").toString()));
+        hdengxiaoqiujingL = report.get("dengxiaoqiujing_os_second") == null ? 0.0 : (double)report.get("dengxiaoqiujing_os_second");
+
+        params.put("hdiopterSR", hdiopterSR);
+        params.put("hdiopterCR", report.get("diopter_c_od_second")==null?"":df.format(zhuanhuan(report.get("diopter_c_od_second").toString())));
+        params.put("hdiopterAR", report.get("diopter_a_od_second")==null?"":zhuanhuan(report.get("diopter_a_od_second").toString()));
+        hdengxiaoqiujingR = report.get("dengxiaoqiujing_od_second") == null ? 0.0 : (double)report.get("dengxiaoqiujing_od_second");
+        /**
+         *  散瞳前（K1、K1轴位、K2、K2轴位) 数据获取
+         */
+        params.put("cornealMmr1R",report.get("corneal_mm_od_first_K1")==null?"0":zhuanhuan(report.get("corneal_mm_od_first_K1")));
+        params.put("cornealDr1R", report.get("corneal_d_od_first_K1")==null?"0":report.get("corneal_d_od_first_K1"));
+        params.put("cornealMmr2R",report.get("corneal_mm_od_first_K2")==null?"0":zhuanhuan(report.get("corneal_mm_od_first_K2")));
+        params.put("cornealDr2R", report.get("corneal_d_od_first_K2")==null?"0":report.get("corneal_d_od_first_K2"));
+        params.put("cornealMmr1L",report.get("corneal_mm_os_first_K1")==null?"0":zhuanhuan(report.get("corneal_mm_os_first_K1")));
+        params.put("cornealDr1L", report.get("corneal_d_os_first_K1")==null?"0":report.get("corneal_d_os_first_K1"));
+        params.put("cornealMmr2L",report.get("corneal_mm_os_first_K2")==null?"0":zhuanhuan(report.get("corneal_mm_os_first_K2")));
+        params.put("cornealDr2L", report.get("corneal_d_os_first_K2")==null?"0":report.get("corneal_d_os_first_K2"));
+
+        double yuanjingshiliL=0,yuanjingshiliR=0;//原镜视力
+        if(!StringUtils.isBlank(correctionFarvisionOd) && isDouble(correctionFarvisionOd)){
+            yuanjingshiliR=Double.parseDouble(correctionFarvisionOd);
+        }
+        if(!StringUtils.isBlank(correctionFarvisionOs) && isDouble(correctionFarvisionOs)){
+            yuanjingshiliL=Double.parseDouble(correctionFarvisionOs);
+        }
+        params.put("ydoctorchubu","");
+        params.put("zdoctorchubu","");
+        adviceld(params,Integer.parseInt(age),hdengxiaoqiujingR,hdengxiaoqiujingL,zhujingqR,zhujingqL,yuanjingshiliR,yuanjingshiliL);
+        return params;
+    }
+
+    @Override
+    public Map<String,List> echarts(String name, String idCard,String checkType) {
+        List<Map> yanzhou,luoyan,dengxiaoqiujing;
+        if ("sc".equals(checkType)) {
+            yanzhou = shaichaStudentDao.yanzhou(name, idCard);
+            luoyan = shaichaStudentDao.luoyan(name, idCard);
+            dengxiaoqiujing = shaichaStudentDao.dengxiaoqiujing(name, idCard);
+        }else {
+            yanzhou = shaichaStudentDao.yanzhould(name, idCard);
+            luoyan = shaichaStudentDao.luoyanld(name, idCard);
+            dengxiaoqiujing = shaichaStudentDao.dengxiaoqiujingld(name, idCard);
+        }
+        Map<String,List> map = new HashMap<>();
+        List yanzhour = new ArrayList();
+        List yanzhoul = new ArrayList();
+        List yanzhoutime = new ArrayList();
+        List luoyanr = new ArrayList();
+        List luoyanl = new ArrayList();
+        List luoyantime = new ArrayList();
+        List dengxiaoqiujingr = new ArrayList();
+        List dengxiaoqiujingl = new ArrayList();
+        List dengxiaoqiujingtime = new ArrayList();
+        fixList(luoyan);
+        fixList(dengxiaoqiujing);
+        if (yanzhou.size()==0){
+            fixList(yanzhou);
+            for (int i = 3; i >=0 ; i--) {
+                yanzhour.add(yanzhou.get(i).get("youyan"));
+                yanzhoul.add(yanzhou.get(i).get("zuoyan"));
+                yanzhoutime.add(luoyan.get(i).get("checkdate"));
+            }
+        }else {
+            fixList(yanzhou);
+            for (int i = 3; i >=0 ; i--) {
+                yanzhour.add(yanzhou.get(i).get("youyan"));
+                yanzhoul.add(yanzhou.get(i).get("zuoyan"));
+                yanzhoutime.add(yanzhou.get(i).get("checkdate"));
+            }
+        }
+        for (int i = 3; i >=0 ; i--) {
+            luoyanr.add(luoyan.get(i).get("youyan"));
+            luoyanl.add(luoyan.get(i).get("zuoyan"));
+            luoyantime.add(luoyan.get(i).get("checkdate"));
+        }
+
+        for (int i = 3; i >=0 ; i--) {
+            dengxiaoqiujingr.add(dengxiaoqiujing.get(i).get("youyan"));
+            dengxiaoqiujingl.add(dengxiaoqiujing.get(i).get("zuoyan"));
+            dengxiaoqiujingtime.add(dengxiaoqiujing.get(i).get("checkdate"));
+        }
+        map.put("yanzhour",yanzhour);
+        map.put("yanzhoul",yanzhoul);
+        map.put("yanzhoutime",yanzhoutime);
+        map.put("dengxiaoqiujingr",dengxiaoqiujingr);
+        map.put("dengxiaoqiujingl",dengxiaoqiujingl);
+        map.put("dengxiaoqiujingtime",dengxiaoqiujingtime);
+        map.put("luoyanr",luoyanr);
+        map.put("luoyanl",luoyanl);
+        map.put("luoyantime",luoyantime);
+        return map;
+    }
 
     /**
      * 求率，保留3位小数  a除以b
@@ -368,7 +548,6 @@ public class schoolServiceImpl implements schoolService {
         BigDecimal lc = new BigDecimal((float) a / b);
         return lc.setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue()*100;
     }
-
     /**
      * 实现男女比例,小数转变为最简分数  z为整数部分，c为分子，b为分母
      * @param n
@@ -417,7 +596,6 @@ public class schoolServiceImpl implements schoolService {
         }
         return list;
     }
-
     /**
      * 判断 学部 年级
      * @param xueBu
@@ -459,7 +637,6 @@ public class schoolServiceImpl implements schoolService {
         }
         return grade;
     }
-
     /**
      * 判断 初中部 年级
      * @param grade
@@ -482,19 +659,17 @@ public class schoolServiceImpl implements schoolService {
         }
         return grade;
     }
-
     /**
      * 保留小数
      * @param ff
      * @return
      */
     public static String format(Double ff){
-        DecimalFormat df = new DecimalFormat("#.0");
+        DecimalFormat df = new DecimalFormat("0.0");
         return df.format(ff);
     }
-
     /**
-     * 输出医生建议
+     * 散瞳前输出医生建议
      * @param params
      * @param od
      * @param os
@@ -603,12 +778,102 @@ public class schoolServiceImpl implements schoolService {
             params.put("zdoctorchubu", "视力下降，近视，散光。建议及时到医院接受近视的详细检查，通过散瞳明确近视的程度并排除其他眼病；若已进行近视矫治，根据检查结果提示，眼镜度数可能需要调整，请及时到医院进行复查，采取科学的方法进行近视的防控或采取相应眼病治疗措施，避免低度近视发展为中度近视，避免中度近视发展为高度近视，减少高度近视的并发症发生。并请严格注意用眼卫生，避免长时间近距离持续用眼，多参加户外活动，建立完善的视觉健康档案，延缓近视的进展。");
         }
     }
+    /**
+     * 散瞳后输出医生建议
+     * @param resultMap
+     * @param birth
+     * @param hdengxiaoqiujingR
+     * @param hdengxiaoqiujingL
+     * @param zhujingqr
+     * @param zhujingqL
+     * @param yuanjingshiliR
+     * @param yuanjingshiliL
+     */
+    public static void adviceld (Map<String, Object> resultMap,Integer birth,Double hdengxiaoqiujingR,Double hdengxiaoqiujingL,Double zhujingqr,Double zhujingqL,Double yuanjingshiliR,Double yuanjingshiliL){
+        if (hdengxiaoqiujingR < -6.0 && zhujingqr > -1.0) {
+            resultMap.put("ydoctorchubu", "高度近视。建议及时到医院接受近视的详细检查，进一步详尽眼底检查，排除其他眼病，采取科学的方法进行近视的防控或采取相应眼病治疗措施，减少高度近视的并发症发生。");
+        }
+        if (hdengxiaoqiujingL < -6.0 && zhujingqL > -1.0) {
+            resultMap.put("zdoctorchubu", "高度近视 。建议及时到医院接受近视的详细检查，进一步详尽眼底检查，排除其他眼病，采取科学的方法进行近视的防控或采取相应眼病治疗措施，减少高度近视的并发症发生。");
+        }
 
+        if (hdengxiaoqiujingR < -6.0 && zhujingqr <= -1.0) {
+            resultMap.put("ydoctorchubu", "高度近视，散光。建议及时到医院接受近视的详细检查，进一步详尽眼底检查，排除其他眼病，采取科学的方法进行近视的防控或采取相应眼病治疗措施，减少高度近视的并发症发生。");
+        }
+        if (hdengxiaoqiujingL < -6.0 && zhujingqL <= -1.0) {
+            resultMap.put("zdoctorchubu", "高度近视，散光。建议及时到医院接受近视的详细检查，进一步详尽眼底检查，排除其他眼病，采取科学的方法进行近视的防控或采取相应眼病治疗措施，减少高度近视的并发症发生。");
+        }
+
+        if (hdengxiaoqiujingR >= -6.0 && hdengxiaoqiujingR <= -0.5 && zhujingqr > -1.0) {
+            resultMap.put("ydoctorchubu", "近视。 建议及时到医院接受近视的详细检查，进一步明确近视的程度并排除其他眼病，采取科学的方法进行近视的防控或采取相应眼病治疗措施，避免低度近视发展为中度近视，避免中度近视发展为高度近视，减少高度近视的并发症发生。");
+        }
+        if (hdengxiaoqiujingL >= -6.0 && hdengxiaoqiujingL <= -0.5 && zhujingqL > -1.0) {
+            resultMap.put("zdoctorchubu", "近视。 建议及时到医院接受近视的详细检查，进一步明确近视的程度并排除其他眼病，采取科学的方法进行近视的防控或采取相应眼病治疗措施，避免低度近视发展为中度近视，避免中度近视发展为高度近视，减少高度近视的并发症发生。");
+        }
+
+        if (hdengxiaoqiujingR >= -6.0 && hdengxiaoqiujingR <= -0.5 && zhujingqr <= -1.0) {
+            resultMap.put("ydoctorchubu", "近视，散光。建议及时到医院接受近视的详细检查，进一步明确近视的程度并排除其他眼病，采取科学的方法进行近视的防控或采取相应眼病治疗措施，避免低度近视发展为中度近视，避免中度近视发展为高度近视，减少高度近视的并发症发生。");
+        }
+        if (hdengxiaoqiujingL >= -6.0 && hdengxiaoqiujingL <= -0.5 && zhujingqL <= -1.0) {
+            resultMap.put("zdoctorchubu", "近视，散光。建议及时到医院接受近视的详细检查，进一步明确近视的程度并排除其他眼病，采取科学的方法进行近视的防控或采取相应眼病治疗措施，避免低度近视发展为中度近视，避免中度近视发展为高度近视，减少高度近视的并发症发生。");
+        }
+
+        if (hdengxiaoqiujingR > -0.5 && hdengxiaoqiujingR <= 0.75 && zhujingqr > -1.0) {
+            resultMap.put("ydoctorchubu", "近视临床前期。请注意卫生用眼，避免长时间近距离持续用眼，多参加户外活动，建议建立完善的视觉健康档案，防控近视的发生，更好地进行近视发生的预警。");
+        }
+        if (hdengxiaoqiujingL > -0.5 && hdengxiaoqiujingL <= 0.75 && zhujingqL > -1.0) {
+            resultMap.put("zdoctorchubu", " 近视临床前期。请注意卫生用眼，避免长时间近距离持续用眼，多参加户外活动，建议建立完善的视觉健康档案，防控近视的发生，更好地进行近视发生的预警。");
+        }
+
+        if (hdengxiaoqiujingR > -0.5 && hdengxiaoqiujingR <= 0.75 && zhujingqr <= -1.0) {
+            resultMap.put("ydoctorchubu", "近视临床前期，散光。请注意卫生用眼，避免长时间近距离持续用眼，多参加户外活动，建议建立完善的视觉健康档案，防控近视的发生，更好地进行近视发生的预警。");
+        }
+        if (hdengxiaoqiujingL > -0.5 && hdengxiaoqiujingL <= 0.75 && zhujingqL <= -1.0) {
+            resultMap.put("zdoctorchubu", "近视临床前期，散光。请注意卫生用眼，避免长时间近距离持续用眼，多参加户外活动，建议建立完善的视觉健康档案，防控近视的发生，更好地进行近视发生的预警。");
+        }
+
+        if (hdengxiaoqiujingR > 0.75 && zhujingqr > -1.0 && ((birth == 3 && yuanjingshiliR >= 4.7) || (birth >= 4 && birth <= 5 && yuanjingshiliR >= 4.8) || (birth == 6 && yuanjingshiliR >= 4.9) || (birth >= 7 && yuanjingshiliR >= 5.0))) {
+            resultMap.put("ydoctorchubu", "远视，视力达到相应年龄段水平，无近视发生。请注意卫生用眼，避免长时间近距离持续用眼，多参加户外活动，建议建立完善的视觉健康档案，更好地进行近视发生的预警。");
+        }
+        if (hdengxiaoqiujingL > 0.75 && zhujingqL > -1.0 && ((birth == 3 && yuanjingshiliL >= 4.7) || (birth >= 4 && birth <= 5 && yuanjingshiliL >= 4.8) || (birth == 6 && yuanjingshiliL >= 4.9) || (birth >= 7 && yuanjingshiliL >= 5.0))) {
+            resultMap.put("zdoctorchubu", "远视，视力达到相应年龄段水平，无近视发生。请注意卫生用眼，避免长时间近距离持续用眼，多参加户外活动，建议建立完善的视觉健康档案，更好地进行近视发生的预警。");
+        }
+
+        if (hdengxiaoqiujingR > 0.75 && zhujingqr <= -1.0 && ((birth == 3 && yuanjingshiliR >= 4.7) || (birth >= 4 && birth <= 5 && yuanjingshiliR >= 4.8) || (birth == 6 && yuanjingshiliR >= 4.9) || (birth >= 7 && yuanjingshiliR >= 5.0))) {
+            resultMap.put("ydoctorchubu", "远视，散光，视力达到相应年龄段水平，无近视发生。请注意卫生用眼，避免长时间近距离持续用眼，多参加户外活动，建议建立完善的视觉健康档案，更好地进行近视发生的预警。");
+        }
+        if (hdengxiaoqiujingL > 0.75 && zhujingqL <= -1.0 && ((birth == 3 && yuanjingshiliL >= 4.7) || (birth >= 4 && birth <= 5 && yuanjingshiliL >= 4.8) || (birth == 6 && yuanjingshiliL >= 4.9) || (birth >= 7 && yuanjingshiliL >= 5.0))) {
+            resultMap.put("zdoctorchubu", "远视，散光，视力达到相应年龄段水平，无近视发生。请注意卫生用眼，避免长时间近距离持续用眼，多参加户外活动，建议建立完善的视觉健康档案，更好地进行近视发生的预警。");
+        }
+
+        if (hdengxiaoqiujingR > 0.75 && zhujingqr > -1.0 && ((birth == 3 && yuanjingshiliR < 4.7) || (birth >= 4 && birth <= 5 && yuanjingshiliR < 4.8) || (birth == 6 && yuanjingshiliR < 4.9) || (birth >= 7 && yuanjingshiliR < 5.0))) {
+            resultMap.put("ydoctorchubu", "远视，视力异常。建议及时到医院接受详细检查，明确诊断是否为屈光不正、弱视、斜视、视功能异常以及其他眼病，并及时采取相应治疗措施。");
+        }
+        if (hdengxiaoqiujingL > 0.75 && zhujingqL > -1.0 && ((birth == 3 && yuanjingshiliL < 4.7) || (birth >= 4 && birth <= 5 && yuanjingshiliL < 4.8) || (birth == 6 && yuanjingshiliL < 4.9) || (birth >= 7 && yuanjingshiliL < 5.0))) {
+            resultMap.put("zdoctorchubu", "远视，视力异常。建议及时到医院接受详细检查，明确诊断是否为屈光不正、弱视、斜视、视功能异常以及其他眼病，并及时采取相应治疗措施。");
+        }
+
+        if (hdengxiaoqiujingR > 0.75 && zhujingqr <= -1.0 && ((birth == 3 && yuanjingshiliR < 4.7) || (birth >= 4 && birth <= 5 && yuanjingshiliR < 4.8) || (birth == 6 && yuanjingshiliR < 4.9) || (birth >= 7 && yuanjingshiliR < 5.0))) {
+            resultMap.put("ydoctorchubu", "远视，散光。视力异常。建议及时到医院接受详细检查，明确诊断是否为屈光不正、弱视、斜视、视功能异常以及其他眼病，并及时采取相应治疗措施。");
+        }
+        if (hdengxiaoqiujingL > 0.75 && zhujingqL <= -1.0 && ((birth == 3 && yuanjingshiliL < 4.7) || (birth >= 4 && birth <= 5 && yuanjingshiliL < 4.8) || (birth == 6 && yuanjingshiliL < 4.9) || (birth >= 7 && yuanjingshiliL < 5.0))) {
+            resultMap.put("zdoctorchubu", "远视，散光。视力异常。建议及时到医院接受详细检查，明确诊断是否为屈光不正、弱视、斜视、视功能异常以及其他眼病，并及时采取相应治疗措施。");
+        }
+    }
     /**
      * 将集合补全为4个
      * @param param
      */
     public static void fixList (List<Map> param){
+        if (param.size()==4) return;
+        if (param.size()==0){
+            Map<String,Object> map = new HashMap();
+            map.put("youyan",0);
+            map.put("zuoyan",0);
+            Object checkdate = "2020-12";
+            map.put("checkdate",checkdate);
+            param.add(map);
+        }
         if (param.size()<4){
             for (int i = param.size();i<4;i++){
                 Map map = new HashMap();
@@ -626,6 +891,35 @@ public class schoolServiceImpl implements schoolService {
                 }
             }
         }
+    }
+    public static void fixlist(List list){
+        if (list.size()==4) return;
+        if (list.size()==0){
+            Object checkdate = "2020-12";
+            list.add(checkdate);
+        }
+        Collections.reverse(list);
+        for (int i = list.size();i<4;i++){
+            SimpleDateFormat sdFormat=new SimpleDateFormat("yyyy-MM");
+            try {
+                Date date = sdFormat.parse(list.get(i-1).toString());
+                date.setMonth(date.getMonth()-6);
+                String format = sdFormat.format(date);
+                list.add(format);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        Collections.reverse(list);
+    }
+    public static void fixTheList(List list){
+        if (list.size()==4) return;
+        if (list.size()==0) list.add(0);
+        Collections.reverse(list);
+        for (int i = list.size();i<4;i++){
+            list.add(0);
+        }
+        Collections.reverse(list);
     }
 
     private static Object zhuanhuan1(Object s){
