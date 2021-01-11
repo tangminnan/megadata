@@ -665,7 +665,7 @@ public class schoolServiceImpl implements schoolService {
      * @return
      */
     public static String format(Double ff){
-        DecimalFormat df = new DecimalFormat("#.0");
+        DecimalFormat df = new DecimalFormat("0.0");
         return df.format(ff);
     }
     /**

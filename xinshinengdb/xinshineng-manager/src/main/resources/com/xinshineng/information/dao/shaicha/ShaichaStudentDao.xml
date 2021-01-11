@@ -1156,10 +1156,10 @@ WHERE identity_card IN
 		SELECT COUNT(*) FROM y_student_school_he where	school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and last_check_time is not null
 	</select>
 	<select id="schoolThisNumber" resultType="int">
-		SELECT COUNT(*) FROM s_student_school_he where	school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate}
+		SELECT COUNT(*) FROM s_student_school_he where	school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate} and dengxiaoqiujingl is not NULL and dengxiaoqiujingr is not NULL and naked_farvision_od is not NULL and naked_farvision_os is not NULL
 	</select>
 	<select id="schoolThisNumberld" resultType="int">
-		SELECT COUNT(*) FROM y_student_school_he where	school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate}
+		SELECT COUNT(*) FROM y_student_school_he where	school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate} AND dengxiaoqiujing_od_second is not NULL AND dengxiaoqiujing_os_second is not NULL and naked_farvision_od is not NULL and naked_farvision_os is not NULL
 	</select>
 	<select id="illNumber" resultType="int" >
 		SELECT
@@ -1189,7 +1189,7 @@ WHERE identity_card IN
 		SELECT COUNT(dengxiaoqiujing) num FROM
 		(SELECT LEAST(dengxiaoqiujing_od_second,dengxiaoqiujing_os_second) dengxiaoqiujing FROM y_student_school_he
 		WHERE `school` = #{school} AND`AreaName` = #{AreaName} AND `CityName` = #{CityName} and DATE_FORMAT(`last_check_time`,'%Y-%m') = #{checkdate}
-		AND dengxiaoqiujing_od_second is not NULL AND dengxiaoqiujing_os_second is not NULL) as one
+		AND dengxiaoqiujing_od_second is not NULL AND dengxiaoqiujing_os_second is not NULL and naked_farvision_od is not NULL and naked_farvision_os is not NULL) as one
 		WHERE dengxiaoqiujing &lt;='-0.5';
 	</select>
 	<select id="sexThisNumber" resultType="int">
@@ -1222,7 +1222,7 @@ WHERE identity_card IN
     	s_student_school_he
     WHERE
     	school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName}
-    AND DATE_FORMAT(last_check_time, '%Y') >= '2019' and dengxiaoqiujingl is not NULL and dengxiaoqiujingr is not NULL and  naked_farvision_od is not NULL and naked_farvision_os is not NULL and naked_farvision_od != '0' and naked_farvision_os != '0' and naked_farvision_os != '' and naked_farvision_od != ''
+    AND DATE_FORMAT(last_check_time, '%Y') >= '2019' and dengxiaoqiujingl is not NULL and dengxiaoqiujingr is not NULL and  naked_farvision_od is not NULL and naked_farvision_os is not NULL
     GROUP BY
     	DATE_FORMAT(last_check_time, '%Y-%m')
 	</select>
@@ -1236,7 +1236,7 @@ WHERE identity_card IN
     	y_student_school_he
     WHERE
     	school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName}
-    AND DATE_FORMAT(last_check_time, '%Y') >= '2019' and dengxiaoqiujing_od_second is not NULL and dengxiaoqiujing_os_second is not NULL and  naked_farvision_od is not NULL and naked_farvision_os is not NULL and naked_farvision_od != '0' and naked_farvision_os != '0' and naked_farvision_os != '' and naked_farvision_od != ''
+    AND DATE_FORMAT(last_check_time, '%Y') >= '2019' and dengxiaoqiujing_od_second is not NULL and dengxiaoqiujing_os_second is not NULL and  naked_farvision_od is not NULL and naked_farvision_os is not NULL
     GROUP BY
     	DATE_FORMAT(last_check_time, '%Y-%m')
 	</select>
@@ -1493,7 +1493,7 @@ WHERE identity_card IN
     	school = #{school}
     AND AreaName = #{AreaName}
     AND CityName = #{CityName}
-    AND DATE_FORMAT(last_check_time, '%Y-%m') = #{checkdate} and dengxiaoqiujingl is not NULL and dengxiaoqiujingr is not NULL and  naked_farvision_od is not NULL and naked_farvision_os is not NULL and naked_farvision_od != '0' and naked_farvision_os != '0' and naked_farvision_os != '' and naked_farvision_od != ''
+    AND DATE_FORMAT(last_check_time, '%Y-%m') = #{checkdate} and SUBSTRING(identity_card, 7, 4) &lt; YEAR(NOW()) and dengxiaoqiujingl is not NULL and dengxiaoqiujingr is not NULL and  naked_farvision_od is not NULL and naked_farvision_os is not NULL and naked_farvision_od != '0' and naked_farvision_os != '0' and naked_farvision_os != '' and naked_farvision_od != '' and identity_card REGEXP '^[1-9][[:digit:]]{7}((0[[:digit:]])|(1[0-2]))(([0|1|2][[:digit:]])|3[0-1])[[:digit:]]{3}$|^[1-9][[:digit:]]{5}[1-9][[:digit:]]{3}((0[[:digit:]])|(1[0-2]))(([0|1|2][[:digit:]])|3[0-1])[[:digit:]]{3}([0-9]|X)$'
     ORDER BY student_name
 	</select>
 	<select id="studentListld" resultType="map">
@@ -1509,7 +1509,7 @@ WHERE identity_card IN
     	school = #{school}
     AND AreaName = #{AreaName}
     AND CityName = #{CityName}
-    AND DATE_FORMAT(last_check_time, '%Y-%m') = #{checkdate} and naked_farvision_od is not NULL and naked_farvision_os is not NULL and dengxiaoqiujing_od_first is not NULL and dengxiaoqiujing_os_first is not NULL and dengxiaoqiujing_od_second is not NULL and dengxiaoqiujing_os_second is not NULL
+    AND DATE_FORMAT(last_check_time, '%Y-%m') = #{checkdate} and SUBSTRING(identity_card, 7, 4) &lt; YEAR(NOW()) and naked_farvision_od is not NULL and naked_farvision_os is not NULL and dengxiaoqiujing_od_first is not NULL and dengxiaoqiujing_os_first is not NULL and dengxiaoqiujing_od_second is not NULL and dengxiaoqiujing_os_second is not NULL and naked_farvision_od != '0' and naked_farvision_os != '0' and naked_farvision_os != '' and naked_farvision_od != '' and identity_card REGEXP '^[1-9][[:digit:]]{7}((0[[:digit:]])|(1[0-2]))(([0|1|2][[:digit:]])|3[0-1])[[:digit:]]{3}$|^[1-9][[:digit:]]{5}[1-9][[:digit:]]{3}((0[[:digit:]])|(1[0-2]))(([0|1|2][[:digit:]])|3[0-1])[[:digit:]]{3}([0-9]|X)$'
     ORDER BY student_name
 	</select>
 	<select id="gradeNumber" resultType="map">
@@ -1552,7 +1552,7 @@ WHERE identity_card IN
 		DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate} and dengxiaoqiujingl is not NULL and dengxiaoqiujingr is not NULL and naked_farvision_od is not NULL and naked_farvision_os is not NULL
 		GROUP BY
 		grade,
-		student_class
+		student_class having b > 5
 		) AS aa,
 		(
 		SELECT
@@ -1582,7 +1582,7 @@ WHERE identity_card IN
 		AND dengxiaoqiujing &lt; '-0.5'
 		GROUP BY
 		grade,
-		student_class
+		student_class having d > 5
 		) AS bb
 		WHERE
 		aa.grade = bb.grade and aa.student_class = bb.student_class GROUP BY lv DESC LIMIT 6
@@ -1603,7 +1603,7 @@ WHERE identity_card IN
 		DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate} and dengxiaoqiujing_od_second is not NULL and dengxiaoqiujing_os_second is not NULL
 		GROUP BY
 		grade,
-		student_class
+		student_class having b > 5
 		) AS aa,
 		(
 		SELECT
@@ -1628,7 +1628,7 @@ WHERE identity_card IN
 		dengxiaoqiujing &lt; '-0.5'
 		GROUP BY
 		grade,
-		student_class
+		student_class having d > 5
 		) AS bb
 		WHERE
 		aa.grade = bb.grade and aa.student_class = bb.student_class GROUP BY lv DESC LIMIT 6
