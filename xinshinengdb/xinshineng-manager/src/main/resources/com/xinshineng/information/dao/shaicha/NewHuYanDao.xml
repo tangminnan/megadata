@@ -52,7 +52,7 @@ last_check_time IS NOT NULL AND dengxiaoqiujing_od_first IS NOT NULL AND dengxia
         SELECT COUNT(DXQJF) FROM
         (SELECT LEAST(dengxiaoqiujing_od_first,dengxiaoqiujing_os_first) DXQJF,LEAST(dengxiaoqiujing_od_second,dengxiaoqiujing_os_second) DXQJS FROM y_student_school_he WHERE
         last_check_time IS NOT NULL AND dengxiaoqiujing_od_first IS NOT NULL AND dengxiaoqiujing_os_first IS NOT NULL AND dengxiaoqiujing_od_second IS NOT NULL AND dengxiaoqiujing_os_second IS NOT NULL
-        ANDCityName =#{cityName} AND AreaName = #{areaName}  AND school=#{school} AND xue_bu =#{xuebu} AND grade = #{grade} AND student_class = #{clazz}) stu
+        AND CityName =#{cityName} AND AreaName = #{areaName}  AND school=#{school} AND xue_bu =#{xuebu} AND grade = #{grade} AND student_class = #{clazz}) stu
         WHERE DXQJS &lt;=-0.5
     </select>
 
