@@ -1200,6 +1200,32 @@ background-size: cover;}
     -webkit-background-size:contain;
     background-size:contain;
 }
+.New_h3{color:#333;text-align: center;margin:30px 0 60px;font-size: 20px;position: relative;letter-spacing:3px;}
+.New_h3:after{
+    position: absolute;
+    bottom:-5px;
+    left: 50%;
+    margin-left:-30px;
+    background:#e97e06;
+    width: 60px;
+    height: 6px;
+    content: "";
+    border-radius:10px;
+}
+
+#bjnone{background: none;padding-top:0;float: right;width:65%;border:none;margin-top: 40px;}
+#bjnone .txt{padding-right: 0;padding-bottom: 0;}
+#bjnone h3{font-size:22px;padding-left: 3%;}
+#bjnone::after{background: none;}
+#bjnone dl{margin-bottom:0;}
+#bjnone dl dt{margin-bottom: 20px;}
+.New_botBtn{background: #fe6a10;color: #fff;width:300px;height:50px;font-size: 22px;
+    display: block;margin:3% auto 0;outline: none;cursor: pointer;border-radius:4px;}
+#bjnone li select, .New_zidingyi li select{border:1px solid #ddd;color:#e97e06;width:33%;height:32px;font-size: 16px;background: #f1dfc6;float: right;text-align: center;outline: none;}
+#bjnone li{margin:0 0 10px 0;width:45%;border: none;}
+#bjnone li:nth-child(even){float: right;}
+
+/*学校按钮入口*/
 .leftMain_middle_rightIn h3 a{
     cursor: pointer;
     background:#1499b1;
@@ -1208,18 +1234,11 @@ background-size: cover;}
     position:absolute;
     right: 0;top: 0;
 }
-.New_h3{color:#333;text-align: center;margin:30px 0 60px;font-size: 20px;position: relative;letter-spacing:3px;}
-.New_h3:after{
-	position: absolute;
-    bottom:-5px;
-    left: 50%;
-	margin-left:-30px;
-    background:#e97e06;
-    width: 60px;
-    height: 6px;
-    content: "";
-	border-radius:10px;
-}
+
+/*自定义计划*/
+.New_zidingyi{width: 100%;-webkit-background-size:300px 90px;
+    background-size:300px 90px;}
+
 
 
 
