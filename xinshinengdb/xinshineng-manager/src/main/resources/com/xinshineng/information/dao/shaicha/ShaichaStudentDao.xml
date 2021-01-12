@@ -960,7 +960,7 @@ WHERE identity_card IN
 		SELECT naked_farvision_od NakeOd,naked_farvision_os NakeOs,dengxiaoqiujingl DL,dengxiaoqiujingr DR FROM s_student_he WHERE last_check_time IS NOT NULL AND DATE_FORMAT(last_check_time,'%Y')=2020
 	</select>
 
-	<select id="getManNum" resultType="int">
+	<select id="getManNum" resultType="long">
 		SELECT
 		COUNT(stu1.`student_new_id`) num
 		FROM s_student_school_he stu1,(SELECT DISTINCT identity_card, student_new_id FROM s_student_school_he WHERE last_check_time IS NOT NULL AND dengxiaoqiujingl IS NOT NULL AND dengxiaoqiujingr IS NOT NULL AND naked_farvision_od IS NOT NULL AND naked_farvision_os IS NOT NULL)
@@ -969,7 +969,7 @@ WHERE identity_card IN
 		<if test="checkCity != null and checkCity != '' ">and stu1.CityName = #{checkCity}</if>
 		<if test="checkArea != null and checkArea != '' ">and stu1.AreaName = #{checkArea}</if>
 	</select>
-	<select id="getJinShiManNum" resultType="int">
+	<select id="getJinShiManNum" resultType="long">
 		SELECT COUNT(dxqj) num FROM
 		(SELECT
 		LEAST(stu1.`dengxiaoqiujingl`,stu1.`dengxiaoqiujingr`) dxqj,LEAST(stu1.`naked_farvision_od`,stu1.`naked_farvision_os`) naked,stu1.CityName,stu1.AreaName
@@ -980,7 +980,7 @@ WHERE identity_card IN
 		<if test="checkArea != null and checkArea != '' ">and AreaName = #{checkArea}</if>
 	</select>
 
-	<select id="getWomenNum" resultType="int">
+	<select id="getWomenNum" resultType="long">
 		SELECT
 		COUNT(stu1.`student_new_id`) num
 		FROM s_student_school_he stu1,(SELECT DISTINCT identity_card, student_new_id FROM s_student_school_he WHERE last_check_time IS NOT NULL AND dengxiaoqiujingl IS NOT NULL AND dengxiaoqiujingr IS NOT NULL AND naked_farvision_od IS NOT NULL AND naked_farvision_os IS NOT NULL)
@@ -990,7 +990,7 @@ WHERE identity_card IN
 		<if test="checkArea != null and checkArea != '' ">and stu1.AreaName = #{checkArea}</if>
 
 	</select>
-	<select id="getJinShiWomenNum" resultType="int">
+	<select id="getJinShiWomenNum" resultType="long">
 		SELECT COUNT(dxqj) num FROM
 		(SELECT
 		LEAST(stu1.`dengxiaoqiujingl`,stu1.`dengxiaoqiujingr`) dxqj,LEAST(stu1.`naked_farvision_od`,stu1.`naked_farvision_os`) naked,stu1.CityName,stu1.AreaName
@@ -1134,21 +1134,27 @@ WHERE identity_card IN
 
 
 	<select id="getShiFanXiaoNumList" resultType="java.util.Map">
-		SELECT
-		COUNT(stu1.`student_new_id`) num,school
-		FROM s_student_school_he stu1,(SELECT DISTINCT identity_card, student_new_id FROM s_student_school_he)
-		stu2
-		WHERE stu1.student_new_id = stu2.student_new_id AND last_check_time IS NOT NULL AND dengxiaoqiujingl IS NOT NULL AND dengxiaoqiujingr IS NOT NULL AND naked_farvision_od IS NOT NULL AND naked_farvision_os IS NOT NULL
-		AND stu1.`CityName` = #{checkCity} AND stu1.`check_type`='SHI_FANXIAO' GROUP BY school HAVING num > 100 ORDER BY num DESC LIMIT 0,20;
+		SELECT COUNT(stu.new_id)num,stu.`school` FROM s_student_he stu,s_school_new sch WHERE stu.`school_id`=sch.`id` AND stu.source='新表'
+		 AND stu.`dengxiaoqiujingl` IS NOT NULL AND stu.`dengxiaoqiujingr` IS NOT NULL AND stu.`naked_farvision_od` IS NOT NULL AND stu.`naked_farvision_os` IS NOT NULL
+		 AND sch.`CityName`= #{checkCity} AND stu.`check_type`='SHI_FANXIAO' GROUP BY school  ORDER BY num DESC LIMIT 0,20;
+
+	</select>
+	<select id="getShiFanXiaoNumListForOld" resultType="map">
+SELECT COUNT(stu.new_id)num,stu.`school` FROM s_student_he stu,s_school sch WHERE stu.`school_code`=sch.`OrgCode` AND stu.source='旧表'
+ AND stu.`dengxiaoqiujingl` IS NOT NULL AND stu.`dengxiaoqiujingr` IS NOT NULL AND stu.`naked_farvision_od` IS NOT NULL AND stu.`naked_farvision_os` IS NOT NULL
+  AND sch.`CityName`= #{checkCity} AND stu.`check_type`='SHI_FANXIAO' GROUP BY school  ORDER BY num DESC LIMIT 0,20;
 	</select>
 	<select id="getSchoolHuanBingNum" resultType="long">
-		SELECT COUNT(dxqj) num FROM
-		(SELECT
-		LEAST(stu1.`dengxiaoqiujingl`,stu1.`dengxiaoqiujingr`) dxqj,LEAST(stu1.`naked_farvision_od`,stu1.`naked_farvision_os`) naked,stu1.CityName,stu1.`check_type`,stu1.`school`
-		FROM s_student_school_he stu1,(SELECT DISTINCT identity_card, student_new_id FROM s_student_school_he )stu2
-		WHERE stu1.`student_new_id`=stu2.student_new_id AND last_check_time IS NOT NULL AND dengxiaoqiujingl IS NOT NULL AND dengxiaoqiujingr IS NOT NULL AND naked_farvision_od IS NOT NULL AND naked_farvision_os IS NOT NULL) stu
-		WHERE  naked &lt;5.0 AND dxqj &lt;-0.5 AND CityName =#{checkCity} AND check_type = 'SHI_FANXIAO' AND school = #{school}
+		SELECT COUNT(DXQJ) FROM (SELECT LEAST(stu.`dengxiaoqiujingl`,stu.`dengxiaoqiujingr`)DXQJ,LEAST(stu.`naked_farvision_od`,stu.`naked_farvision_os`)NAKED FROM s_student_he stu,s_school_new sch WHERE stu.`school_id`=sch.`id` AND stu.source='新表'
+		AND stu.`dengxiaoqiujingl` IS NOT NULL AND stu.`dengxiaoqiujingr` IS NOT NULL AND stu.`naked_farvision_od` IS NOT NULL AND stu.`naked_farvision_os` IS NOT NULL
+		AND sch.`CityName`=#{checkCity} AND stu.`check_type`='SHI_FANXIAO' AND stu.`school`= #{school} ) stu WHERE DXQJ &lt;-0.5 AND NAKED &lt;5.0
 	</select>
+	<select id="getSchoolHuanBingNumForOld" resultType="long">
+		SELECT COUNT(DXQJ) FROM (SELECT LEAST(stu.`dengxiaoqiujingl`,stu.`dengxiaoqiujingr`)DXQJ,LEAST(stu.`naked_farvision_od`,stu.`naked_farvision_os`)NAKED FROM s_student_he stu,s_school sch WHERE stu.`school_code`=sch.`OrgCode` AND stu.source='旧表'
+		AND stu.`dengxiaoqiujingl` IS NOT NULL AND stu.`dengxiaoqiujingr` IS NOT NULL AND stu.`naked_farvision_od` IS NOT NULL AND stu.`naked_farvision_os` IS NOT NULL
+		AND sch.`CityName`=#{checkCity} AND stu.`check_type`='SHI_FANXIAO' AND stu.`school`= #{school} ) stu WHERE DXQJ &lt;-0.5 AND NAKED &lt;5.0
+	</select>
+
 	<select id="schoolAllNumber" resultType="int">
 		SELECT COUNT(*) FROM s_student_school_he where	school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and last_check_time is not null
 	</select>

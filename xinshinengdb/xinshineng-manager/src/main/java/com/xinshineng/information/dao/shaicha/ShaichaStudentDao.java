@@ -131,13 +131,13 @@ public interface ShaichaStudentDao {
 	List<Map<String, Object>> get2020CheckData();
 
 
-    Integer getManNum(@Param("checkCity") String checkCity,@Param("checkArea") String checkArea);
+    Long getManNum(@Param("checkCity") String checkCity,@Param("checkArea") String checkArea);
 
-	Integer getJinShiManNum(@Param("checkCity") String checkCity,@Param("checkArea") String checkArea);
+	Long getJinShiManNum(@Param("checkCity") String checkCity,@Param("checkArea") String checkArea);
 
-	Integer getWomenNum(@Param("checkCity") String checkCity,@Param("checkArea") String checkArea);
+	Long getWomenNum(@Param("checkCity") String checkCity,@Param("checkArea") String checkArea);
 
-	Integer getJinShiWomenNum(@Param("checkCity") String checkCity,@Param("checkArea") String checkArea);
+	Long getJinShiWomenNum(@Param("checkCity") String checkCity,@Param("checkArea") String checkArea);
 
 	List<Map<String,Object>> getEveryXueBuNum(@Param("checkCity") String checkCity);
 
@@ -254,4 +254,8 @@ public interface ShaichaStudentDao {
 	List<Map> getJGEyeaxisList(Integer sys_id);
 
 	List<Map> getJGCornealList(Integer sys_id);
+
+	List<Map<String, Object>> getShiFanXiaoNumListForOld(String checkCity);
+
+	Long getSchoolHuanBingNumForOld(@Param("checkCity") String checkCity,@Param("school") String school);
 }

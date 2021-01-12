@@ -445,11 +445,17 @@ public class ShaichaStudentServiceImpl implements ShaichaStudentService {
 		Boolean flag = redisTemplate.hasKey(checkCity + "ShiFanXiaoHuanBingLv");
 		if (!flag){
 			resultList = studentDao.getShiFanXiaoNumList(checkCity);
+			if (resultList.isEmpty()){
+				resultList = studentDao.getShiFanXiaoNumListForOld(checkCity);
+				if (resultList.isEmpty()){
+					return null;
+				}
+			}
 			for (int i = 0; i < resultList.size(); i++) {
 				Map<String, Object> map = resultList.get(i);
 				String school = (String) map.get("school");
 				Long num = (Long) map.get("num");
-				Long Bnum = studentDao.getSchoolHuanBingNum(checkCity,school);
+				Long Bnum = studentDao.getSchoolHuanBingNumForOld(checkCity,school);
 				BigDecimal bg = new BigDecimal((float) Bnum / num);
 				String HBL = df.format(bg.setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue() * 100);
 				map.put("HBL",HBL);
@@ -635,12 +641,12 @@ public class ShaichaStudentServiceImpl implements ShaichaStudentService {
 			if (StringUtils.isBlank(checkArea)){
 				resultMap = redisTemplate.opsForHash().entries(checkCity+"ManAndWomenLv");
 				if (resultMap.size()==0){
-					Integer manNum = studentDao.getManNum(checkCity,checkArea);
-					Integer jinshiManNum = studentDao.getJinShiManNum(checkCity,checkArea);
+					Long manNum = studentDao.getManNum(checkCity,checkArea);
+					Long jinshiManNum = studentDao.getJinShiManNum(checkCity,checkArea);
 					BigDecimal bg = new BigDecimal((float) jinshiManNum / manNum);
 					double manLv = bg.setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue();
-					Integer womenNum = studentDao.getWomenNum(checkCity,checkArea);
-					Integer jinshiWoMenNum = studentDao.getJinShiWomenNum(checkCity,checkArea);
+					Long womenNum = studentDao.getWomenNum(checkCity,checkArea);
+					Long jinshiWoMenNum = studentDao.getJinShiWomenNum(checkCity,checkArea);
 					bg = new BigDecimal((float)jinshiWoMenNum/womenNum);
 					double womenLv = bg.setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue();
 
@@ -655,12 +661,12 @@ public class ShaichaStudentServiceImpl implements ShaichaStudentService {
 			if (StringUtils.isNotBlank(checkArea)){
 				resultMap = redisTemplate.opsForHash().entries(checkCity+checkArea+"ManAndWomenLv");
 				if (resultMap.size()==0){
-					Integer manNum = studentDao.getManNum(checkCity,checkArea);
-					Integer jinshiManNum = studentDao.getJinShiManNum(checkCity,checkArea);
+					Long manNum = studentDao.getManNum(checkCity,checkArea);
+					Long jinshiManNum = studentDao.getJinShiManNum(checkCity,checkArea);
 					BigDecimal bg = new BigDecimal((float) jinshiManNum / manNum);
 					double manLv = bg.setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue();
-					Integer womenNum = studentDao.getWomenNum(checkCity,checkArea);
-					Integer jinshiWoMenNum = studentDao.getJinShiWomenNum(checkCity,checkArea);
+					Long womenNum = studentDao.getWomenNum(checkCity,checkArea);
+					Long jinshiWoMenNum = studentDao.getJinShiWomenNum(checkCity,checkArea);
 					bg = new BigDecimal((float)jinshiWoMenNum/womenNum);
 					double womenLv = bg.setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue();
 					String smanLv = df.format(manLv*100);
@@ -677,12 +683,12 @@ public class ShaichaStudentServiceImpl implements ShaichaStudentService {
 		if (StringUtils.isBlank(checkCity)){
 			resultMap = redisTemplate.opsForHash().entries("ManAndWomenLv");
 			if (resultMap.size()==0){
-				Integer manNum = studentDao.getManNum(checkCity,checkArea);
-				Integer jinshiManNum = studentDao.getJinShiManNum(checkCity,checkArea);
+				Long manNum = studentDao.getManNum(checkCity,checkArea);
+				Long jinshiManNum = studentDao.getJinShiManNum(checkCity,checkArea);
 				BigDecimal bg = new BigDecimal((float) jinshiManNum / manNum);
 				double manLv = bg.setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue();
-				Integer womenNum = studentDao.getWomenNum(checkCity,checkArea);
-				Integer jinshiWoMenNum = studentDao.getJinShiWomenNum(checkCity,checkArea);
+				Long womenNum = studentDao.getWomenNum(checkCity,checkArea);
+				Long jinshiWoMenNum = studentDao.getJinShiWomenNum(checkCity,checkArea);
 				bg = new BigDecimal((float)jinshiWoMenNum/womenNum);
 				double womenLv = bg.setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue();
 				String smanLv = df.format(manLv*100);
