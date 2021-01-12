@@ -1654,7 +1654,7 @@ WHERE identity_card IN
 		AND dengxiaoqiujing &lt; '-0.5'
 		GROUP BY
 		grade,
-		student_class having d > 5
+		student_class
 		) AS bb
 		WHERE
 		aa.grade = bb.grade and aa.student_class = bb.student_class GROUP BY lv DESC LIMIT 6
@@ -1700,7 +1700,7 @@ WHERE identity_card IN
 		dengxiaoqiujing &lt; '-0.5'
 		GROUP BY
 		grade,
-		student_class having d > 5
+		student_class
 		) AS bb
 		WHERE
 		aa.grade = bb.grade and aa.student_class = bb.student_class GROUP BY lv DESC LIMIT 6
@@ -1743,7 +1743,7 @@ WHERE identity_card IN
 		DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate} and dengxiaoqiujingl is not NULL and dengxiaoqiujingr is not NULL and naked_farvision_od is not NULL and naked_farvision_os is not NULL
 		GROUP BY
 		grade) as bb
-		WHERE bb.grade = aa.grade GROUP BY lv desc
+		WHERE bb.grade = aa.grade GROUP BY lv desc LIMIT 6
 	</select>
 	<select id="gradeLvld" resultType="map">
 		SELECT bb.grade , Round((aa.num / bb.num)*100,1) lv FROM
@@ -1778,7 +1778,7 @@ WHERE identity_card IN
 		DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate} and dengxiaoqiujing_od_second is not NULL and dengxiaoqiujing_os_second is not NULL
 		GROUP BY
 		grade) as bb
-		WHERE bb.grade = aa.grade GROUP BY lv desc
+		WHERE bb.grade = aa.grade GROUP BY lv desc LIMIT 6
 	</select>
 	<select id="advice" resultType="map">
 		SELECT naked_farvision_od luoyanr,naked_farvision_os luoyanl,dengxiaoqiujingr,dengxiaoqiujingl,diopter_c_od zhujingr,diopter_c_os zhujingl,correction_farvision_od daijingr,correction_farvision_os daijingl FROM s_student_school_he WHERE student_name = #{name} and identity_card = #{idCard} and DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate}
