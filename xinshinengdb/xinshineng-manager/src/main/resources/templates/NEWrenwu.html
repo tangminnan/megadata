@@ -69,10 +69,10 @@
 							<li><em>时长：</em>
 								<select name="taskTime" onchange="setTaskTime(this.value)">
 									<option value="0">=请选择=</option>
-									<option value="1">一周</option>
-									<option value="2">10天</option>
-									<option value="3">15天</option>
-									<option value="4">20天</option>
+									<option value="7">一周</option>
+									<option value="10">10天</option>
+									<option value="15">15天</option>
+									<option value="20">20天</option>
 								</select>
 							</li>
 							<li><em>健康用眼评级：</em>
@@ -168,7 +168,7 @@
 </body>
 </html>
 <script type="text/javascript" th:inline="javascript">
-
+   var url = 'http://eyemonitor-api.dddmaker.com'
 	var school = [[${school}]];
 	var checkType = [[${checkType}]];
 	var CityName = [[${CityName}]];
@@ -303,7 +303,7 @@
 	var initTask = function () {
 	   $.ajax({
 		  type:'get',
-		  url:'http://localhost:8087/api/gift/listPc',
+		  url:url+'/api/gift/listPc',
           async : false,
           dataType : "jsonp",
           jsonp:"callback",
@@ -411,7 +411,7 @@
        $.ajax({
           cache: true,
           type: "get",
-          url: "http://localhost:8087/api/gift/customTaskPc",
+          url: url+"/api/gift/customTaskPc",
           data: signupFormData+"&idCards="+idCards11+"&giftId="+giftId,// 你的formid
           dataType : "jsonp",
           jsonp:"callback",

@@ -23,7 +23,11 @@
    </div>
 </body>
 </html>
-<script type="text/javascript">
+<script type="text/javascript" th:inline="javascript">
+   var url = 'http://eyemonitor-api.dddmaker.com'
+	var idCard = [[${idCard}]]
+	console.log(idCard,'idCard')
+
     $(function () {
        initTask();
        setInterval("loadslide()", 1000);
@@ -35,7 +39,7 @@
     function initTask() {
        $.ajax({
           type:'get',
-          url:'http://localhost:8087/api/gift/listPcJiazhang',
+          url:url+'/api/gift/listPcJiazhang',
           async : false,
           dataType : "jsonp",
           jsonp:"callback",
@@ -49,13 +53,13 @@
                 html+='<li><input type="hidden" value="'+result[i].id+'"><img src="'+result[i].coverImg+'" alt=""/><p>'+result[i].giftName+'</p></li>'
 
 				html11+='<div class="txt">';
-                html11+= '<p>任务时间：<span>'+result[i].giftPc.taskTime+'</span></p>'
+                html11+= '<p>任务时间：<span>'+result[i].giftPc.taskTime+'天</span></p>'
                 html11+= '<p>平均评级：<span>优秀等级</span></p>'
                 html11+=  '   <dl>'
                 html11+=  '   <dt>任务详情：</dt>'
                 html11+=  '   <dd>'
                 html11+=  '<ul>'
-                html11+=  '<li><em>时长</em><span>'+result[i].giftPc.taskTime+'</span></li>'
+                html11+=  '<li><em>时长</em><span>'+result[i].giftPc.taskTime+'天</span></li>'
 
 				if(result[i].giftPc.eyeRate ==1){
                    html11+=  '<li><em>健康用眼评级：</em><span>优秀</span></li>'
@@ -167,11 +171,11 @@
                 html11+=   '</ul>'
                 html11+=   '  </dd>'
                 html11+=   '   </dl>'
-                html11+=   '   <input type="button" value="我要挑战">'
+                html11+=   '   <input type="button" value="我要挑战" onclick="save()">'
                 html11+=  '   </div>'
              }
              html+='</ul>'
-			 html+='<input onclick="window.location.href=\'/skip/Newzidingyi\'" type="button" class="zidingyi" value="自定义任务">'
+			 html+='<input onclick="zidingyi()" type="button" class="zidingyi" value="自定义任务">'
              $('#hd').html(html)
 
 			 $('#bd').html(html11)
@@ -181,6 +185,31 @@
              alert('fail');
           }
        })
+    }
+
+    function save() {
+       var giftId = $("#hd ul").find(".on").children("input").val()
+       alert("请求中，请稍等..")
+       $.ajax({
+          cache: true,
+          type: "get",
+          url: url+"/api/gift/addTaskPcByJz?idCard="+idCard+"&giftId="+giftId,
+          dataType : "jsonp",
+          jsonp:"callback",
+          async: false,
+          success: function (data) {
+             alert(data.msg)
+          },
+          error: function (request) {
+             alert("Connection error");
+          },
+       });
+
+    }
+
+    function zidingyi() {
+       var giftId = $("#hd ul").find(".on").children("input").val()
+       window.location.href="/skip/Newzidingyi?idCard="+idCard+"&giftId="+giftId
     }
 </script>
 

@@ -26,7 +26,7 @@
                 <li id="JHY"><a href="/skip/jiancebiao">用眼行为监测</a></li>
                 <dl>
                     <dt>用眼行为矫正</dt>
-                    <dd><a href="/skip/jiaose/jiazhang">家长</a><a href="/skip/jiaose/haizi">孩子</a></dd>
+                    <dd id="Jz"></dd>
                 </dl>
                 <li id="TEAS"><a href="/skip/EyeTEAS">Eye-TEAS治疗</a></li>
             </ul>
@@ -116,6 +116,8 @@
         }
         $('#gerentable').html(html)
     }
+    var idCard = [[${idCard}]]
+    $('#Jz').html('<a href="/skip/jiaose/jiazhang?idCard='+idCard+'">家长</a><a href="/skip/jiaose/haizi?idCard='+idCard+'">孩子</a>')
 </script>
 </body>
 </html>
