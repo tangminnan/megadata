@@ -6,7 +6,11 @@
     <title>山东省儿童青少年近视防控预警大数据平台</title>
     <link rel="stylesheet" href="css/index.css" />
 </head>
-
+    <style>
+        #zt:hover{
+            cursor: pointer;
+        }
+    </style>
 <body style="background-color: #06164A;">
     <header>
         <h1>山东省儿童青少年健康与近视防控大数据平台</h1>
@@ -186,6 +190,12 @@
             })
             }
         })
+        /*$("#zt").mouseover(function (){
+            $("#zt").style.cursor='hand';
+        })
+        $("#zt").mouseout(function (){
+            $("#zt").style.cursor='normal';
+        })*/
         //地图点击事件
 
 
@@ -1476,8 +1486,10 @@
                             <div class="bd">
                             <ul class="infoList">`;
                         var html2=``;
-                        for (let i = 0; i < data.length; i++) {
+                        if (data.length>0){
+                            for (let i = 0; i < data.length; i++) {
                             html2+=`<li><span class="num">`+(i+1)+`</span><span class="name">`+data[i].school+`</span><span class="shuL">`+data[i].HBL+`%</span></li>`
+                            }
                         }
                         var html = html1+html2+`</ul></div>`;
                         $("#gundong").html(html);

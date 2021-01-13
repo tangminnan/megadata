@@ -63,6 +63,7 @@
 				</ul>
 			</div>
 		</div>
+
 		<div class="leftMain_middle" style="margin-bottom: 0.1rem;">
 			<div class="leftMain_middle_left" style="width:33.33%;">
 				<div class="leftMain_middle_leftIn">
@@ -828,7 +829,7 @@
 	if (dataThree.length>0){
 	    var html = '';
 	    for (var i = 0;i<dataThree.length;i++){
-	        html+='<li><span><a href="/skip/geren?name='+dataThree[i].student_name+'&idCard='+dataThree[i].identity_card+'&checkdate='+dataThree[i].checkdate+'&checkType='+dataThree[i].checkType+'">'+dataThree[i].student_name+'</a></span><span>'+dataThree[i].grade+'</span><span>'+dataThree[i].age+'</span><span>'+dataThree[i].naked_farvision_od+'</span><span>'+dataThree[i].naked_farvision_os+'</span></li>'
+	        html+='<li><span><a href="/skip/geren?name='+dataThree[i].student_name+'&idCard='+dataThree[i].identity_card+'&checkdate='+dataThree[i].checkdate+'&checkType='+dataThree[i].checkType+'&age='+dataThree[i].age+'">'+dataThree[i].student_name+'</a></span><span>'+dataThree[i].grade+'</span><span>'+dataThree[i].age+'</span><span>'+dataThree[i].naked_farvision_od+'</span><span>'+dataThree[i].naked_farvision_os+'</span></li>'
 		}
 		$('#studentlist').html(html)
 	}

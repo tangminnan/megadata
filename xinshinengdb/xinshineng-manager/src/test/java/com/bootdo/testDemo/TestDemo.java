@@ -1,5 +1,6 @@
 package com.bootdo.testDemo;
 
+import com.xinshineng.common.utils.MD5Utils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,17 @@ import java.util.concurrent.TimeUnit;
 
 @RestController()
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(classes = com.xinshineng.BootdoApplication.class)
+
 public class TestDemo {
 
+
+    @Test
+    public void testpwd(){
+        String username = "huantaizhongxin";
+
+        String password = "123456";
+        password = MD5Utils.encrypt(username, password);
+        System.out.println(password);
+    }
 }
