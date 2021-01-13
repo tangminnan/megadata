@@ -16,7 +16,9 @@ import java.util.Map;
 public class correctController {
 
     @GetMapping("/Newzidingyi")
-    public String Newzidingyi(){
+    public String Newzidingyi(Model model,String idCard,String giftId){
+        model.addAttribute("idCard",idCard);
+        model.addAttribute("giftId",giftId);
         return "Newzidingyi";
     }
 

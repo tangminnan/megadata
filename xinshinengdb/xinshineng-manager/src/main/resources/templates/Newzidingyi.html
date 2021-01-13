@@ -14,24 +14,25 @@
 <div class="topbanner"><img src="/img/banner.png" alt=""></div>
    <div class="main renwuBox">
    		<div class="bd New_zidingyi">
+			<form id="signupForm">
    			<div class="txt">
-				<p>任务时间：<span>7天</span></p>
-				<p>平均评级：<span>优秀等级</span></p>
+				<p>任务时间：<span id="span1"></span></p>
+				<p>平均评级：<span id="span2"></span></p>
    				<dl>
    					<dt>任务详情：</dt>
    					<dd>
 						<ul>
 							<li><em>时长：</em>
-								<select name="sel1" onChange="OnS1Change(this.value)">
+								<select name="taskTime" onChange="setTaskTime(this.value)">
 									<option value="0">=请选择=</option>
-									<option value="1">一周</option>
-									<option value="2">10天</option>
-									<option value="3">15天</option>
-									<option value="4">20天</option>
+									<option value="7">一周</option>
+									<option value="10">10天</option>
+									<option value="15">15天</option>
+									<option value="20">20天</option>
 								</select>
 							</li>
 							<li><em>健康用眼评级：</em>
-								<select name="sel1" onChange="OnS1Change(this.value)">
+								<select name="eyeRate" onChange="setEyeRate(this.value)">
 									<option value="0">=请选择=</option>
 									<option value="1">优秀</option>
 									<option value="2">良好</option>
@@ -39,7 +40,7 @@
 								</select>
 							</li>
 							<li><em>平均单次阅读时长：</em>
-								<select name="sel1" onChange="OnS1Change(this.value)">
+								<select name="avgRead" >
 									<option value="0">=请选择=</option>
 									<option value="1">优秀</option>
 									<option value="2">良好</option>
@@ -47,7 +48,7 @@
 								</select>
 							</li>
 							<li><em>平均户外时长：</em>
-								<select name="sel1" onChange="OnS1Change(this.value)">
+								<select name="avgOut" >
 									<option value="0">=请选择=</option>
 									<option value="1">优秀</option>
 									<option value="2">良好</option>
@@ -55,7 +56,7 @@
 								</select>
 							</li>
 							<li><em>平均阅读距离：</em>
-								<select name="sel1" onChange="OnS1Change(this.value)">
+								<select name="avgReadDistance" >
 									<option value="0">=请选择=</option>
 									<option value="1">优秀</option>
 									<option value="2">良好</option>
@@ -63,7 +64,7 @@
 								</select>
 							</li>
 							<li><em>平均阅读光照：</em>
-								<select name="sel1" onChange="OnS1Change(this.value)">
+								<select name="avgLight" >
 									<option value="0">=请选择=</option>
 									<option value="1">优秀</option>
 									<option value="2">良好</option>
@@ -71,7 +72,7 @@
 								</select>
 							</li>
 							<li><em>平均单次看手机时长：</em>
-								<select name="sel1" onChange="OnS1Change(this.value)">
+								<select name="avgLookPhone" >
 									<option value="0">=请选择=</option>
 									<option value="1">优秀</option>
 									<option value="2">良好</option>
@@ -79,7 +80,7 @@
 								</select>
 							</li>
 							<li><em>平均单次看电脑电视时长：</em>
-								<select name="sel1" onChange="OnS1Change(this.value)">
+								<select name="avgLookTv" >
 									<option value="0">=请选择=</option>
 									<option value="1">优秀</option>
 									<option value="2">良好</option>
@@ -87,7 +88,7 @@
 								</select>
 							</li>
 							<li><em>平均坐姿倾斜度：</em>
-								<select name="sel1" onChange="OnS1Change(this.value)">
+								<select name="avgSitTilt" >
 									<option value="0">=请选择=</option>
 									<option value="1">优秀</option>
 									<option value="2">良好</option>
@@ -95,7 +96,7 @@
 								</select>
 							</li>
 							<li><em>有效使用监护仪总时长：</em>
-								<select name="sel1" onChange="OnS1Change(this.value)">
+								<select name="effectiveUseTime" >
 									<option value="0">=请选择=</option>
 									<option value="1">优秀</option>
 									<option value="2">良好</option>
@@ -106,9 +107,103 @@
   					</dd>
    				</dl>
    			</div>
+			</form>
    		</div>
    </div>
-   <input type="button" class="New_botBtn" value="执行任务">
+   <input type="button" class="New_botBtn" value="执行任务" onclick="save()">
+
+<script type="text/javascript" th:inline="javascript">
+   var url = 'http://eyemonitor-api.dddmaker.com'
+	var idCard = [[${idCard}]]
+	var giftId = [[${giftId}]]
+
+   function setTaskTime(value) {
+      if(value!=null && value>0){
+         if(value == 1){
+            $('#span1').text("一周")
+         }else if(value == 2){
+            $('#span1').text("10天")
+         }else if(value == 3){
+            $('#span1').text("15天")
+         }else if(value == 4){
+            $('#span1').text("20天")
+         }
+      }
+   }
+
+   function setEyeRate(value) {
+      if(value!=null && value>0){
+         if(value == 1){
+            $('#span2').text("优秀")
+         }else if(value == 2){
+            $('#span2').text("良好")
+         }else if(value == 3){
+            $('#span2').text("差")
+         }else if(value == 4){
+            $('#span2').text("极差")
+         }
+      }
+   }
+
+   function save() {
+      if($("select[name='taskTime']").val() <=0){
+         alert("请选择任务时长");
+         return;
+      }
+      if($("select[name='eyeRate']").val() <=0){
+         alert("请选择用眼评级");
+         return;
+      }
+      if($("select[name='avgRead']").val() <=0 ){
+         alert("请选择平均单次阅读时长");
+         return;
+      }
+      if($("select[name='avgReadDistance']").val() <=0 ){
+         alert("请选择平均阅读距离");
+         return;
+      }
+      if($("select[name='avgLight']").val() <=0 ){
+         alert("请选择平均阅读光照");
+         return;
+      }
+      if($("select[name='avgLookPhone']").val() <=0 ){
+         alert("请选择平均单次看手机时长");
+         return;
+      }
+      if($("select[name='avgLookTv']").val() <=0 ){
+         alert("请选择平均单次看电脑电视时长");
+         return;
+      }
+      if($("select[name='avgSitTilt']").val() <=0 ){
+         alert("请选择平均坐姿倾斜度");
+         return;
+      }
+      if($("select[name='effectiveUseTime']").val() <=0 ){
+         alert("请选择有效使用监护仪总时长");
+         return;
+      }
+
+      var signupFormData=$('#signupForm').serialize();
+
+      alert("请求中，请稍等")
+      $.ajax({
+         cache: true,
+         type: "get",
+         url: url+"/api/gift/customTaskPcByJz",
+         data: signupFormData+"&idCard="+idCard+"&giftId="+giftId,// 你的formid
+         dataType : "jsonp",
+         jsonp:"callback",
+         async: false,
+         success: function (data) {
+            alert(data.msg)
+         },
+         error: function (request) {
+            alert("Connection error");
+         },
+      });
+
+   }
+</script>
 </body>
 </html>
 
