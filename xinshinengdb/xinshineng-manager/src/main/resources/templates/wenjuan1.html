@@ -15,10 +15,10 @@
     <div class="msgBG">
         <div class="baseMsg">
             <div class="boxtxt">
-                <div class="box"><span>姓名：</span><input type="text" value="name" /></div>
-                <div class="box"><span>手机：</span><input type="text" value="phone"/></div>
-                <div class="box"><span>身份证号：</span><input type="text" value="IdCard"/></div>
-                <div class="box"><span>关系：</span><input type="text" value="name"/></div>
+                <div class="box"><span>姓名：</span><input type="text"/></div>
+                <div class="box"><span>手机：</span><input type="text"/></div>
+                <div class="box"><span>身份证号：</span><input type="text"/></div>
+                <div class="box"><span>关系：</span><input type="text"/></div>
             </div>
 
             <div class="zhiadmin">
@@ -292,8 +292,16 @@
         </div>-->
 
 
-        <div class="btnTJ"><input type="button" onclick="javascript:window.location.href='/skip/success'"  value="提交"></div>
+        <div id="suc" class="btnTJ">
+            <input type="button" onclick="javascript:window.location.href='/skip/success'"  value="提交">
         </div>
+        </div>
+    <script type="text/javascript" th:inline="javascript">
+        var name = [[${name}]];
+        var idCard = [[${idCard}]];
+        var href1='/skip/success?name='+name+'&idCard='+idCard;
+        $("#suc").html(`<input type="button" onclick="javascript:window.location.href=href1"  value="提交">`)
+    </script>
     </div>
 </body>
 </html>

@@ -1,7 +1,9 @@
 package com.xinshineng.information.controller;
 
 import com.sun.org.apache.xpath.internal.operations.Mod;
+import com.xinshineng.information.dao.shaicha.ShaichaStudentDao;
 import com.xinshineng.information.service.jigou.service.JiGouService;
+import com.xinshineng.information.service.shaicha.service.ShaichaStudentService;
 import com.xinshineng.information.service.shaicha.service.schoolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -151,15 +153,21 @@ public class skipController {
     }
 
     @GetMapping("/wenjuan1")
-    public String skipToWenJuan1(){
+    public String skipToWenJuan1(Model model,String name,String idCard){
+        model.addAttribute("name",name);
+        model.addAttribute("idCard",idCard);
         return "wenjuan1";
     }
     @GetMapping("/wenjuan2")
-    public String skipToWenJuan2(){
+    public String skipToWenJuan2(Model model,String name,String idCard){
+        model.addAttribute("name",name);
+        model.addAttribute("idCard",idCard);
         return "wenjuan2";
     }
     @GetMapping("/wenjuan3")
-    public String skipToWenJuan3(){
+    public String skipToWenJuan3(Model model,String name,String idCard){
+        model.addAttribute("name",name);
+        model.addAttribute("idCard",idCard);
         return "wenjuan3";
     }
 
@@ -197,8 +205,14 @@ public class skipController {
         model.addAttribute("idCard",idCard);
         return "biaoge-teas";
     }
+    @Autowired
+    private ShaichaStudentDao shaichaStudentDao;
     @GetMapping("/success")
-    public String skipToSuccess(){
+    public String skipToSuccess(Model model,String name,String idCard){
+        model.addAttribute("name",name);
+        model.addAttribute("idCard",idCard);
+        String checkDate = shaichaStudentDao.getLastCheckDate(name, idCard);
+        model.addAttribute("checkDate",checkDate);
         return "success";
     }
 

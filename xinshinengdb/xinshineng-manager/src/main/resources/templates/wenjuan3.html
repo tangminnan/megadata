@@ -189,8 +189,15 @@
 
 
 
-        <div class="btnTJ"><input type="button" onclick="javascript:window.location.href='/skip/success'"  value="提交"></div>
-        </div>
+        <div id="suc" class="btnTJ">
+            <input type="button" onclick="javascript:window.location.href='/skip/success'"  value="提交"></div>
+    </div>
+    <script type="text/javascript" th:inline="javascript">
+        var name = [[${name}]];
+        var idCard = [[${idCard}]];
+        var href1='/skip/success?name='+name+'&idCard='+idCard;
+        $("#suc").html(`<input type="button" onclick="javascript:window.location.href=href1"  value="提交">`)
+    </script>
     </div>
 </body>
 </html>
