@@ -451,6 +451,10 @@ public class ShaichaStudentServiceImpl implements ShaichaStudentService {
 					return null;
 				}
 			}
+			if(resultList.size()<5){
+				List<Map<String, Object>> shiFanXiaoNumListForOld = studentDao.getShiFanXiaoNumListForOld(checkCity);
+				resultList.addAll(shiFanXiaoNumListForOld);
+			}
 			for (int i = 0; i < resultList.size(); i++) {
 				Map<String, Object> map = resultList.get(i);
 				String school = (String) map.get("school");
