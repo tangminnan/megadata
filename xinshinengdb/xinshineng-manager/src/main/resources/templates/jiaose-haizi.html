@@ -33,44 +33,8 @@
 			</div>
    		</div>
    		
-   		<div class="boyBotton">
-   			<h3>任务记录</h3>
-   			<table border="1" cellspacing="0" cellpadding="0" width="100%">
-   			  <thead>
-   			  	<tr>
-   			  		<th>日期</th>
-   			  		<th>有效使用时长(h)</th>
-   			  		<th>评级</th>
-   			  		<th>完成度</th>
-   			  	</tr>
-   			  </thead>
-			  <tbody>
-				<tr>
-				  <td>7月2日</td>
-				  <td>4.2h</td>
-				  <td class="excellent">优秀</td>
-				  <td><img src="/img/JD-excellent.png" alt=""></td>
-				</tr>
-				<tr>
-				  <td>7月3日</td>
-				  <td>4.2h</td>
-				  <td class="excellent">优秀</td>
-				  <td><img src="/img/JD-excellent.png" alt=""></td>
-				</tr>
-				<tr>
-				  <td>7月4日</td>
-				  <td>4.2h</td>
-				  <td class="excellent">优秀</td>
-				  <td><img src="/img/JD-excellent.png" alt=""></td>
-				</tr>
-				<tr>
-				  <td>7月5日</td>
-				  <td>4.2h</td>
-				  <td>良好</td>
-				  <td><img src="/img/JD-good.png" alt=""></td>
-				</tr>
-			  </tbody>
-			</table>
+   		<div class="boyBotton" id="record">
+
    		</div>
    		
    		<div class="boyBotton HHxiangqing">
@@ -81,8 +45,8 @@
 
 <script th:inline="javascript">
 	var idCard = [[${idCard}]]
-	var url = 'http://eyemonitor-api.dddmaker.com'
-
+	//var url = 'http://localhost:8087'
+    var url = 'http://eyemonitor-api.dddmaker.com'
 	$(function () {
        var taskType;
 	   $('.HnewBtn li').click(function () {
@@ -107,6 +71,7 @@
                 var html = ''
 				var html2 = ''
                 var taskIng = data.data.taskIng
+				var recordDOList = data.data.recordDOList
 
 				if(taskIng){
                    var giftDO = taskIng.giftDO
@@ -120,8 +85,21 @@
                    html += '<h3>任务进度还差 <span><i>3</i>天，继续加油！</span></h3>'
                    html += '<ul>'
                    html +=  '<li><i>4</i> 天<span>已完成天数</span></li>'
-                   html +=  '<li><i>优秀</i><span>平均等级</span></li>'
-                   html += '<li><i>4.6</i> h<span>平均有效使用时长</span></li>'
+
+                      if(data.data.overallMerit == 1){
+                         html +=  '<li><i>'+data.data.overallMerit+'</i><span>优秀</span></li>'
+                      }else if(data.data.overallMerit == 2){
+                         html +=  '<li><i>'+data.data.overallMerit+'</i><span>良好</span></li>'
+                      }else if(data.data.overallMerit== 3){
+                         html +=  '<li><i>'+data.data.overallMerit+'</i><span>不太好</span></li>'
+                      }else if(data.data.overallMerit == 4){
+                         html +=  '<li><i>'+data.data.overallMerit+'</i><span>差</span></li>'
+                      }else{
+                         html +=  '<li><i>'+data.data.overallMerit+'</i><span>极差</span></li>'
+                      }
+
+
+                   html += '<li><i>'+data.data.allUseJianhuyi+'</i> h<span>平均有效使用时长</span></li>'
                    html += '</ul>'
                    html += '</div>'
 
@@ -293,6 +271,61 @@
 				else{
                    $('.nobody').html('<h1 style="text-align: center">暂无任务</h1>');
                    $('.boyBotton').hide()
+				}
+
+				if(recordDOList){
+				   var record = ''
+                   record+='<h3>任务记录</h3>'
+                   record+=  '   <table border="1" cellspacing="0" cellpadding="0" width="100%">'
+                   record+=   '     <thead>'
+                   record+=   '     <tr>'
+                   record+=   '     <th>日期</th>'
+                   record+=   '     <th>有效使用时长(h)</th>'
+                   record+=   '     <th>评级</th>'
+                   record+=   '     <th>完成度</th>'
+                   record+=   '     </tr>'
+                   record+=   '     </thead>'
+                   record+=  '  <tbody>'
+				   for(var i =0;i<recordDOList.length;i++){
+                      record+=   '<tr>'
+                      record+=   '  <td>'+recordDOList[i].date+'</td>'
+                      record+=   '  <td>'+recordDOList[i].useJianhuyiTime+'h</td>'
+					  if(recordDOList[i].grade == 1){
+                         record+=  '  <td class="excellent">极差</td>'
+					  }else if(recordDOList[i].grade == 2){
+                         record+=  '  <td class="excellent">差</td>'
+                      }else if(recordDOList[i].grade == 3){
+                         record+=  '  <td class="excellent">不太好</td>'
+                      }else if(recordDOList[i].grade == 4){
+                         record+=  '  <td class="excellent">良</td>'
+                      }else if(recordDOList[i].grade == 5){
+                         record+=  '  <td class="excellent">优</td>'
+                      }
+
+                      if(recordDOList[i].isfinish){
+                         record+=   '  <td><img src="/img/JD-excellent.png" alt=""></td>'
+                      }else if(!recordDOList[i].isfinish){
+                         record+=   '  <td><img src="/img/JD-good.png" alt=""></td>'
+                      }
+                      record+=   '</tr>'
+				   }
+                   record+=   '  </tbody>'
+                   record+=   '</table>'
+                   $('#record').html(record)
+				}else{
+                   var record = ''
+                   record+='<h3>任务记录</h3>'
+                   record+=  '   <table border="1" cellspacing="0" cellpadding="0" width="100%">'
+                   record+=   '     <thead>'
+                   record+=   '     <tr>'
+                   record+=   '     <th>日期</th>'
+                   record+=   '     <th>有效使用时长(h)</th>'
+                   record+=   '     <th>评级</th>'
+                   record+=   '     <th>完成度</th>'
+                   record+=   '     </tr>'
+                   record+=   '     </thead>'
+
+                   $('#record').html(record)
 				}
 
              },
