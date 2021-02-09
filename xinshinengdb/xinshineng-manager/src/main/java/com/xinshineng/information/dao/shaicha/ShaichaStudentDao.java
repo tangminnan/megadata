@@ -258,4 +258,18 @@ public interface ShaichaStudentDao {
 	List<Map<String, Object>> getShiFanXiaoNumListForOld(String checkCity);
 
 	Long getSchoolHuanBingNumForOld(@Param("checkCity") String checkCity,@Param("school") String school);
+
+	List<Map<String,Object>> getScYuCe(@Param("checkTime") String checkTime, @Param("school")String school, @Param("cityName")String cityName,@Param("areaName") String areaName);
+
+	Integer getOptId(Integer id);
+
+	List<Map<String, Object>> getDiopterData(Integer optId);
+
+	List<Map<String, Object>> getCornealData(Integer optId);
+
+	Map<String, Double> getEyeAxisData(Integer id);
+
+	Map<String, Double> getEyepressureData(Integer id);
+
+	Map<String, Object> getYuCeForPerson(@Param("checkDate") String checkDate,@Param("name") String name,@Param("idCard") String idCard);
 }

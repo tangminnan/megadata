@@ -14,14 +14,14 @@
    		<h3>山东省儿童青少年健康与近视防控大数据平台</h3>
 		<div class="LGtxt">
 			<div class="Boxex">
-				<form id="form" method="post" action="/login">
+				<form id="Form" method="post" action="/login">
 				<div class="Atxt">
 					<em></em>
-					<input type="text" name="username" placeholder="账号" />
+					<input id="username" type="text" name="username" placeholder="账号" />
 				</div>
 				<div class="Atxt Btxt">
 					<em></em>
-					<input type="password" name="password" placeholder="密码" />
+					<input id="password" type="password" name="password" placeholder="密码" />
 				</div>
 					<input id="choseType" name="choseType" value="政府部门" hidden="hidden">
 				<input type="button" class="loginBtn" value="登录" />
@@ -43,9 +43,19 @@
 	$(".choseBtn li").click(function(){
 		$(this).addClass("on").siblings().removeClass("on")
 		$("#choseType").val($(this).text());
+		if ($(this).text()=='家庭个人'){
+			document.getElementById("Form").setAttribute("action","/loginForPerson")
+			document.getElementById("username").setAttribute("placeholder","姓名")
+			document.getElementById("password").setAttribute("placeholder","身份证号")
+		}
+		if ($(this).text()!='家庭个人'){
+			document.getElementById("Form").setAttribute("action","/login")
+			document.getElementById("username").setAttribute("placeholder","账号")
+			document.getElementById("password").setAttribute("placeholder","密码")
+		}
 	});
 	$(".loginBtn").on('click',function (){
-		$("#form").submit();
+		$("#Form").submit();
 	});
 </script>
 

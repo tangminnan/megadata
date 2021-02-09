@@ -74,9 +74,11 @@
 						// window.onload = function () {
 						//指定图表的配置项和数据
 						var dataAxis = [[${dataTwo.everyTime}]];
+						dataAxis=dataAxis.slice(0,dataAxis.length-1)
 						var data = [[${dataTwo.zxjsLv}]];
 						var yMax = 500;
 						var dataShadow = [[${dataTwo.zxjsLv}]];
+						dataShadow=dataShadow.slice(0,dataShadow.length-1)
 
 						for (var i = 0; i < data.length; i++) {
 							dataShadow.push(yMax);
