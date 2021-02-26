@@ -55,7 +55,28 @@
 		}
 	});
 	$(".loginBtn").on('click',function (){
+/*
 		$("#Form").submit();
+*/
+		var loginUrl = $("#Form").attr("action");
+		var data = $("#Form").serialize();
+		$.ajax({
+			type:'post',
+			url:loginUrl,
+			cache:false,
+			data:data,
+			datatype:'json',
+			success:function (R){
+				if (R.code==0){
+					location.href=R.url;
+				}else {
+					alert(R.msg);
+				}
+			},
+			error:function (R){
+				alert('服务器繁忙，请稍后再试')
+			}
+		})
 	});
 </script>
 

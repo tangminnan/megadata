@@ -2,6 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.xinshineng.system.dao.UserDao">
+	<resultMap id="user" type="com.xinshineng.system.domain.UserDO">
+		<id property="userId" column="user_id"/>
+
+	</resultMap>
 
 	<select id="get" resultType="com.xinshineng.system.domain.UserDO">
 		select `user_id`,`username`,`name`,`password`,`dept_id`,`email`,`mobile`,`status`,`user_id_create`,`gmt_create`,`gmt_modified`,`sex`,`birth`,`pic_id`,`live_address`,`hobby`,`province`,`city`,`district` from sys_user where user_id = #{value}
@@ -10,9 +14,10 @@
 		select `user_id`,`username`,`name`,`password`,`dept_id`,`email`,`mobile`,`status`,`user_id_create`,`gmt_create`,`gmt_modified`,`sex`,`birth`,`pic_id`,`live_address`,`hobby`,`province`,`city`,`district` from sys_user where mobile = #{value}
 	</select>
 
-	<select id="list" resultType="com.xinshineng.system.domain.UserDO">
+	<select id="list" resultMap="user">
 		select `user_id`,`username`,`name`,`password`,`dept_id`,`email`,`mobile`,`status`,`user_id_create`,`gmt_create`,`gmt_modified`,`sex`,`birth`,`pic_id`,`live_address`,`hobby`,`province`,`city`,`district` from sys_user
-        <where>  
+		where username = #{username}
+        <!--<where>
 		  		  <if test="userId != null and userId != ''"> and user_id = #{userId} </if>
 		  		  <if test="username != null and username != ''"> and username = #{username} </if>
 		  		  <if test="name != null and name != ''"> and name = #{name} </if>
@@ -43,7 +48,7 @@
         </choose>
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
-		</if>
+		</if>-->
 	</select>
 	
  	<select id="count" resultType="int">

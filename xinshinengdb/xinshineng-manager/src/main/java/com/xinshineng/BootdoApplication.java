@@ -73,9 +73,9 @@ public class BootdoApplication extends SpringBootServletInitializer {
     public RestTemplate restTemplate() {
         HttpComponentsClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
 
-        httpRequestFactory.setConnectionRequestTimeout(60 * 1000);
-        httpRequestFactory.setConnectTimeout(60 * 3000);
-        httpRequestFactory.setReadTimeout(60 * 10000);
+        httpRequestFactory.setConnectionRequestTimeout(60 * 10000);
+        httpRequestFactory.setConnectTimeout(60 * 30000);
+        httpRequestFactory.setReadTimeout(60 * 100000);
         return new RestTemplate(httpRequestFactory);
     }
 

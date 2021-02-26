@@ -5,6 +5,7 @@ import com.xinshineng.information.dao.shaicha.ShaichaStudentDao;
 import com.xinshineng.information.service.jigou.service.JiGouService;
 import com.xinshineng.information.service.shaicha.service.ShaichaStudentService;
 import com.xinshineng.information.service.shaicha.service.schoolService;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
@@ -27,6 +28,12 @@ public class skipController {
     @Autowired
     private JiGouService jiGouService;
 
+    @RequiresPermissions("sys:zhengfu")
+    @GetMapping("/zhengfu")
+    public String skipToSchool(){
+        return "main";
+    }
+    @RequiresPermissions("sys:xuexiao")
     @GetMapping("/school")
     public String skipToSchool(Model model, String school, String CityName, String AreaName, String checkdate,String checkType){
 
@@ -78,6 +85,7 @@ public class skipController {
         return "school";
     }
 
+    @RequiresPermissions("sys:jigou")
     @GetMapping("/jigou")
     public String skipToJiGou(Model model,Integer sys_id){
         Map oneData = redisTemplate.opsForHash().entries(sys_id + "JiGouMainData");

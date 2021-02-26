@@ -272,4 +272,30 @@ public interface ShaichaStudentDao {
 	Map<String, Double> getEyepressureData(Integer id);
 
 	Map<String, Object> getYuCeForPerson(@Param("checkDate") String checkDate,@Param("name") String name,@Param("idCard") String idCard);
+
+    List<Map<String, Long>> getThisYearCheckCount(int year);
+
+	Long getThisYearJinShiCount(@Param("year") int year,@Param("cityName") String cityName);
+
+	Long getQNCheckNum(@Param("year") int year,@Param("cityName") String cityName);
+
+	Long getThisYearCheckCountForArea(@Param("checkCity") String checkCity,@Param("areaName") String areaName,@Param("year") int year);
+
+	Long getThisYearJinShiCountForArea(@Param("checkCity") String checkCity,@Param("areaName") String areaName,@Param("year") int year);
+
+	List<Map<String, Object>> getScYuCeForOld(@Param("checkTime") String checkTime, @Param("school")String school, @Param("cityName")String cityName,@Param("areaName") String areaName);
+
+	Integer getOptIdForOld(Integer id);
+
+	List<Map<String, Object>> getDiopterDataForOld(Integer optId);
+
+	List<Map<String, Object>> getCornealDataForOld(Integer optId);
+
+	Map<String, Double> getEyeAxisDataForOld(Integer id);
+
+	Map<String, Double> getEyepressureDataForOld(Integer id);
+
+	String getShiFouHaveOtherTime(@Param("checkTime") String checkTime,@Param("school") String school,@Param("cityName") String cityName,@Param("areaName") String areaName);
+
+	Integer getOtherTimeCount(@Param("checkTime") String checkTime,@Param("school") String school,@Param("cityName") String cityName,@Param("areaName") String areaName);
 }

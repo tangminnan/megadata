@@ -316,6 +316,10 @@
                         var zxjsLv = [[${dataTwo.zxjsLv}]];
                         var lcqqLv = [[${dataTwo.lcqqLv}]];
                         var jxjsLv = [[${dataTwo.jxjsLv}]];
+
+                        var zxycList = [[${dataTwo.zxycList}]];
+                        var jxycList = [[${dataTwo.jxycList}]];
+                        var lcycList = [[${dataTwo.lcycList}]];
                         var everyTime = [[${dataTwo.everyTime}]];
 
 						option = {
@@ -331,7 +335,7 @@
 									fontSize: 12,
 								},
 								right:'50%',
-								data: ['临床前期', '假性近视', '真性近视']
+								data: ['临床前期', '假性近视', '真性近视','预测临床前期','预测真性近视','预测假性近视']
 							},
 							grid:{
 								x:40,
@@ -410,6 +414,7 @@
 										},
 									}
 								},
+
 								{
 									name: '假性近视',
 									type: 'line',
@@ -440,6 +445,51 @@
 										},
 									}
 								},
+								{
+									name: '预测临床前期',
+									type: 'line',
+									//stack: '总量',
+									data: lcycList,
+									itemStyle: {
+										normal: {
+											color: "#efff0e",//折线点的颜色
+											lineStyle: {
+												color: "#efff0e",//折线的颜色
+												width:2,
+											}
+										},
+									}
+								},
+								{
+									name: '预测真性近视',
+									type: 'line',
+									//stack: '总量',
+									data: zxycList,
+									itemStyle: {
+										normal: {
+											color: "#0eff12",//折线点的颜色
+											lineStyle: {
+												color: "#0eff12",//折线的颜色
+												width:2,
+											}
+										},
+									}
+								},
+								{
+									name: '预测假性近视',
+									type: 'line',
+									//stack: '总量',
+									data: jxycList,
+									itemStyle: {
+										normal: {
+											color: "#0e42ff",//折线点的颜色
+											lineStyle: {
+												color: "#0e42ff",//折线的颜色
+												width:2,
+											}
+										},
+									}
+								}
 							]
 						};
 						//获取dom容器

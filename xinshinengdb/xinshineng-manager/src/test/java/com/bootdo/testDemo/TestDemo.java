@@ -22,8 +22,8 @@ public class TestDemo {
 
     @Test
     public void testpwd(){
-       int a = 902;
-        int i = a / 200;
-        System.out.println(i);
+     /* String  password = MD5Utils.encrypt("huantaizhongxin", "123456");
+        System.out.println(password);*/
+        System.out.println(199/200);
     }
 }

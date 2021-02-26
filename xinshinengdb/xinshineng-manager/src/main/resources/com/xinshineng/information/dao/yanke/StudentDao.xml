@@ -360,13 +360,50 @@
 	</select>
 
 	<select id="getLiuDiaoTotalOld" resultType="java.util.Map">
-		SELECT sch.`CityName`,COUNT(*) num FROM y_student stu,y_school_new sch WHERE stu.school_id = sch.`id` AND sch.`ProvinceCode`='370000' AND stu.`last_check_time` is not null  GROUP BY sch.`CityName`;
-	</select>
-
-	<select id="getLiuDiaoTotalNew" resultType="java.util.Map">
 		SELECT sch.`CityName`,COUNT(*) num FROM y_student_old stu,y_school_new sch WHERE stu.`school`=sch.`OrgName` AND sch.`ProvinceCode`='370000' AND stu.`last_check_time` is not null GROUP BY sch.`CityName`;
 	</select>
 
+	<select id="getLiuDiaoTotalNew" resultType="java.util.Map">
+		SELECT sch.`CityName`,COUNT(*) num FROM y_student stu,y_school_new sch WHERE stu.school_id = sch.`id` AND sch.`ProvinceCode`='370000' AND stu.`last_check_time` is not null  GROUP BY sch.`CityName`;
+	</select>
+	<select id="getThisYearCheckCount" resultType="map">
+		SELECT sch.`CityName`,COUNT(*) num FROM y_student stu,y_school_new sch WHERE stu.school_id = sch.`id` AND sch.`ProvinceCode`='370000' AND stu.`last_check_time` IS NOT NULL AND  DATE_FORMAT(stu.`last_check_time`,'%Y') = #{year} GROUP BY sch.`CityName`;
+
+	</select>
+	<select id="getThisYearCheckCountForArea" resultType="long">
+		SELECT
+COUNT(*) num
+FROM
+y_student stu,y_school_new sch
+WHERE
+stu.school_id = sch.`id` AND sch.`ProvinceCode`='370000' AND stu.`last_check_time` IS NOT NULL AND  DATE_FORMAT(stu.`last_check_time`,'%Y') = #{year} AND sch.`CityName`=#{checkCity} AND sch.`AreaName`=#{areaName}
+	</select>
+	<select id="getQNCheckNum" resultType="long">
+		SELECT COUNT(*) num FROM y_student stu,y_school_new sch WHERE stu.school_id = sch.`id` AND sch.`ProvinceCode`='370000' AND stu.`last_check_time` IS NOT NULL AND  DATE_FORMAT(stu.`last_check_time`,'%Y') = #{year} AND sch.`CityName`=#{cityName}
+	</select>
+	<select id="getThisYearJinShiCount" resultType="long">
+		SELECT COUNT(dxqj) num FROM (SELECT LEAST(lopt.dxqjL,ropt.dxqjR) dxqj FROM (SELECT t_optometry_id , dengxiaoqiujing dxqjL FROM y_result_diopter WHERE t_optometry_id IN (SELECT t_optometry_id FROM y_result_optometry WHERE student_id IN (SELECT stu.`id`
+		FROM y_student stu,y_school_new sch
+		WHERE stu.school_id = sch.`id` AND sch.`ProvinceCode`='370000' AND stu.`last_check_time` IS NOT NULL AND  DATE_FORMAT(stu.`last_check_time`,'%Y') = #{year} AND sch.`CityName` = #{cityName})
+		AND DATE_FORMAT(check_date,'%Y') = #{year}) AND TYPE = 'AVG' AND first_second = 'SECOND_CHECK' AND ifRL='L') lopt,
+		(SELECT t_optometry_id , dengxiaoqiujing dxqjR FROM y_result_diopter WHERE t_optometry_id IN (SELECT t_optometry_id FROM y_result_optometry WHERE student_id IN (SELECT stu.`id`
+		FROM y_student stu,y_school_new sch
+		WHERE stu.school_id = sch.`id` AND sch.`ProvinceCode`='370000' AND stu.`last_check_time` IS NOT NULL AND  DATE_FORMAT(stu.`last_check_time`,'%Y') = #{year} AND sch.`CityName` = #{cityName})
+		AND DATE_FORMAT(check_date,'%Y') = #{year}) AND TYPE = 'AVG' AND first_second = 'SECOND_CHECK' AND ifRL='R') ropt
+		WHERE lopt.t_optometry_id = ropt.t_optometry_id ) stu WHERE dxqj &lt;= -0.5
+
+	</select>
+	<select id="getThisYearJinShiCountForArea" resultType="long">
+		SELECT COUNT(dxqj) num FROM (SELECT LEAST(lopt.dxqjL,ropt.dxqjR) dxqj FROM (SELECT t_optometry_id , dengxiaoqiujing dxqjL FROM y_result_diopter WHERE t_optometry_id IN (SELECT t_optometry_id FROM y_result_optometry WHERE student_id IN (SELECT stu.`id`
+		FROM y_student stu,y_school_new sch
+		WHERE stu.school_id = sch.`id` AND sch.`ProvinceCode`='370000' AND stu.`last_check_time` IS NOT NULL AND  DATE_FORMAT(stu.`last_check_time`,'%Y') = #{year} AND sch.`CityName` = #{checkCity} and sch.`AreaName` = #{areaName})
+		AND DATE_FORMAT(check_date,'%Y') = #{year}) AND TYPE = 'AVG' AND first_second = 'SECOND_CHECK' AND ifRL='L') lopt,
+		(SELECT t_optometry_id , dengxiaoqiujing dxqjR FROM y_result_diopter WHERE t_optometry_id IN (SELECT t_optometry_id FROM y_result_optometry WHERE student_id IN (SELECT stu.`id`
+		FROM y_student stu,y_school_new sch
+		WHERE stu.school_id = sch.`id` AND sch.`ProvinceCode`='370000' AND stu.`last_check_time` IS NOT NULL AND  DATE_FORMAT(stu.`last_check_time`,'%Y') = #{year} AND sch.`CityName` = #{checkCity} and sch.`AreaName` = #{areaName})
+		AND DATE_FORMAT(check_date,'%Y') = #{year}) AND TYPE = 'AVG' AND first_second = 'SECOND_CHECK' AND ifRL='R') ropt
+		WHERE lopt.t_optometry_id = ropt.t_optometry_id ) stu WHERE dxqj &lt;= -0.5
+	</select>
 	<select id="getLiuDiaoNewTotalNum" resultType="java.lang.Long">
 		SELECT COUNT(*) num FROM y_student
 	</select>

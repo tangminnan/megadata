@@ -80,14 +80,20 @@ public class LoginController extends BaseController {
 
 	@Log("登录")
 	@PostMapping("/login")
-	String ajaxLogin(String username, String password,String choseType) {
+	@ResponseBody
+	R ajaxLogin(String username, String password,String choseType) {
 		if ("医疗机构".equals(choseType)){
 			password = MD5Utils.encrypt(username, password);
 			UsernamePasswordToken token = new UsernamePasswordToken(username, password);
 				Subject subject = SecurityUtils.getSubject();
-				subject.login(token);
-				int id  = userDao.getUserId(username,password);
-				return "redirect:/skip/jigou?sys_id="+id;
+				try {
+					subject.login(token);
+					int id  = userDao.getUserId(username,password);
+					return R.ok().put("url","/skip/jigou?sys_id="+id);
+				}catch (AuthenticationException e){
+					return R.error("用户名或密码错误");
+				}
+
 		}
 		if ("学校".equals(choseType)){
 			if ("htsyxx".equals(username) && "123456".equals(password)){
@@ -96,17 +102,14 @@ public class LoginController extends BaseController {
 				psw = MD5Utils.encrypt(admin,psw);
 				UsernamePasswordToken token = new UsernamePasswordToken(admin, psw);
 				Subject subject = SecurityUtils.getSubject();
-				subject.login(token);
 				try {
-					String school = new String("桓台实验学校小学部".getBytes(),"ISO-8859-1");
-					String CityName = new String("淄博市".getBytes(),"ISO-8859-1");
-					String AreaName = new String("桓台县".getBytes(),"ISO-8859-1");
-					return "redirect:/skip/school?school="+school+"&CityName="+CityName+"&AreaName="+AreaName+"&checkdate=2020-11&checkType=sc";
-				} catch (UnsupportedEncodingException e) {
-					e.printStackTrace();
+					subject.login(token);
+					return R.ok().put("url","/skip/school?school=桓台实验学校小学部&CityName=淄博市&AreaName=桓台县&checkdate=2020-11&checkType=sc");
+				} catch (Exception e) {
+					return R.error("用户名或密码错误");
 				}
 			}
-			return "/login";
+			return R.error("用户名或密码错误");
 		}
 		password = MD5Utils.encrypt(username, password);
 		UsernamePasswordToken token = new UsernamePasswordToken(username, password);
@@ -114,41 +117,36 @@ public class LoginController extends BaseController {
 		try {
 			subject.login(token);
 			if ("政府部门".equals(choseType)){
-				return "main";
+				return R.ok().put("url","/skip/zhengfu");
 			}
 
-
 		} catch (AuthenticationException e) {
-			return "";
+			return R.error("用户名或密码错误");
 		}
-		return username;
+		return R.error("用户名或密码错误");
 	}
 
 
 	@PostMapping("/loginForPerson")
-	String LoginForPerson(String username, String password,String choseType) {
+	@ResponseBody
+	R LoginForPerson(String username, String password,String choseType) {
 			int cow = shaichaStudentDao.login(username,password);
 			if (cow>0){
 				String checkdate = shaichaStudentDao.getLastCheckDate(username,password);
-				try {
-					username= new String(username.getBytes(),"ISO-8859-1");
-				} catch (UnsupportedEncodingException e) {
-					e.printStackTrace();
-				}
-				return "redirect:/skip/geren?name="+username+"&idCard="+password+"&checkdate="+checkdate+"&checkType=sc";
+				return R.ok().put("url","/skip/geren?name="+username+"&idCard="+password+"&checkdate="+checkdate+"&checkType=sc");
 			}
 			if (cow==0){
 				cow = studentDao.login(username,password);
 				if (cow>0){
 					String checkdate = studentDao.getLastCheckDate(username,password);
-					return "redirect:/skip/geren?name="+username+"&idCard="+password+"&checkdate="+checkdate+"&checkType=ld";
+					return R.ok().put("url","/skip/geren?name="+username+"&idCard="+password+"&checkdate="+checkdate+"&checkType=ld");
 				}
 				else {
-					return "/login";
+					return  R.error("姓名或身份证有误");
 				}
 			}
 
-		return "/login";
+		 return  R.error("姓名或身份证有误");
 	}
 
 

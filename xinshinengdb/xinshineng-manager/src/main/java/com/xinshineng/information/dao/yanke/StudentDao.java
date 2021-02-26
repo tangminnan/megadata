@@ -196,4 +196,14 @@ public interface StudentDao {
 	Map<String, Double> getEyepressureData(Integer id);
 
     Map<String, Object> getYuCeForPerson(@Param("checkDate") String checkDate,@Param("name") String name,@Param("idCard") String idCard);
+
+    List<Map<String, Long>> getThisYearCheckCount(int year);
+
+	Long getThisYearJinShiCount(@Param("year") int year,@Param("cityName") String cityName);
+
+	Long getQNCheckNum(@Param("year") int year,@Param("cityName") String cityName);
+
+	Long getThisYearCheckCountForArea(@Param("checkCity") String checkCity,@Param("areaName") String areaName,@Param("year") int year);
+
+	long getThisYearJinShiCountForArea(@Param("checkCity") String checkCity,@Param("areaName") String areaName,@Param("year") int year);
 }
