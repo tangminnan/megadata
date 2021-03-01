@@ -9,197 +9,408 @@
 <link rel="stylesheet" href="/css/index.css" type="text/css">
 <script type="text/javascript" src="/js/jquery-3.5.1.min.js"></script>
 <script type="text/javascript" src="/js/jquery.SuperSlide.2.1.3.js"></script>
+	<script type="text/javascript" src="/js/layui.js"></script>
+	<style>
+		.submit_loading {
+			position:fixed;
+			width:100%;
+			height:100%;
+			top:0;
+			left:0;
+			background-color:#000;
+			text-align:center;
+			opacity:0.3;
+		}
+		.loading_show {
+			margin-top:15%;
+		}
+		.loading_context {
+			color: #fff;
+		}
+	</style>
+
 </head>
 <body>
    <div class="topbanner"><img src="/img/banner.png" alt=""></div>
-   <div class="main renwuBox">
-   		<div class="hd" id="hd">
+   <div class="main renwuBox"  style="background:#f9ae40;padding:8px;border-radius:10px;">
+	   <div class="hd" id="New_hd">
+	   </div>
+   		<div class="bd" id="New_bd">
+			<form id="signupForm">
+				<div class="txt">
+					<p>任务时间：<span id="span1"></span></p>
+					<p>平均评级：<span id="span2"></span></p>
+					<p>礼物描述：
+						<div>
+							<textarea name="gift" style="margin: 0;padding: 0;border:1px solid yellowgreen; box-sizing: border-box;width: 100%;"></textarea></p>
+						</div>
+					<dl>
+						<dt>任务详情：</dt>
+						<dd>
 
+							<ul>
+								<li><em>时长：</em>
+									<select name="taskTime" onchange="setTaskTime(this.value)">
+										<option value="0">=请选择=</option>
+										<option value="1">1天</option>
+										<option value="7">7天</option>
+										<option value="15">15天</option>
+										<option value="30">30天</option>
+									</select>
+								</li>
+								<li><em>健康用眼评级：</em>
+									<select name="eyeRate" onchange="setEyeRate(this.value)">
+										<option value="0">=请选择=</option>
+										<option value="5">优秀</option>
+										<option value="4">良好</option>
+										<option value="2">差</option>
+										<option value="1">极差</option>
+									</select>
+								</li>
+								<li><em>平均单次阅读时长：</em>
+									<select name="avgRead">
+										<option value="0">=请选择=</option>
+										<option value="5">优秀</option>
+										<option value="4">良好</option>
+										<option value="2">差</option>
+										<option value="1">极差</option>
+									</select>
+								</li>
+								<li><em>平均户外时长：</em>
+									<select name="avgOut" >
+										<option value="0">=请选择=</option>
+										<option value="5">优秀</option>
+										<option value="4">良好</option>
+										<option value="2">差</option>
+										<option value="1">极差</option>
+									</select>
+								</li>
+								<li><em>平均阅读距离：</em>
+									<select name="avgReadDistance">
+										<option value="0">=请选择=</option>
+										<option value="5">优秀</option>
+										<option value="4">良好</option>
+										<option value="2">差</option>
+										<option value="1">极差</option>
+									</select>
+								</li>
+								<li><em>平均阅读光照：</em>
+									<select name="avgLight">
+										<option value="0">=请选择=</option>
+										<option value="5">优秀</option>
+										<option value="4">良好</option>
+										<option value="2">差</option>
+										<option value="1">极差</option>
+									</select>
+								</li>
+								<li><em>平均单次看手机时长：</em>
+									<select name="avgLookPhone">
+										<option value="0">=请选择=</option>
+										<option value="5">优秀</option>
+										<option value="4">良好</option>
+										<option value="2">差</option>
+										<option value="1">极差</option>
+									</select>
+								</li>
+								<li><em>平均单次看电脑电视时长：</em>
+									<select name="avgLookTv">
+										<option value="0">=请选择=</option>
+										<option value="5">优秀</option>
+										<option value="4">良好</option>
+										<option value="2">差</option>
+										<option value="1">极差</option>
+									</select>
+								</li>
+								<li><em>平均坐姿倾斜度：</em>
+									<select name="avgSitTilt" >
+										<option value="0">=请选择=</option>
+										<option value="5">优秀</option>
+										<option value="4">良好</option>
+										<option value="2">差</option>
+										<option value="1">极差</option>
+									</select>
+								</li>
+								<li><em>有效使用监护仪总时长：</em>
+									<select name="effectiveUseTime" >
+										<option value="0">=请选择=</option>
+										<option value="5">优秀</option>
+										<option value="4">良好</option>
+										<option value="2">差</option>
+										<option value="1">极差</option>
+									</select>
+								</li>
+							</ul>
 
-   		</div>
-   		<div class="bd" id="bd">
-
+						</dd>
+					</dl>
+					<input type="button" value="执行任务" onclick="save()">
+				</div>
+			</form>
    		</div>
    </div>
+
+
+   <div id="loading" class="submit_loading" style="display: none">
+	   <div class="loading_show">
+		   <img src="/images/loading.gif">
+		   <p class="loading_context">正在提交，请稍候。。。</p>
+	   </div>
+   </div>
+
 </body>
 </html>
 <script type="text/javascript" th:inline="javascript">
-    //var url = 'http://localhost:8087'
-    var url = 'http://eyemonitor-api.dddmaker.com'
+    var url = 'http://localhost:8083'
+   // var url = 'http://eyemonitor-api.dddmaker.com'
 	var idCard = [[${idCard}]]
 	console.log(idCard,'idCard')
 
     $(function () {
-       initTask();
+ //      initTask();
        setInterval("loadslide()", 1000);
     })
     function loadslide(){
        jQuery(".renwuBox").slide({trigger:"click"});
     }
 
-    function initTask() {
-       $.ajax({
-          type:'get',
-          url:url+'/api/gift/listPcJiazhang',
-          async : false,
-          dataType : "jsonp",
-          jsonp:"callback",
-          success : function(data) {
-             console.log(data.data,"data")
-             result = data.data
-             var html = ''
-			 var html11 =''
-             html+='<ul>'
-             for(var i= 0;i<result.length;i++){
-                html+='<li><input type="hidden" value="'+result[i].id+'"><img src="'+result[i].coverImg+'" alt=""/><p>'+result[i].giftName+'</p></li>'
+//    function initTask() {
+//       $.ajax({
+//          type:'get',
+//          url:url+'/api/gift/listPcJiazhang',
+//          async : false,
+//          dataType : "jsonp",
+//          jsonp:"callback",
+//          success : function(data) {
+//             console.log(data.data,"data")
+//             result = data.data
+//             var html = ''
+//			 var html11 =''
+//             html+='<ul>'
+//             for(var i= 0;i<result.length;i++){
+//                html+='<li><input type="hidden" value="'+result[i].id+'"><img src="'+result[i].coverImg+'" alt=""/><p>'+result[i].giftName+'</p></li>'
+//
+//				html11+='<div class="txt">';
+//                html11+= '<p>任务时间：<span>'+result[i].giftPc.taskTime+'天</span></p>'
+//                html11+= '<p>平均评级：<span>优秀等级</span></p>'
+//                html11+=  '   <dl>'
+//                html11+=  '   <dt>任务详情：</dt>'
+//                html11+=  '   <dd>'
+//                html11+=  '<ul>'
+//                html11+=  '<li><em>时长</em><span>'+result[i].giftPc.taskTime+'天</span></li>'
+//
+//				if(result[i].giftPc.eyeRate ==1){
+//                   html11+=  '<li><em>健康用眼评级：</em><span>优秀</span></li>'
+//				}else if(result[i].giftPc.eyeRate ==2){
+//                   html11+=  '<li><em>健康用眼评级：</em><span>良好</span></li>'
+//				}else if(result[i].giftPc.eyeRate ==3){
+//                   html11+=  '<li><em>健康用眼评级：</em><span>差</span></li>'
+//                }else if(result[i].giftPc.eyeRate ==4){
+//                   html11+=  '<li><em>健康用眼评级：</em><span>极差</span></li>'
+//                }else{
+//                   html11+=  '<li><em>健康用眼评级：</em><span></span></li>'
+//				}
+//
+//                if(result[i].giftPc.avgRead ==1){
+//                   html11+=  '<li><em>平均单次阅读时长：</em><span>优秀</span></li>'
+//                }else if(result[i].giftPc.avgRead ==2){
+//                   html11+=  '<li><em>平均单次阅读时长：</em><span>良好</span></li>'
+//                }else if(result[i].giftPc.avgRead ==3){
+//                   html11+=  '<li><em>平均单次阅读时长：</em><span>差</span></li>'
+//                }else if(result[i].giftPc.avgRead ==4){
+//                   html11+=  '<li><em>平均单次阅读时长：</em><span>极差</span></li>'
+//                }else{
+//                   html11+=  '<li><em>平均单次阅读时长：</em><span></span></li>'
+//                }
+//
+//                if(result[i].giftPc.avgOut ==1){
+//                   html11+=  '<li><em>平均户外时长：</em><span>优秀</span></li>'
+//                }else if(result[i].giftPc.avgOut ==2){
+//                   html11+=  '<li><em>平均户外时长：</em><span>良好</span></li>'
+//                }else if(result[i].giftPc.avgOut ==3){
+//                   html11+=  '<li><em>平均户外时长：</em><span>差</span></li>'
+//                }else if(result[i].giftPc.avgOut ==4){
+//                   html11+=  '<li><em>平均户外时长：</em><span>极差</span></li>'
+//                }else{
+//                   html11+=  '<li><em>平均户外时长：</em><span></span></li>'
+//                }
+//
+//                if(result[i].giftPc.avgReadDistance ==1){
+//                   html11+=  '<li><em>平均阅读距离：</em><span>优秀</span></li>'
+//                }else if(result[i].giftPc.avgReadDistance ==2){
+//                   html11+=  '<li><em>平均阅读距离：</em><span>良好</span></li>'
+//                }else if(result[i].giftPc.avgReadDistance ==3){
+//                   html11+=  '<li><em>平均阅读距离：</em><span>差</span></li>'
+//                }else if(result[i].giftPc.avgReadDistance ==4){
+//                   html11+=  '<li><em>平均阅读距离：</em><span>极差</span></li>'
+//                }else{
+//                   html11+=  '<li><em>平均阅读距离：</em><span></span></li>'
+//                }
+//
+//                if(result[i].giftPc.avgLight ==1){
+//                   html11+=  '<li><em>平均阅读光照：</em><span>优秀</span></li>'
+//                }else if(result[i].giftPc.avgLight ==2){
+//                   html11+=  '<li><em>平均阅读光照：</em><span>良好</span></li>'
+//                }else if(result[i].giftPc.avgLight ==3){
+//                   html11+=  '<li><em>平均阅读光照：</em><span>差</span></li>'
+//                }else if(result[i].giftPc.avgLight ==4){
+//                   html11+=  '<li><em>平均阅读光照：</em><span>极差</span></li>'
+//                }else{
+//                   html11+=  '<li><em>平均阅读光照：</em><span></span></li>'
+//                }
+//
+//                if(result[i].giftPc.avgLookPhone ==1){
+//                   html11+=  '<li><em>平均单次看手机时长：</em><span>优秀</span></li>'
+//                }else if(result[i].giftPc.avgLookPhone ==2){
+//                   html11+=  '<li><em>平均单次看手机时长：</em><span>良好</span></li>'
+//                }else if(result[i].giftPc.avgLookPhone ==3){
+//                   html11+=  '<li><em>平均单次看手机时长：</em><span>差</span></li>'
+//                }else if(result[i].giftPc.avgLookPhone ==4){
+//                   html11+=  '<li><em>平均单次看手机时长：</em><span>极差</span></li>'
+//                }else{
+//                   html11+=  '<li><em>平均单次看手机时长：</em><span></span></li>'
+//                }
+//
+//                if(result[i].giftPc.avgLookTv ==1){
+//                   html11+=  '<li><em>平均单次看电脑电视时长：</em><span>优秀</span></li>'
+//                }else if(result[i].giftPc.avgLookTv ==2){
+//                   html11+=  '<li><em>平均单次看电脑电视时长：</em><span>良好</span></li>'
+//                }else if(result[i].giftPc.avgLookTv ==3){
+//                   html11+=  '<li><em>平均单次看电脑电视时长：</em><span>差</span></li>'
+//                }else if(result[i].giftPc.avgLookTv ==4){
+//                   html11+=  '<li><em>平均单次看电脑电视时长：</em><span>极差</span></li>'
+//                }else{
+//                   html11+=  '<li><em>平均单次看电脑电视时长：</em><span></span></li>'
+//                }
+//
+//                if(result[i].giftPc.avgSitTilt ==1){
+//                   html11+=  '<li><em>平均坐姿倾斜度：</em><span>优秀</span></li>'
+//                }else if(result[i].giftPc.avgSitTilt ==2){
+//                   html11+=  '<li><em>平均坐姿倾斜度：</em><span>良好</span></li>'
+//                }else if(result[i].giftPc.avgSitTilt ==3){
+//                   html11+=  '<li><em>平均坐姿倾斜度：</em><span>差</span></li>'
+//                }else if(result[i].giftPc.avgSitTilt ==4){
+//                   html11+=  '<li><em>平均坐姿倾斜度：</em><span>极差</span></li>'
+//                }else{
+//                   html11+=  '<li><em>平均坐姿倾斜度：</em><span></span></li>'
+//                }
+//
+//                if(result[i].giftPc.effectiveUseTime ==1){
+//                   html11+=  '<li><em>有效使用监护仪总时长：</em><span>优秀</span></li>'
+//                }else if(result[i].giftPc.effectiveUseTime ==2){
+//                   html11+=  '<li><em>有效使用监护仪总时长：</em><span>良好</span></li>'
+//                }else if(result[i].giftPc.effectiveUseTime ==3){
+//                   html11+=  '<li><em>有效使用监护仪总时长：</em><span>差</span></li>'
+//                }else if(result[i].giftPc.effectiveUseTime ==4){
+//                   html11+=  '<li><em>有效使用监护仪总时长：</em><span>极差</span></li>'
+//                }else{
+//                   html11+=  '<li><em>有效使用监护仪总时长：</em><span></span></li>'
+//                }
+//                html11+=   '</ul>'
+//                html11+=   '  </dd>'
+//                html11+=   '   </dl>'
+//                html11+=   '   <input type="button" value="我要挑战" onclick="save()">'
+//                html11+=  '   </div>'
+//             }
+//             html+='</ul>'
+//			 html+='<input onclick="zidingyi()" type="button" class="zidingyi" value="自定义任务">'
+//             $('#hd').html(html)
+//
+//			 $('#bd').html(html11)
+//
+//          },
+//          error : function() {
+//             alert('fail');
+//          }
+//       })
+//    }
 
-				html11+='<div class="txt">';
-                html11+= '<p>任务时间：<span>'+result[i].giftPc.taskTime+'天</span></p>'
-                html11+= '<p>平均评级：<span>优秀等级</span></p>'
-                html11+=  '   <dl>'
-                html11+=  '   <dt>任务详情：</dt>'
-                html11+=  '   <dd>'
-                html11+=  '<ul>'
-                html11+=  '<li><em>时长</em><span>'+result[i].giftPc.taskTime+'天</span></li>'
-
-				if(result[i].giftPc.eyeRate ==1){
-                   html11+=  '<li><em>健康用眼评级：</em><span>优秀</span></li>'
-				}else if(result[i].giftPc.eyeRate ==2){
-                   html11+=  '<li><em>健康用眼评级：</em><span>良好</span></li>'
-				}else if(result[i].giftPc.eyeRate ==3){
-                   html11+=  '<li><em>健康用眼评级：</em><span>差</span></li>'
-                }else if(result[i].giftPc.eyeRate ==4){
-                   html11+=  '<li><em>健康用眼评级：</em><span>极差</span></li>'
-                }else{
-                   html11+=  '<li><em>健康用眼评级：</em><span></span></li>'
-				}
-
-                if(result[i].giftPc.avgRead ==1){
-                   html11+=  '<li><em>平均单次阅读时长：</em><span>优秀</span></li>'
-                }else if(result[i].giftPc.avgRead ==2){
-                   html11+=  '<li><em>平均单次阅读时长：</em><span>良好</span></li>'
-                }else if(result[i].giftPc.avgRead ==3){
-                   html11+=  '<li><em>平均单次阅读时长：</em><span>差</span></li>'
-                }else if(result[i].giftPc.avgRead ==4){
-                   html11+=  '<li><em>平均单次阅读时长：</em><span>极差</span></li>'
-                }else{
-                   html11+=  '<li><em>平均单次阅读时长：</em><span></span></li>'
-                }
-
-                if(result[i].giftPc.avgOut ==1){
-                   html11+=  '<li><em>平均户外时长：</em><span>优秀</span></li>'
-                }else if(result[i].giftPc.avgOut ==2){
-                   html11+=  '<li><em>平均户外时长：</em><span>良好</span></li>'
-                }else if(result[i].giftPc.avgOut ==3){
-                   html11+=  '<li><em>平均户外时长：</em><span>差</span></li>'
-                }else if(result[i].giftPc.avgOut ==4){
-                   html11+=  '<li><em>平均户外时长：</em><span>极差</span></li>'
-                }else{
-                   html11+=  '<li><em>平均户外时长：</em><span></span></li>'
-                }
-
-                if(result[i].giftPc.avgReadDistance ==1){
-                   html11+=  '<li><em>平均阅读距离：</em><span>优秀</span></li>'
-                }else if(result[i].giftPc.avgReadDistance ==2){
-                   html11+=  '<li><em>平均阅读距离：</em><span>良好</span></li>'
-                }else if(result[i].giftPc.avgReadDistance ==3){
-                   html11+=  '<li><em>平均阅读距离：</em><span>差</span></li>'
-                }else if(result[i].giftPc.avgReadDistance ==4){
-                   html11+=  '<li><em>平均阅读距离：</em><span>极差</span></li>'
-                }else{
-                   html11+=  '<li><em>平均阅读距离：</em><span></span></li>'
-                }
-
-                if(result[i].giftPc.avgLight ==1){
-                   html11+=  '<li><em>平均阅读光照：</em><span>优秀</span></li>'
-                }else if(result[i].giftPc.avgLight ==2){
-                   html11+=  '<li><em>平均阅读光照：</em><span>良好</span></li>'
-                }else if(result[i].giftPc.avgLight ==3){
-                   html11+=  '<li><em>平均阅读光照：</em><span>差</span></li>'
-                }else if(result[i].giftPc.avgLight ==4){
-                   html11+=  '<li><em>平均阅读光照：</em><span>极差</span></li>'
-                }else{
-                   html11+=  '<li><em>平均阅读光照：</em><span></span></li>'
-                }
-
-                if(result[i].giftPc.avgLookPhone ==1){
-                   html11+=  '<li><em>平均单次看手机时长：</em><span>优秀</span></li>'
-                }else if(result[i].giftPc.avgLookPhone ==2){
-                   html11+=  '<li><em>平均单次看手机时长：</em><span>良好</span></li>'
-                }else if(result[i].giftPc.avgLookPhone ==3){
-                   html11+=  '<li><em>平均单次看手机时长：</em><span>差</span></li>'
-                }else if(result[i].giftPc.avgLookPhone ==4){
-                   html11+=  '<li><em>平均单次看手机时长：</em><span>极差</span></li>'
-                }else{
-                   html11+=  '<li><em>平均单次看手机时长：</em><span></span></li>'
-                }
-
-                if(result[i].giftPc.avgLookTv ==1){
-                   html11+=  '<li><em>平均单次看电脑电视时长：</em><span>优秀</span></li>'
-                }else if(result[i].giftPc.avgLookTv ==2){
-                   html11+=  '<li><em>平均单次看电脑电视时长：</em><span>良好</span></li>'
-                }else if(result[i].giftPc.avgLookTv ==3){
-                   html11+=  '<li><em>平均单次看电脑电视时长：</em><span>差</span></li>'
-                }else if(result[i].giftPc.avgLookTv ==4){
-                   html11+=  '<li><em>平均单次看电脑电视时长：</em><span>极差</span></li>'
-                }else{
-                   html11+=  '<li><em>平均单次看电脑电视时长：</em><span></span></li>'
-                }
-
-                if(result[i].giftPc.avgSitTilt ==1){
-                   html11+=  '<li><em>平均坐姿倾斜度：</em><span>优秀</span></li>'
-                }else if(result[i].giftPc.avgSitTilt ==2){
-                   html11+=  '<li><em>平均坐姿倾斜度：</em><span>良好</span></li>'
-                }else if(result[i].giftPc.avgSitTilt ==3){
-                   html11+=  '<li><em>平均坐姿倾斜度：</em><span>差</span></li>'
-                }else if(result[i].giftPc.avgSitTilt ==4){
-                   html11+=  '<li><em>平均坐姿倾斜度：</em><span>极差</span></li>'
-                }else{
-                   html11+=  '<li><em>平均坐姿倾斜度：</em><span></span></li>'
-                }
-
-                if(result[i].giftPc.effectiveUseTime ==1){
-                   html11+=  '<li><em>有效使用监护仪总时长：</em><span>优秀</span></li>'
-                }else if(result[i].giftPc.effectiveUseTime ==2){
-                   html11+=  '<li><em>有效使用监护仪总时长：</em><span>良好</span></li>'
-                }else if(result[i].giftPc.effectiveUseTime ==3){
-                   html11+=  '<li><em>有效使用监护仪总时长：</em><span>差</span></li>'
-                }else if(result[i].giftPc.effectiveUseTime ==4){
-                   html11+=  '<li><em>有效使用监护仪总时长：</em><span>极差</span></li>'
-                }else{
-                   html11+=  '<li><em>有效使用监护仪总时长：</em><span></span></li>'
-                }
-                html11+=   '</ul>'
-                html11+=   '  </dd>'
-                html11+=   '   </dl>'
-                html11+=   '   <input type="button" value="我要挑战" onclick="save()">'
-                html11+=  '   </div>'
-             }
-             html+='</ul>'
-			 html+='<input onclick="zidingyi()" type="button" class="zidingyi" value="自定义任务">'
-             $('#hd').html(html)
-
-			 $('#bd').html(html11)
-
-          },
-          error : function() {
-             alert('fail');
-          }
-       })
+    function setTaskTime(value) {
+        if(value!=null && value>0){
+            if(value == 1){
+                $('#span1').text("1天")
+            }else if(value == 7){
+                $('#span1').text("7天")
+            }else if(value == 15){
+                $('#span1').text("15天")
+            }else if(value == 30){
+                $('#span1').text("30天")
+            }
+        }
     }
 
+    function setEyeRate(value) {
+        if(value!=null && value>0){
+            if(value == 5){
+                $('#span2').text("优秀")
+            }else if(value == 4){
+                $('#span2').text("良好")
+            }else if(value == 2){
+                $('#span2').text("差")
+            }else if(value == 1){
+                $('#span2').text("极差")
+            }
+        }
+    }
+
+
+
+ //   var giftId = $("#New_hd ul").find(".on").children("input").val()
     function save() {
-       var giftId = $("#hd ul").find(".on").children("input").val()
-       alert("请求中，请稍等..")
+        if($("select[name='taskTime']").val() <=0){
+            alert("请选择任务时长");
+            return;
+        }
+        if($("select[name='eyeRate']").val() <=0){
+            alert("请选择用眼评级");
+            return;
+        }
+        if($("select[name='avgRead']").val() <=0 ){
+            alert("请选择平均单次阅读时长");
+            return;
+        }
+        if($("select[name='avgReadDistance']").val() <=0 ){
+            alert("请选择平均阅读距离");
+            return;
+        }
+        if($("select[name='avgLight']").val() <=0 ){
+            alert("请选择平均阅读光照");
+            return;
+        }
+        if($("select[name='avgLookPhone']").val() <=0 ){
+            alert("请选择平均单次看手机时长");
+            return;
+        }
+        if($("select[name='avgLookTv']").val() <=0 ){
+            alert("请选择平均单次看电脑电视时长");
+            return;
+        }
+        if($("select[name='avgSitTilt']").val() <=0 ){
+            alert("请选择平均坐姿倾斜度");
+            return;
+        }
+        if($("select[name='effectiveUseTime']").val() <=0 ){
+            alert("请选择有效使用监护仪总时长");
+            return;
+        }
+
+        //     var giftId = $("#hd ul").find(".on").children("input").val()
+        var signupFormData=$('#signupForm').serialize();
+        $("#loading").show();
        $.ajax({
           cache: true,
           type: "get",
-          url: url+"/api/gift/addTaskPcByJz?idCard="+idCard+"&giftId="+giftId,
+          url: url+"/api/gift/addTaskPcByJz",
+		   data: signupFormData+"&idCard="+idCard,// 你的formid
           dataType : "jsonp",
           jsonp:"callback",
           async: false,
-          success: function (data) {
-             alert(data.msg)
+          success: function (data) {console.info(data);
+              if(data.code==0){
+                  $("select").val("0");
+                  $("#span1").text('');
+                  $("#span2").text('');
+                  $("#loading").hide();
+              }
           },
           error: function (request) {
              alert("Connection error");

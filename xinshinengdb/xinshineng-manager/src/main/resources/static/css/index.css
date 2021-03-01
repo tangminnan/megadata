@@ -1082,6 +1082,7 @@ background-size: cover;}
 	background-size: contain;
 	}
 .renwuBox .bd .txt p:nth-child(2){background-image: url(../img/jz-DJ.png);}
+.renwuBox .bd .txt p:nth-child(3){background-image: url(../img/jz-DJ.png);}
 .renwuBox .bd .txt p span{color: #e97e06;}
 .renwuBox .bd .txt dl{margin-top:30px;line-height: 26px;margin-bottom:5%;overflow: hidden;}
 .renwuBox .bd .txt dl dd li{
