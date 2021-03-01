@@ -18,8 +18,8 @@ public class UserDO implements Serializable {
     private String password;
     // 部门
     private Long deptId;
-    private String deptName;
-    
+
+
     private String roleName;
     // 邮箱
     private String email;
@@ -93,13 +93,13 @@ public class UserDO implements Serializable {
         this.deptId = deptId;
     }
 
-    public String getDeptName() {
+   /* public String getDeptName() {
         return deptName;
     }
 
     public void setDeptName(String deptName) {
         this.deptName = deptName;
-    }
+    }*/
 
     public String getEmail() {
         return email;
@@ -229,7 +229,7 @@ public class UserDO implements Serializable {
 		this.roleName = roleName;
 	}
 
-	@Override
+	/*@Override
     public String toString() {
         return "UserDO{" +
                 "userId=" + userId +
@@ -254,5 +254,5 @@ public class UserDO implements Serializable {
                 ", city='" + city + '\'' +
                 ", district='" + district + '\'' +
                 '}';
-    }
+    }*/
 }

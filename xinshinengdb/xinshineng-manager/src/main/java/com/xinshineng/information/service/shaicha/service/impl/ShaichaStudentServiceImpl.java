@@ -519,11 +519,899 @@ public class ShaichaStudentServiceImpl implements ShaichaStudentService {
 			Long liuDiaoOldTotalNum = liuDiaoDao.getLiuDiaoOldTotalNum();
 			firstMap.put("liuDiaoNum",liuDiaoNewTotalNum+liuDiaoOldTotalNum);
 			firstMap.put("totalNum",shaiChaOldTotalNum+shaiChaNewTotalNum+liuDiaoNewTotalNum+liuDiaoOldTotalNum);
+
+			/*Date date = new Date();
+			int year = date.getYear();*/
+			Calendar instance = Calendar.getInstance();
+			int year = instance.get(Calendar.YEAR);
+			//获取筛查流调当年每个城市受检人数
+			List<Map<String,Long>> thisYearCountForsc = studentDao.getThisYearCheckCount(year);
+			List<Map<String,Long>> thisYearCountForld = liuDiaoDao.getThisYearCheckCount(year);
+			Map<String,Object> someMap = jiSuanJinShi(thisYearCountForld,thisYearCountForsc,year);
+
+			shifoudabiao(someMap,firstMap,year);
+
+
 			redisTemplate.opsForHash().putAll("shouYeData",firstMap);
 		}
 		return firstMap;
 	}
 
+	private void shifoudabiao(Map<String, Object> someMap, Map<String, Object> firstMap,int year) {
+		if ((Long) someMap.get("JiNanShi")!=0L){
+			Long jiNanShiNum = (Long) someMap.get("JiNanShi");
+			Long jiNanShiJS = (Long) someMap.get("JiNanShiJS");
+			BigDecimal bg = new BigDecimal((float) jiNanShiJS / jiNanShiNum);
+			double jsl = (bg.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue())*100;
+			Long qnCheckNumsc = studentDao.getQNCheckNum(year-1,"济南市");
+			Long qnJinShisc = 0L;
+			Long qnJinShild = 0L;
+			if (qnCheckNumsc!=0L){
+				qnJinShisc = studentDao.getThisYearJinShiCount(year - 1, "济南市");
+			}
+			Long qnCheckNumld = liuDiaoDao.getQNCheckNum(year-1,"济南市");
+			if (qnCheckNumld!=0L){
+				qnJinShild = liuDiaoDao.getThisYearJinShiCount(year-1,"济南市");
+			}
+			long qnCheckNum = qnCheckNumld + qnCheckNumsc;
+			if (qnCheckNum!=0){
+				long qnJinShiNum = qnJinShisc + qnJinShild;
+				if (qnJinShiNum!=0){
+					bg = new BigDecimal((float) qnJinShiNum / qnCheckNum);
+					double qnjsl = (bg.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue())*100;
+					if (jsl-qnjsl>0){
+						firstMap.put("JiNanShiJS",2);
+					}
+					if (jsl-qnjsl<0 && jsl-qnjsl>=-1){
+						firstMap.put("JiNanShiJS",1);
+					}
+					if (jsl-qnjsl<-1){
+						firstMap.put("JiNanShiJS",0);
+					}
+				}else {
+					firstMap.put("JiNanShiJS",1);
+				}
+			}else {
+				firstMap.put("JiNanShiJS",1);
+			}
+		}else {
+			firstMap.put("JiNanShiJS",1);
+		}
+
+		if ((Long) someMap.get("QingDaoShi")!=0L){
+			Long jiNanShiNum = (Long) someMap.get("QingDaoShi");
+			Long jiNanShiJS = (Long) someMap.get("QingDaoShi");
+			BigDecimal bg = new BigDecimal((float) jiNanShiJS / jiNanShiNum);
+			double jsl = (bg.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue())*100;
+			Long qnCheckNumsc = studentDao.getQNCheckNum(year-1,"青岛市");
+			Long qnJinShisc = 0L;
+			Long qnJinShild = 0L;
+			if (qnCheckNumsc!=0L){
+				qnJinShisc = studentDao.getThisYearJinShiCount(year - 1, "青岛市");
+			}
+			Long qnCheckNumld = liuDiaoDao.getQNCheckNum(year-1,"青岛市");
+			if (qnCheckNumld!=0L){
+				qnJinShild = liuDiaoDao.getThisYearJinShiCount(year-1,"青岛市");
+			}
+			long qnCheckNum = qnCheckNumld + qnCheckNumsc;
+			if (qnCheckNum!=0){
+				long qnJinShiNum = qnJinShisc + qnJinShild;
+				if (qnJinShiNum!=0){
+					bg = new BigDecimal((float) qnJinShiNum / qnCheckNum);
+					double qnjsl = (bg.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue())*100;
+					if (jsl-qnjsl>0){
+						firstMap.put("QingDaoShiJS",2);
+					}
+					if (jsl-qnjsl<0 && jsl-qnjsl>=-1){
+						firstMap.put("QingDaoShiJS",1);
+					}
+					if (jsl-qnjsl<-1){
+						firstMap.put("QingDaoShiJS",0);
+					}
+				}else {
+					firstMap.put("QingDaoShiJS",1);
+				}
+			}else {
+				firstMap.put("QingDaoShiJS",1);
+			}
+		}else {
+			firstMap.put("QingDaoShiJS",1);
+		}
+
+		if ((Long) someMap.get("ZiBoShi")!=0L){
+			Long jiNanShiNum = (Long) someMap.get("ZiBoShi");
+			Long jiNanShiJS = (Long) someMap.get("ZiBoShi");
+			BigDecimal bg = new BigDecimal((float) jiNanShiJS / jiNanShiNum);
+			double jsl = (bg.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue())*100;
+			Long qnCheckNumsc = studentDao.getQNCheckNum(year-1,"淄博市");
+			Long qnJinShisc = 0L;
+			Long qnJinShild = 0L;
+			if (qnCheckNumsc!=0L){
+				qnJinShisc = studentDao.getThisYearJinShiCount(year - 1, "淄博市");
+			}
+			Long qnCheckNumld = liuDiaoDao.getQNCheckNum(year-1,"淄博市");
+			if (qnCheckNumld!=0L){
+				qnJinShild = liuDiaoDao.getThisYearJinShiCount(year-1,"淄博市");
+			}
+			long qnCheckNum = qnCheckNumld + qnCheckNumsc;
+			if (qnCheckNum!=0){
+				long qnJinShiNum = qnJinShisc + qnJinShild;
+				if (qnJinShiNum!=0){
+					bg = new BigDecimal((float) qnJinShiNum / qnCheckNum);
+					double qnjsl = (bg.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue())*100;
+					if (jsl-qnjsl>0){
+						firstMap.put("ZiBoShiJS",2);
+					}
+					if (jsl-qnjsl<0 && jsl-qnjsl>=-1){
+						firstMap.put("ZiBoShiJS",1);
+					}
+					if (jsl-qnjsl<-1){
+						firstMap.put("ZiBoShiJS",0);
+					}
+				}else {
+					firstMap.put("ZiBoShiJS",1);
+				}
+			}else {
+				firstMap.put("ZiBoShiJS",1);
+			}
+		}else {
+			firstMap.put("ZiBoShiJS",1);
+		}
+
+		if ((Long) someMap.get("ZaoZhuangShi")!=0L){
+			Long jiNanShiNum = (Long) someMap.get("ZaoZhuangShi");
+			Long jiNanShiJS = (Long) someMap.get("ZaoZhuangShi");
+			BigDecimal bg = new BigDecimal((float) jiNanShiJS / jiNanShiNum);
+			double jsl = (bg.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue())*100;
+			Long qnCheckNumsc = studentDao.getQNCheckNum(year-1,"枣庄市");
+			Long qnJinShisc = 0L;
+			Long qnJinShild = 0L;
+			if (qnCheckNumsc!=0L){
+				qnJinShisc = studentDao.getThisYearJinShiCount(year - 1, "枣庄市");
+			}
+			Long qnCheckNumld = liuDiaoDao.getQNCheckNum(year-1,"枣庄市");
+			if (qnCheckNumld!=0L){
+				qnJinShild = liuDiaoDao.getThisYearJinShiCount(year-1,"枣庄市");
+			}
+			long qnCheckNum = qnCheckNumld + qnCheckNumsc;
+			if (qnCheckNum!=0){
+				long qnJinShiNum = qnJinShisc + qnJinShild;
+				if (qnJinShiNum!=0){
+					bg = new BigDecimal((float) qnJinShiNum / qnCheckNum);
+					double qnjsl = (bg.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue())*100;
+					if (jsl-qnjsl>0){
+						firstMap.put("ZaoZhuangShiJS",2);
+					}
+					if (jsl-qnjsl<0 && jsl-qnjsl>=-1){
+						firstMap.put("ZaoZhuangShiJS",1);
+					}
+					if (jsl-qnjsl<-1){
+						firstMap.put("ZaoZhuangShiJS",0);
+					}
+				}else {
+					firstMap.put("ZaoZhuangShiJS",1);
+				}
+			}else {
+				firstMap.put("ZaoZhuangShiJS",1);
+			}
+		}else {
+			firstMap.put("ZaoZhuangShiJS",1);
+		}
+
+		if ((Long) someMap.get("DongYingShi")!=0L){
+			Long jiNanShiNum = (Long) someMap.get("DongYingShi");
+			Long jiNanShiJS = (Long) someMap.get("DongYingShi");
+			BigDecimal bg = new BigDecimal((float) jiNanShiJS / jiNanShiNum);
+			double jsl = (bg.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue())*100;
+			Long qnCheckNumsc = studentDao.getQNCheckNum(year-1,"东营市");
+			Long qnJinShisc = 0L;
+			Long qnJinShild = 0L;
+			if (qnCheckNumsc!=0L){
+				qnJinShisc = studentDao.getThisYearJinShiCount(year - 1, "东营市");
+			}
+			Long qnCheckNumld = liuDiaoDao.getQNCheckNum(year-1,"东营市");
+			if (qnCheckNumld!=0L){
+				qnJinShild = liuDiaoDao.getThisYearJinShiCount(year-1,"东营市");
+			}
+			long qnCheckNum = qnCheckNumld + qnCheckNumsc;
+			if (qnCheckNum!=0){
+				long qnJinShiNum = qnJinShisc + qnJinShild;
+				if (qnJinShiNum!=0){
+					bg = new BigDecimal((float) qnJinShiNum / qnCheckNum);
+					double qnjsl = (bg.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue())*100;
+					if (jsl-qnjsl>0){
+						firstMap.put("DongYingShiJS",2);
+					}
+					if (jsl-qnjsl<0 && jsl-qnjsl>=-1){
+						firstMap.put("DongYingShiJS",1);
+					}
+					if (jsl-qnjsl<-1){
+						firstMap.put("DongYingShiJS",0);
+					}
+				}else {
+					firstMap.put("DongYingShiJS",1);
+				}
+			}else {
+				firstMap.put("DongYingShiJS",1);
+			}
+		}else {
+			firstMap.put("DongYingShiJS",1);
+		}
+
+		if ((Long) someMap.get("YanTaiShi")!=0L){
+			Long jiNanShiNum = (Long) someMap.get("YanTaiShi");
+			Long jiNanShiJS = (Long) someMap.get("YanTaiShi");
+			BigDecimal bg = new BigDecimal((float) jiNanShiJS / jiNanShiNum);
+			double jsl = (bg.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue())*100;
+			Long qnCheckNumsc = studentDao.getQNCheckNum(year-1,"烟台市");
+			Long qnJinShisc = 0L;
+			Long qnJinShild = 0L;
+			if (qnCheckNumsc!=0L){
+				qnJinShisc = studentDao.getThisYearJinShiCount(year - 1, "烟台市");
+			}
+			Long qnCheckNumld = liuDiaoDao.getQNCheckNum(year-1,"烟台市");
+			if (qnCheckNumld!=0L){
+				qnJinShild = liuDiaoDao.getThisYearJinShiCount(year-1,"烟台市");
+			}
+			long qnCheckNum = qnCheckNumld + qnCheckNumsc;
+			if (qnCheckNum!=0){
+				long qnJinShiNum = qnJinShisc + qnJinShild;
+				if (qnJinShiNum!=0){
+					bg = new BigDecimal((float) qnJinShiNum / qnCheckNum);
+					double qnjsl = (bg.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue())*100;
+					if (jsl-qnjsl>0){
+						firstMap.put("YanTaiShiJS",2);
+					}
+					if (jsl-qnjsl<0 && jsl-qnjsl>=-1){
+						firstMap.put("YanTaiShiJS",1);
+					}
+					if (jsl-qnjsl<-1){
+						firstMap.put("YanTaiShiJS",0);
+					}
+				}else {
+					firstMap.put("YanTaiShiJS",1);
+				}
+			}else {
+				firstMap.put("YanTaiShiJS",1);
+			}
+		}else {
+			firstMap.put("YanTaiShiJS",1);
+		}
+
+		if ((Long) someMap.get("WeiFangShi")!=0L){
+			Long jiNanShiNum = (Long) someMap.get("WeiFangShi");
+			Long jiNanShiJS = (Long) someMap.get("WeiFangShi");
+			BigDecimal bg = new BigDecimal((float) jiNanShiJS / jiNanShiNum);
+			double jsl = (bg.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue())*100;
+			Long qnCheckNumsc = studentDao.getQNCheckNum(year-1,"潍坊市");
+			Long qnJinShisc = 0L;
+			Long qnJinShild = 0L;
+			if (qnCheckNumsc!=0L){
+				qnJinShisc = studentDao.getThisYearJinShiCount(year - 1, "潍坊市");
+			}
+			Long qnCheckNumld = liuDiaoDao.getQNCheckNum(year-1,"潍坊市");
+			if (qnCheckNumld!=0L){
+				qnJinShild = liuDiaoDao.getThisYearJinShiCount(year-1,"潍坊市");
+			}
+			long qnCheckNum = qnCheckNumld + qnCheckNumsc;
+			if (qnCheckNum!=0){
+				long qnJinShiNum = qnJinShisc + qnJinShild;
+				if (qnJinShiNum!=0){
+					bg = new BigDecimal((float) qnJinShiNum / qnCheckNum);
+					double qnjsl = (bg.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue())*100;
+					if (jsl-qnjsl>0){
+						firstMap.put("WeiFangShiJS",2);
+					}
+					if (jsl-qnjsl<0 && jsl-qnjsl>=-1){
+						firstMap.put("WeiFangShiJS",1);
+					}
+					if (jsl-qnjsl<-1){
+						firstMap.put("WeiFangShiJS",0);
+					}
+				}else {
+					firstMap.put("WeiFangShiJS",1);
+				}
+			}else {
+				firstMap.put("WeiFangShiJS",1);
+			}
+		}else {
+			firstMap.put("WeiFangShiJS",1);
+		}
+
+		if ((Long) someMap.get("JiNingShi")!=0L){
+			Long jiNanShiNum = (Long) someMap.get("JiNingShi");
+			Long jiNanShiJS = (Long) someMap.get("JiNingShi");
+			BigDecimal bg = new BigDecimal((float) jiNanShiJS / jiNanShiNum);
+			double jsl = (bg.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue())*100;
+			Long qnCheckNumsc = studentDao.getQNCheckNum(year-1,"济宁市");
+			Long qnJinShisc = 0L;
+			Long qnJinShild = 0L;
+			if (qnCheckNumsc!=0L){
+				qnJinShisc = studentDao.getThisYearJinShiCount(year - 1, "济宁市");
+			}
+			Long qnCheckNumld = liuDiaoDao.getQNCheckNum(year-1,"济宁市");
+			if (qnCheckNumld!=0L){
+				qnJinShild = liuDiaoDao.getThisYearJinShiCount(year-1,"济宁市");
+			}
+			long qnCheckNum = qnCheckNumld + qnCheckNumsc;
+			if (qnCheckNum!=0){
+				long qnJinShiNum = qnJinShisc + qnJinShild;
+				if (qnJinShiNum!=0){
+					bg = new BigDecimal((float) qnJinShiNum / qnCheckNum);
+					double qnjsl = (bg.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue())*100;
+					if (jsl-qnjsl>0){
+						firstMap.put("JiNingShiJS",2);
+					}
+					if (jsl-qnjsl<0 && jsl-qnjsl>=-1){
+						firstMap.put("JiNingShiJS",1);
+					}
+					if (jsl-qnjsl<-1){
+						firstMap.put("JiNingShiJS",0);
+					}
+				}else {
+					firstMap.put("JiNingShiJS",1);
+				}
+			}else {
+				firstMap.put("JiNingShiJS",1);
+			}
+		}else {
+			firstMap.put("JiNingShiJS",1);
+		}
+
+		if ((Long) someMap.get("TaiAnShi")!=0L){
+			Long jiNanShiNum = (Long) someMap.get("TaiAnShi");
+			Long jiNanShiJS = (Long) someMap.get("TaiAnShi");
+			BigDecimal bg = new BigDecimal((float) jiNanShiJS / jiNanShiNum);
+			double jsl = (bg.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue())*100;
+			Long qnCheckNumsc = studentDao.getQNCheckNum(year-1,"泰安市");
+			Long qnJinShisc = 0L;
+			Long qnJinShild = 0L;
+			if (qnCheckNumsc!=0L){
+				qnJinShisc = studentDao.getThisYearJinShiCount(year - 1, "泰安市");
+			}
+			Long qnCheckNumld = liuDiaoDao.getQNCheckNum(year-1,"泰安市");
+			if (qnCheckNumld!=0L){
+				qnJinShild = liuDiaoDao.getThisYearJinShiCount(year-1,"泰安市");
+			}
+			long qnCheckNum = qnCheckNumld + qnCheckNumsc;
+			if (qnCheckNum!=0){
+				long qnJinShiNum = qnJinShisc + qnJinShild;
+				if (qnJinShiNum!=0){
+					bg = new BigDecimal((float) qnJinShiNum / qnCheckNum);
+					double qnjsl = (bg.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue())*100;
+					if (jsl-qnjsl>0){
+						firstMap.put("TaiAnShiJS",2);
+					}
+					if (jsl-qnjsl<0 && jsl-qnjsl>=-1){
+						firstMap.put("TaiAnShiJS",1);
+					}
+					if (jsl-qnjsl<-1){
+						firstMap.put("TaiAnShiJS",0);
+					}
+				}else {
+					firstMap.put("TaiAnShiJS",1);
+				}
+			}else {
+				firstMap.put("TaiAnShiJS",1);
+			}
+		}else {
+			firstMap.put("TaiAnShiJS",1);
+		}
+
+		if ((Long) someMap.get("WeiHaiShi")!=0L){
+			Long jiNanShiNum = (Long) someMap.get("WeiHaiShi");
+			Long jiNanShiJS = (Long) someMap.get("WeiHaiShi");
+			BigDecimal bg = new BigDecimal((float) jiNanShiJS / jiNanShiNum);
+			double jsl = (bg.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue())*100;
+			Long qnCheckNumsc = studentDao.getQNCheckNum(year-1,"威海市");
+			Long qnJinShisc = 0L;
+			Long qnJinShild = 0L;
+			if (qnCheckNumsc!=0L){
+				qnJinShisc = studentDao.getThisYearJinShiCount(year - 1, "威海市");
+			}
+			Long qnCheckNumld = liuDiaoDao.getQNCheckNum(year-1,"威海市");
+			if (qnCheckNumld!=0L){
+				qnJinShild = liuDiaoDao.getThisYearJinShiCount(year-1,"威海市");
+			}
+			long qnCheckNum = qnCheckNumld + qnCheckNumsc;
+			if (qnCheckNum!=0){
+				long qnJinShiNum = qnJinShisc + qnJinShild;
+				if (qnJinShiNum!=0){
+					bg = new BigDecimal((float) qnJinShiNum / qnCheckNum);
+					double qnjsl = (bg.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue())*100;
+					if (jsl-qnjsl>0){
+						firstMap.put("WeiHaiShiJS",2);
+					}
+					if (jsl-qnjsl<0 && jsl-qnjsl>=-1){
+						firstMap.put("WeiHaiShiJS",1);
+					}
+					if (jsl-qnjsl<-1){
+						firstMap.put("WeiHaiShiJS",0);
+					}
+				}else {
+					firstMap.put("WeiHaiShiJS",1);
+				}
+			}else {
+				firstMap.put("WeiHaiShiJS",1);
+			}
+		}else {
+			firstMap.put("WeiHaiShiJS",1);
+		}
+
+		if ((Long) someMap.get("RiZhaoShi")!=0L){
+			Long jiNanShiNum = (Long) someMap.get("RiZhaoShi");
+			Long jiNanShiJS = (Long) someMap.get("RiZhaoShi");
+			BigDecimal bg = new BigDecimal((float) jiNanShiJS / jiNanShiNum);
+			double jsl = (bg.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue())*100;
+			Long qnCheckNumsc = studentDao.getQNCheckNum(year-1,"日照市");
+			Long qnJinShisc = 0L;
+			Long qnJinShild = 0L;
+			if (qnCheckNumsc!=0L){
+				qnJinShisc = studentDao.getThisYearJinShiCount(year - 1, "日照市");
+			}
+			Long qnCheckNumld = liuDiaoDao.getQNCheckNum(year-1,"日照市");
+			if (qnCheckNumld!=0L){
+				qnJinShild = liuDiaoDao.getThisYearJinShiCount(year-1,"日照市");
+			}
+			long qnCheckNum = qnCheckNumld + qnCheckNumsc;
+			if (qnCheckNum!=0){
+				long qnJinShiNum = qnJinShisc + qnJinShild;
+				if (qnJinShiNum!=0){
+					bg = new BigDecimal((float) qnJinShiNum / qnCheckNum);
+					double qnjsl = (bg.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue())*100;
+					if (jsl-qnjsl>0){
+						firstMap.put("RiZhaoShiJS",2);
+					}
+					if (jsl-qnjsl<0 && jsl-qnjsl>=-1){
+						firstMap.put("RiZhaoShiJS",1);
+					}
+					if (jsl-qnjsl<-1){
+						firstMap.put("RiZhaoShiJS",0);
+					}
+				}else {
+					firstMap.put("RiZhaoShiJS",1);
+				}
+			}else {
+				firstMap.put("RiZhaoShiJS",1);
+			}
+		}else {
+			firstMap.put("RiZhaoShiJS",1);
+		}
+
+		if ((Long) someMap.get("BinZhouShi")!=0L){
+			Long jiNanShiNum = (Long) someMap.get("BinZhouShi");
+			Long jiNanShiJS = (Long) someMap.get("BinZhouShi");
+			BigDecimal bg = new BigDecimal((float) jiNanShiJS / jiNanShiNum);
+			double jsl = (bg.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue())*100;
+			Long qnCheckNumsc = studentDao.getQNCheckNum(year-1,"滨州市");
+			Long qnJinShisc = 0L;
+			Long qnJinShild = 0L;
+			if (qnCheckNumsc!=0L){
+				qnJinShisc = studentDao.getThisYearJinShiCount(year - 1, "滨州市");
+			}
+			Long qnCheckNumld = liuDiaoDao.getQNCheckNum(year-1,"滨州市");
+			if (qnCheckNumld!=0L){
+				qnJinShild = liuDiaoDao.getThisYearJinShiCount(year-1,"滨州市");
+			}
+			long qnCheckNum = qnCheckNumld + qnCheckNumsc;
+			if (qnCheckNum!=0){
+				long qnJinShiNum = qnJinShisc + qnJinShild;
+				if (qnJinShiNum!=0){
+					bg = new BigDecimal((float) qnJinShiNum / qnCheckNum);
+					double qnjsl = (bg.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue())*100;
+					if (jsl-qnjsl>0){
+						firstMap.put("BinZhouShiJS",2);
+					}
+					if (jsl-qnjsl<0 && jsl-qnjsl>=-1){
+						firstMap.put("BinZhouShiJS",1);
+					}
+					if (jsl-qnjsl<-1){
+						firstMap.put("BinZhouShiJS",0);
+					}
+				}else {
+					firstMap.put("BinZhouShiJS",1);
+				}
+			}else {
+				firstMap.put("BinZhouShiJS",1);
+			}
+		}else {
+			firstMap.put("BinZhouShiJS",1);
+		}
+
+		if ((Long) someMap.get("LinYiShi")!=0L){
+			Long jiNanShiNum = (Long) someMap.get("LinYiShi");
+			Long jiNanShiJS = (Long) someMap.get("LinYiShi");
+			BigDecimal bg = new BigDecimal((float) jiNanShiJS / jiNanShiNum);
+			double jsl = (bg.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue())*100;
+			Long qnCheckNumsc = studentDao.getQNCheckNum(year-1,"临沂市");
+			Long qnJinShisc = 0L;
+			Long qnJinShild = 0L;
+			if (qnCheckNumsc!=0L){
+				qnJinShisc = studentDao.getThisYearJinShiCount(year - 1, "临沂市");
+			}
+			Long qnCheckNumld = liuDiaoDao.getQNCheckNum(year-1,"临沂市");
+			if (qnCheckNumld!=0L){
+				qnJinShild = liuDiaoDao.getThisYearJinShiCount(year-1,"临沂市");
+			}
+			long qnCheckNum = qnCheckNumld + qnCheckNumsc;
+			if (qnCheckNum!=0){
+				long qnJinShiNum = qnJinShisc + qnJinShild;
+				if (qnJinShiNum!=0){
+					bg = new BigDecimal((float) qnJinShiNum / qnCheckNum);
+					double qnjsl = (bg.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue())*100;
+					if (jsl-qnjsl>0){
+						firstMap.put("LinYiShiJS",2);
+					}
+					if (jsl-qnjsl<0 && jsl-qnjsl>=-1){
+						firstMap.put("LinYiShiJS",1);
+					}
+					if (jsl-qnjsl<-1){
+						firstMap.put("LinYiShiJS",0);
+					}
+				}else {
+					firstMap.put("LinYiShiJS",1);
+				}
+			}else {
+				firstMap.put("LinYiShiJS",1);
+			}
+		}else {
+			firstMap.put("LinYiShiJS",1);
+		}
+
+		if ((Long) someMap.get("DeZhouShi")!=0L){
+			Long jiNanShiNum = (Long) someMap.get("DeZhouShi");
+			Long jiNanShiJS = (Long) someMap.get("DeZhouShi");
+			BigDecimal bg = new BigDecimal((float) jiNanShiJS / jiNanShiNum);
+			double jsl = (bg.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue())*100;
+			Long qnCheckNumsc = studentDao.getQNCheckNum(year-1,"德州市");
+			Long qnJinShisc = 0L;
+			Long qnJinShild = 0L;
+			if (qnCheckNumsc!=0L){
+				qnJinShisc = studentDao.getThisYearJinShiCount(year - 1, "德州市");
+			}
+			Long qnCheckNumld = liuDiaoDao.getQNCheckNum(year-1,"德州市");
+			if (qnCheckNumld!=0L){
+				qnJinShild = liuDiaoDao.getThisYearJinShiCount(year-1,"德州市");
+			}
+			long qnCheckNum = qnCheckNumld + qnCheckNumsc;
+			if (qnCheckNum!=0){
+				long qnJinShiNum = qnJinShisc + qnJinShild;
+				if (qnJinShiNum!=0){
+					bg = new BigDecimal((float) qnJinShiNum / qnCheckNum);
+					double qnjsl = (bg.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue())*100;
+					if (jsl-qnjsl>0){
+						firstMap.put("DeZhouShiJS",2);
+					}
+					if (jsl-qnjsl<0 && jsl-qnjsl>=-1){
+						firstMap.put("DeZhouShiJS",1);
+					}
+					if (jsl-qnjsl<-1){
+						firstMap.put("DeZhouShiJS",0);
+					}
+				}else {
+					firstMap.put("DeZhouShiJS",1);
+				}
+			}else {
+				firstMap.put("DeZhouShiJS",1);
+			}
+		}else {
+			firstMap.put("DeZhouShiJS",1);
+		}
+
+		if ((Long) someMap.get("HeZeShi")!=0L){
+			Long jiNanShiNum = (Long) someMap.get("HeZeShi");
+			Long jiNanShiJS = (Long) someMap.get("HeZeShi");
+			BigDecimal bg = new BigDecimal((float) jiNanShiJS / jiNanShiNum);
+			double jsl = (bg.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue())*100;
+			Long qnCheckNumsc = studentDao.getQNCheckNum(year-1,"菏泽市");
+			Long qnJinShisc = 0L;
+			Long qnJinShild = 0L;
+			if (qnCheckNumsc!=0L){
+				qnJinShisc = studentDao.getThisYearJinShiCount(year - 1, "菏泽市");
+			}
+			Long qnCheckNumld = liuDiaoDao.getQNCheckNum(year-1,"菏泽市");
+			if (qnCheckNumld!=0L){
+				qnJinShild = liuDiaoDao.getThisYearJinShiCount(year-1,"菏泽市");
+			}
+			long qnCheckNum = qnCheckNumld + qnCheckNumsc;
+			if (qnCheckNum!=0){
+				long qnJinShiNum = qnJinShisc + qnJinShild;
+				if (qnJinShiNum!=0){
+					bg = new BigDecimal((float) qnJinShiNum / qnCheckNum);
+					double qnjsl = (bg.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue())*100;
+					if (jsl-qnjsl>0){
+						firstMap.put("HeZeShiJS",2);
+					}
+					if (jsl-qnjsl<0 && jsl-qnjsl>=-1){
+						firstMap.put("HeZeShiJS",1);
+					}
+					if (jsl-qnjsl<-1){
+						firstMap.put("HeZeShiJS",0);
+					}
+				}else {
+					firstMap.put("HeZeShiJS",1);
+				}
+			}else {
+				firstMap.put("HeZeShiJS",1);
+			}
+		}else {
+			firstMap.put("HeZeShiJS",1);
+		}
+
+		if ((Long) someMap.get("LiaoChengShi")!=0L){
+			Long jiNanShiNum = (Long) someMap.get("LiaoChengShi");
+			Long jiNanShiJS = (Long) someMap.get("LiaoChengShi");
+			BigDecimal bg = new BigDecimal((float) jiNanShiJS / jiNanShiNum);
+			double jsl = (bg.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue())*100;
+			Long qnCheckNumsc = studentDao.getQNCheckNum(year-1,"聊城市");
+			Long qnJinShisc = 0L;
+			Long qnJinShild = 0L;
+			if (qnCheckNumsc!=0L){
+				qnJinShisc = studentDao.getThisYearJinShiCount(year - 1, "聊城市");
+			}
+			Long qnCheckNumld = liuDiaoDao.getQNCheckNum(year-1,"聊城市");
+			if (qnCheckNumld!=0L){
+				qnJinShild = liuDiaoDao.getThisYearJinShiCount(year-1,"聊城市");
+			}
+			long qnCheckNum = qnCheckNumld + qnCheckNumsc;
+			if (qnCheckNum!=0){
+				long qnJinShiNum = qnJinShisc + qnJinShild;
+				if (qnJinShiNum!=0){
+					bg = new BigDecimal((float) qnJinShiNum / qnCheckNum);
+					double qnjsl = (bg.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue())*100;
+					if (jsl-qnjsl>0){
+						firstMap.put("LiaoChengShiJS",2);
+					}
+					if (jsl-qnjsl<0 && jsl-qnjsl>=-1){
+						firstMap.put("LiaoChengShiJS",1);
+					}
+					if (jsl-qnjsl<-1){
+						firstMap.put("LiaoChengShiJS",0);
+					}
+				}else {
+					firstMap.put("LiaoChengShiJS",1);
+				}
+			}else {
+				firstMap.put("LiaoChengShiJS",1);
+			}
+		}else {
+			firstMap.put("LiaoChengShiJS",1);
+		}
+
+		if ((Long) someMap.get("LaiWuShi")!=0L){
+			Long jiNanShiNum = (Long) someMap.get("LaiWuShi");
+			Long jiNanShiJS = (Long) someMap.get("LaiWuShi");
+			BigDecimal bg = new BigDecimal((float) jiNanShiJS / jiNanShiNum);
+			double jsl = (bg.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue())*100;
+			Long qnCheckNumsc = studentDao.getQNCheckNum(year-1,"莱芜市");
+			qnCheckNumsc+=studentDao.getQNCheckNum(year-1,"莱芜区");
+			Long qnJinShisc = 0L;
+			Long qnJinShild = 0L;
+			if (qnCheckNumsc!=0L){
+				qnJinShisc = studentDao.getThisYearJinShiCount(year - 1, "莱芜市");
+				qnJinShisc += studentDao.getThisYearJinShiCount(year - 1, "莱芜区");
+			}
+			Long qnCheckNumld = liuDiaoDao.getQNCheckNum(year-1,"莱芜市");
+			qnCheckNumld += liuDiaoDao.getQNCheckNum(year-1,"莱芜区");
+			if (qnCheckNumld!=0L){
+				qnJinShild = liuDiaoDao.getThisYearJinShiCount(year-1,"莱芜市");
+				qnJinShild += liuDiaoDao.getThisYearJinShiCount(year-1,"莱芜区");
+			}
+			long qnCheckNum = qnCheckNumld + qnCheckNumsc;
+			if (qnCheckNum!=0){
+				long qnJinShiNum = qnJinShisc + qnJinShild;
+				if (qnJinShiNum!=0){
+					bg = new BigDecimal((float) qnJinShiNum / qnCheckNum);
+					double qnjsl = (bg.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue())*100;
+					if (jsl-qnjsl>0){
+						firstMap.put("LaiWuShiJS",2);
+					}
+					if (jsl-qnjsl<0 && jsl-qnjsl>=-1){
+						firstMap.put("LaiWuShiJS",1);
+					}
+					if (jsl-qnjsl<-1){
+						firstMap.put("LaiWuShiJS",0);
+					}
+				}else {
+					firstMap.put("LaiWuShiJS",1);
+				}
+			}else {
+				firstMap.put("LaiWuShiJS",1);
+			}
+		}else {
+			firstMap.put("LaiWuShiJS",1);
+		}
+	}
+
+	private Map<String,Object> jiSuanJinShi(List<Map<String, Long>> thisYearCountForld, List<Map<String, Long>> thisYearCountForsc,int year) {
+		Map<String,Object> smoeMap = new HashMap<>();
+		smoeMap.put("JiNanShi",0L);
+		smoeMap.put("QingDaoShi",0L);
+		smoeMap.put("ZiBoShi",0L);
+		smoeMap.put("ZaoZhuangShi",0L);
+		smoeMap.put("DongYingShi",0L);
+		smoeMap.put("YanTaiShi",0L);
+		smoeMap.put("WeiFangShi",0L);
+		smoeMap.put("JiNingShi",0L);
+		smoeMap.put("TaiAnShi",0L);
+		smoeMap.put("WeiHaiShi",0L);
+		smoeMap.put("RiZhaoShi",0L);
+		smoeMap.put("BinZhouShi",0L);
+		smoeMap.put("LinYiShi",0L);
+		smoeMap.put("DeZhouShi",0L);
+		smoeMap.put("HeZeShi",0L);
+		smoeMap.put("LiaoChengShi",0L);
+		smoeMap.put("LaiWuShi",0L);
+
+		smoeMap.put("JiNanShiJS",0L);
+		smoeMap.put("QingDaoShiJS",0L);
+		smoeMap.put("ZiBoShiJS",0L);
+		smoeMap.put("ZaoZhuangShiJS",0L);
+		smoeMap.put("DongYingShiJS",0L);
+		smoeMap.put("YanTaiShiJS",0L);
+		smoeMap.put("WeiFangShiJS",0L);
+		smoeMap.put("JiNingShiJS",0L);
+		smoeMap.put("TaiAnShiJS",0L);
+		smoeMap.put("WeiHaiShiJS",0L);
+		smoeMap.put("RiZhaoShiJS",0L);
+		smoeMap.put("BinZhouShiJS",0L);
+		smoeMap.put("LinYiShiJS",0L);
+		smoeMap.put("DeZhouShiJS",0L);
+		smoeMap.put("HeZeShiJS",0L);
+		smoeMap.put("LiaoChengShiJS",0L);
+		smoeMap.put("LaiWuShiJS",0L);
+		for (Map<String, Long> scresult : thisYearCountForsc) {
+			if ("济南市".equals(scresult.get("CityName"))){
+				smoeMap.put("JiNanShi",(Long)smoeMap.get("JiNanShi")+scresult.get("num"));
+				smoeMap.put("JiNanShiJS",(Long)smoeMap.get("JiNanShiJS")+studentDao.getThisYearJinShiCount(year, "济南市"));
+			}
+			if ("青岛市".equals(scresult.get("CityName"))){
+				smoeMap.put("QingDaoShi",(Long)smoeMap.get("QingDaoShi")+scresult.get("num"));
+				smoeMap.put("QingDaoShiJS",(Long)smoeMap.get("QingDaoShiJS")+studentDao.getThisYearJinShiCount(year, "青岛市"));
+			}
+			if ("淄博市".equals(scresult.get("CityName"))){
+				smoeMap.put("ZiBoShi",(Long)smoeMap.get("ZiBoShi")+scresult.get("num"));
+				smoeMap.put("ZiBoShiJS",(Long)smoeMap.get("ZiBoShiJS")+studentDao.getThisYearJinShiCount(year, "淄博市"));
+			}
+			if ("枣庄市".equals(scresult.get("CityName"))){
+				smoeMap.put("ZaoZhuangShi",(Long)smoeMap.get("ZaoZhuangShi")+scresult.get("num"));
+				smoeMap.put("ZaoZhuangShiJS",(Long)smoeMap.get("ZaoZhuangShiJS")+studentDao.getThisYearJinShiCount(year, "枣庄市"));
+			}
+			if ("东营市".equals(scresult.get("CityName"))){
+				smoeMap.put("DongYingShi",(Long)smoeMap.get("DongYingShi")+scresult.get("num"));
+				smoeMap.put("DongYingShiJS",(Long)smoeMap.get("DongYingShiJS")+studentDao.getThisYearJinShiCount(year, "东营市"));
+			}
+			if ("烟台市".equals(scresult.get("CityName"))){
+				smoeMap.put("YanTaiShi",(Long)smoeMap.get("YanTaiShi")+scresult.get("num"));
+				smoeMap.put("YanTaiShiJS",(Long)smoeMap.get("YanTaiShiJS")+studentDao.getThisYearJinShiCount(year, "烟台市"));
+			}
+			if ("潍坊市".equals(scresult.get("CityName"))){
+				smoeMap.put("WeiFangShi",(Long)smoeMap.get("WeiFangShi")+scresult.get("num"));
+				smoeMap.put("WeiFangShiJS",(Long)smoeMap.get("WeiFangShiJS")+studentDao.getThisYearJinShiCount(year, "潍坊市"));
+			}
+			if ("济宁市".equals(scresult.get("CityName"))){
+				smoeMap.put("JiNingShi",(Long)smoeMap.get("JiNingShi")+scresult.get("num"));
+				smoeMap.put("JiNingShiJS",(Long)smoeMap.get("JiNingShiJS")+studentDao.getThisYearJinShiCount(year, "济宁市"));
+			}
+			if ("泰安市".equals(scresult.get("CityName"))){
+				smoeMap.put("TaiAnShi",(Long)smoeMap.get("TaiAnShi")+scresult.get("num"));
+				smoeMap.put("TaiAnShiJS",(Long)smoeMap.get("TaiAnShiJS")+studentDao.getThisYearJinShiCount(year, "泰安市"));
+			}
+			if ("威海市".equals(scresult.get("CityName"))){
+				smoeMap.put("WeiHaiShi",(Long)smoeMap.get("WeiHaiShi")+scresult.get("num"));
+				smoeMap.put("WeiHaiShiJS",(Long)smoeMap.get("WeiHaiShiJS")+studentDao.getThisYearJinShiCount(year, "威海市"));
+			}
+			if ("日照市".equals(scresult.get("CityName"))){
+				smoeMap.put("RiZhaoShi",(Long)smoeMap.get("RiZhaoShi")+scresult.get("num"));
+				smoeMap.put("RiZhaoShiJS",(Long)smoeMap.get("RiZhaoShiJS")+studentDao.getThisYearJinShiCount(year, "日照市"));
+			}
+			if ("滨州市".equals(scresult.get("CityName"))){
+				smoeMap.put("BinZhouShi",(Long)smoeMap.get("BinZhouShi")+scresult.get("num"));
+				smoeMap.put("BinZhouShiJS",(Long)smoeMap.get("BinZhouShiJS")+studentDao.getThisYearJinShiCount(year, "滨州市"));
+			}
+			if ("临沂市".equals(scresult.get("CityName"))){
+				smoeMap.put("LinYiShi",(Long)smoeMap.get("LinYiShi")+scresult.get("num"));
+				smoeMap.put("LinYiShiJS",(Long)smoeMap.get("LinYiShiJS")+studentDao.getThisYearJinShiCount(year, "临沂市"));
+			}
+			if ("德州市".equals(scresult.get("CityName"))){
+				smoeMap.put("DeZhouShi",(Long)smoeMap.get("DeZhouShi")+scresult.get("num"));
+				smoeMap.put("DeZhouShiJS",(Long)smoeMap.get("DeZhouShiJS")+studentDao.getThisYearJinShiCount(year, "德州市"));
+			}
+			if ("菏泽市".equals(scresult.get("CityName"))){
+				smoeMap.put("HeZeShi",(Long)smoeMap.get("HeZeShi")+scresult.get("num"));
+				smoeMap.put("HeZeShiJS",(Long)smoeMap.get("HeZeShiJS")+studentDao.getThisYearJinShiCount(year, "菏泽市"));
+			}
+			if ("聊城市".equals(scresult.get("CityName"))){
+				smoeMap.put("LiaoChengShi",(Long)smoeMap.get("LiaoChengShi")+scresult.get("num"));
+				smoeMap.put("LiaoChengShiJS",(Long)smoeMap.get("LiaoChengShiJS")+studentDao.getThisYearJinShiCount(year, "聊城市"));
+			}
+			if ("莱芜区".equals(scresult.get("CityName"))){
+				smoeMap.put("LaiWuShi",(Long)smoeMap.get("LaiWuShi")+scresult.get("num"));
+				smoeMap.put("LaiWuShiJS",(Long)smoeMap.get("LaiWuShiJS")+studentDao.getThisYearJinShiCount(year, "莱芜区"));
+			}
+			if ("莱芜市".equals(scresult.get("CityName"))){
+				smoeMap.put("LaiWuShi",(Long)smoeMap.get("LaiWuShi")+scresult.get("num"));
+				smoeMap.put("LaiWuShiJS",(Long)smoeMap.get("LaiWuShiJS")+studentDao.getThisYearJinShiCount(year, "莱芜市"));
+			}
+		}
+
+		for (Map<String, Long> ldresult : thisYearCountForld) {
+			if ("济南市".equals(ldresult.get("CityName"))){
+				smoeMap.put("JiNanShi",(Long)smoeMap.get("JiNanShi")+ldresult.get("num"));
+				smoeMap.put("JiNanShiJS",(Long)smoeMap.get("JiNanShiJS")+liuDiaoDao.getThisYearJinShiCount(year, "济南市"));
+			}
+			if ("青岛市".equals(ldresult.get("CityName"))){
+				smoeMap.put("QingDaoShi",(Long)smoeMap.get("QingDaoShi")+ldresult.get("num"));
+				smoeMap.put("QingDaoShiJS",(Long)smoeMap.get("QingDaoShiJS")+liuDiaoDao.getThisYearJinShiCount(year, "青岛市"));
+			}
+			if ("淄博市".equals(ldresult.get("CityName"))){
+				smoeMap.put("ZiBoShi",(Long)smoeMap.get("ZiBoShi")+ldresult.get("num"));
+				smoeMap.put("ZiBoShiJS",(Long)smoeMap.get("ZiBoShiJS")+liuDiaoDao.getThisYearJinShiCount(year, "淄博市"));
+			}
+			if ("枣庄市".equals(ldresult.get("CityName"))){
+				smoeMap.put("ZaoZhuangShi",(Long)smoeMap.get("ZaoZhuangShi")+ldresult.get("num"));
+				smoeMap.put("ZaoZhuangShiJS",(Long)smoeMap.get("ZaoZhuangShiJS")+liuDiaoDao.getThisYearJinShiCount(year, "枣庄市"));
+			}
+			if ("东营市".equals(ldresult.get("CityName"))){
+				smoeMap.put("DongYingShi",(Long)smoeMap.get("DongYingShi")+ldresult.get("num"));
+				smoeMap.put("DongYingShiJS",(Long)smoeMap.get("DongYingShiJS")+liuDiaoDao.getThisYearJinShiCount(year, "东营市"));
+			}
+			if ("烟台市".equals(ldresult.get("CityName"))){
+				smoeMap.put("YanTaiShi",(Long)smoeMap.get("YanTaiShi")+ldresult.get("num"));
+				smoeMap.put("YanTaiShiJS",(Long)smoeMap.get("YanTaiShiJS")+liuDiaoDao.getThisYearJinShiCount(year, "烟台市"));
+			}
+			if ("潍坊市".equals(ldresult.get("CityName"))){
+				smoeMap.put("WeiFangShi",(Long)smoeMap.get("WeiFangShi")+ldresult.get("num"));
+				smoeMap.put("WeiFangShiJS",(Long)smoeMap.get("WeiFangShiJS")+liuDiaoDao.getThisYearJinShiCount(year, "潍坊市"));
+			}
+			if ("济宁市".equals(ldresult.get("CityName"))){
+				smoeMap.put("JiNingShi",(Long)smoeMap.get("JiNingShi")+ldresult.get("num"));
+				smoeMap.put("JiNingShiJS",(Long)smoeMap.get("JiNingShiJS")+liuDiaoDao.getThisYearJinShiCount(year, "济宁市"));
+			}
+			if ("泰安市".equals(ldresult.get("CityName"))){
+				smoeMap.put("TaiAnShi",(Long)smoeMap.get("TaiAnShi")+ldresult.get("num"));
+				smoeMap.put("TaiAnShiJS",(Long)smoeMap.get("TaiAnShiJS")+liuDiaoDao.getThisYearJinShiCount(year, "泰安市"));
+			}
+			if ("威海市".equals(ldresult.get("CityName"))){
+				smoeMap.put("WeiHaiShi",(Long)smoeMap.get("WeiHaiShi")+ldresult.get("num"));
+				smoeMap.put("WeiHaiShiJS",(Long)smoeMap.get("WeiHaiShiJS")+liuDiaoDao.getThisYearJinShiCount(year, "威海市"));
+			}
+			if ("日照市".equals(ldresult.get("CityName"))){
+				smoeMap.put("RiZhaoShi",(Long)smoeMap.get("RiZhaoShi")+ldresult.get("num"));
+				smoeMap.put("RiZhaoShiJS",(Long)smoeMap.get("RiZhaoShiJS")+liuDiaoDao.getThisYearJinShiCount(year, "日照市"));
+			}
+			if ("滨州市".equals(ldresult.get("CityName"))){
+				smoeMap.put("BinZhouShi",(Long)smoeMap.get("BinZhouShi")+ldresult.get("num"));
+				smoeMap.put("BinZhouShiJS",(Long)smoeMap.get("BinZhouShiJS")+liuDiaoDao.getThisYearJinShiCount(year, "滨州市"));
+			}
+			if ("临沂市".equals(ldresult.get("CityName"))){
+				smoeMap.put("LinYiShi",(Long)smoeMap.get("LinYiShi")+ldresult.get("num"));
+				smoeMap.put("LinYiShiJS",(Long)smoeMap.get("LinYiShiJS")+liuDiaoDao.getThisYearJinShiCount(year, "临沂市"));
+			}
+			if ("德州市".equals(ldresult.get("CityName"))){
+				smoeMap.put("DeZhouShi",(Long)smoeMap.get("DeZhouShi")+ldresult.get("num"));
+				smoeMap.put("DeZhouShiJS",(Long)smoeMap.get("DeZhouShiJS")+liuDiaoDao.getThisYearJinShiCount(year, "德州市"));
+			}
+			if ("菏泽市".equals(ldresult.get("CityName"))){
+				smoeMap.put("HeZeShi",(Long)smoeMap.get("HeZeShi")+ldresult.get("num"));
+				smoeMap.put("HeZeShiJS",(Long)smoeMap.get("HeZeShiJS")+liuDiaoDao.getThisYearJinShiCount(year, "菏泽市"));
+			}
+			if ("聊城市".equals(ldresult.get("CityName"))){
+				smoeMap.put("LiaoChengShi",(Long)smoeMap.get("LiaoChengShi")+ldresult.get("num"));
+				smoeMap.put("LiaoChengShiJS",(Long)smoeMap.get("LiaoChengShiJS")+liuDiaoDao.getThisYearJinShiCount(year, "聊城市"));
+			}
+			if ("莱芜区".equals(ldresult.get("CityName"))){
+				smoeMap.put("LaiWuShi",(Long)smoeMap.get("LaiWuShi")+ldresult.get("num"));
+				smoeMap.put("LaiWuShiJS",(Long)smoeMap.get("LaiWuShiJS")+liuDiaoDao.getThisYearJinShiCount(year, "莱芜区"));
+			}
+			if ("莱芜市".equals(ldresult.get("CityName"))){
+				smoeMap.put("LaiWuShi",(Long)smoeMap.get("LaiWuShi")+ldresult.get("num"));
+				smoeMap.put("LaiWuShiJS",(Long)smoeMap.get("LaiWuShiJS")+liuDiaoDao.getThisYearJinShiCount(year, "莱芜市"));
+			}
+		}
+
+		return smoeMap;
+	}
 
 
 	static void addEveryYearCount(Map<String,Long> resultMap,List<Map<String,Long>> dataMap){
@@ -1216,9 +2104,76 @@ public class ShaichaStudentServiceImpl implements ShaichaStudentService {
 			AddAreaCount(areaMap,shaichaNewAreaCount);
 			AddAreaCount(areaMap,liudiaoOldAreaCount);
 			AddAreaCount(areaMap,liudiaoNewAreaCount);
+
+			Calendar instance = Calendar.getInstance();
+			int year = instance.get(Calendar.YEAR);
+
+			 getThisYearCheck(areaMap,checkCity,areaList,year);
+
+
 			redisTemplate.opsForHash().putAll(checkCity+"AreaData",areaMap);
 		}
 		return areaMap;
+	}
+
+	private void getThisYearCheck(Map<String, Object> areaMap,String checkCity, String[] areaList, int year) {
+		for (String areaName : areaList) {
+			Long thisYearCountSc = studentDao.getThisYearCheckCountForArea(checkCity,areaName,year);
+			Long thisYearCountld = liuDiaoDao.getThisYearCheckCountForArea(checkCity, areaName, year);
+			long thisYearCount = thisYearCountSc + thisYearCountld;
+			if (thisYearCount!=0){
+				long scJsCount = 0;
+				long ldJsCount = 0;
+				if (thisYearCountSc!=0){
+					scJsCount = studentDao.getThisYearJinShiCountForArea(checkCity,areaName,year);
+				}
+				if (thisYearCountld!=0){
+					ldJsCount = liuDiaoDao.getThisYearJinShiCountForArea(checkCity,areaName,year);
+				}
+				long thisYearJsCount = scJsCount + ldJsCount;
+				if (thisYearJsCount!=0){
+					BigDecimal bg = new BigDecimal((float) thisYearJsCount / thisYearCount);
+					double jsl = (bg.setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue()) * 100;
+					Long scQNCheckNum = studentDao.getThisYearCheckCountForArea(checkCity, areaName, year - 1);
+					Long ldQNCheckNum = liuDiaoDao.getThisYearCheckCountForArea(checkCity, areaName, year - 1);
+					long qnCheckNum = scQNCheckNum + ldQNCheckNum;
+					if (qnCheckNum!=0){
+						long scQNJsCount = 0;
+						long ldQNJsCount = 0;
+						if (scQNCheckNum!=0){
+							scQNJsCount = studentDao.getThisYearJinShiCountForArea(checkCity,areaName,year-1);
+						}
+						if (ldQNCheckNum!=0){
+							ldQNJsCount = liuDiaoDao.getThisYearJinShiCountForArea(checkCity,areaName,year-1);
+						}
+						long qnJsNum = scQNJsCount + ldQNJsCount;
+						if (qnJsNum!=0){
+							bg = new BigDecimal((float)qnJsNum/qnCheckNum);
+							double qnjsl = (bg.setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue()) * 100;
+							if (jsl-qnjsl>0){
+								areaMap.put(areaName+"JS",2);
+							}
+							if (jsl-qnjsl<0 && jsl-qnjsl<-1){
+								areaMap.put(areaName+"JS",0);
+							}
+							if (jsl-qnjsl<0 && jsl-qnjsl>=-1){
+								areaMap.put(areaName+"JS",1);
+							}
+						}else {
+							areaMap.put(areaName+"JS",0);
+						}
+					}else {
+						areaMap.put(areaName+"JS",0);
+					}
+				}else {
+					areaMap.put(areaName+"JS",0);
+				}
+			}else {
+				areaMap.put(areaName+"JS",1);
+			}
+		}
+
+
 	}
 
 	@Override

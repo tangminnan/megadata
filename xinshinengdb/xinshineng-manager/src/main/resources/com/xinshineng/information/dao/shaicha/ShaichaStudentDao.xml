@@ -741,6 +741,63 @@ LIMIT #{i},#{j}
 		GROUP BY
 		 	sch.`CityName`
 	</select>
+	<select id="getThisYearCheckCount" resultType="map">
+		SELECT
+			sch.`CityName`,COUNT(*) num
+		FROM
+			s_student_new stu,s_school_new sch
+		WHERE
+			stu.school_id = sch.`id`
+		AND
+			sch.`ProvinceCode`='370000' AND DATE_FORMAT(stu.`last_check_time`,'%Y') = #{year}
+		GROUP BY
+			sch.`CityName`;
+	</select>
+	<select id="getThisYearCheckCountForArea" resultType="long">
+SELECT
+COUNT(*) num
+FROM
+s_student_new stu,s_school_new sch
+WHERE
+stu.school_id = sch.`id`
+AND
+sch.`ProvinceCode`='370000' AND DATE_FORMAT(stu.`last_check_time`,'%Y') = #{year} AND sch.`CityName`=#{checkCity} AND sch.`AreaName`=#{areaName}
+	</select>
+	<select id="getQNCheckNum" resultType="long">
+		SELECT
+		COUNT(*) num
+		FROM
+		s_student_new stu,s_school_new sch
+		WHERE
+		stu.school_id = sch.`id`
+		AND
+		sch.`ProvinceCode`='370000' AND DATE_FORMAT(stu.`last_check_time`,'%Y') = #{year}
+		AND sch.`CityName`=#{cityName}
+	</select>
+	<select id="getThisYearJinShiCount" resultType="long">
+		SELECT COUNT(naked) num FROM (SELECT
+		LEAST(stu.`naked_farvision_od`,stu.`naked_farvision_os`) naked,LEAST(stu.`dengxiaoqiujingl`,stu.`dengxiaoqiujingr`) dxqj
+		FROM
+		s_student_new stu,s_school_new sch
+		WHERE
+		stu.school_id = sch.`id`
+		AND
+		sch.`ProvinceCode`='370000' AND DATE_FORMAT(stu.`last_check_time`,'%Y') = #{year} AND sch.`CityName`= #{cityName}
+		AND stu.`naked_farvision_od` IS NOT NULL AND stu.`naked_farvision_os` IS NOT NULL AND stu.`dengxiaoqiujingl` IS NOT NULL AND stu.`dengxiaoqiujingr` IS NOT NULL) stu
+		WHERE stu.naked &lt; 5.0 AND stu.dxqj &lt; -0.5
+	</select>
+	<select id="getThisYearJinShiCountForArea" resultType="long">
+		SELECT COUNT(naked) num FROM (SELECT
+		LEAST(stu.`naked_farvision_od`,stu.`naked_farvision_os`) naked,LEAST(stu.`dengxiaoqiujingl`,stu.`dengxiaoqiujingr`) dxqj
+		FROM
+		s_student_new stu,s_school_new sch
+		WHERE
+		stu.school_id = sch.`id`
+		AND
+		sch.`ProvinceCode`='370000' AND DATE_FORMAT(stu.`last_check_time`,'%Y') = #{year} AND sch.`CityName`= #{checkCity} and sch.`AreaName` = #{areaName}
+		AND stu.`naked_farvision_od` IS NOT NULL AND stu.`naked_farvision_os` IS NOT NULL AND stu.`dengxiaoqiujingl` IS NOT NULL AND stu.`dengxiaoqiujingr` IS NOT NULL) stu
+		WHERE stu.naked &lt; 5.0 AND stu.dxqj &lt; -0.5
+	</select>
 	<select id="getShaiChaTotalOld" resultType="java.util.Map">
 		SELECT
 			sch.`CityName`,COUNT(*) num
@@ -1954,5 +2011,63 @@ WHERE NAKED != '塑形镜' AND NAKED !='其他' AND NAKED !='' LIMIT 0,50
 (SELECT stu.id,cor.corneal_mm mmR FROM s_student_new stu,s_result_optometry_new opt,s_result_corneal_new cor WHERE stu.id = opt.student_id AND opt.t_optometry_id = cor.t_optometry_id AND stu.sys_id =#{sys_id} AND cor.type='AVG' AND cor.ifRL='R'
 ) stu2
 where stu1.id=stu2.id limit 0,30
+	</select>
+
+	<select id="getScYuCe" resultType="map">
+SELECT stu.`id`,stu.`student_sex` sex ,stu.last_check_time checkTime,DATE_FORMAT(stu.`last_check_time`,'%Y')-DATE_FORMAT(stu.`birthday`,'%Y') age,stu.`dengxiaoqiujingl` DXQJL,stu.`dengxiaoqiujingr` DXQJR,stu.`naked_farvision_od` NakedOd,stu.`naked_farvision_os` NakedOs
+FROM s_student_new stu,s_school_new sch WHERE stu.`school_id` = sch.`id` AND stu.`dengxiaoqiujingl` IS NOT NULL AND stu.`dengxiaoqiujingr` IS NOT NULL AND stu.`naked_farvision_od` IS NOT NULL AND stu.`naked_farvision_os` IS NOT NULL AND stu.last_check_time IS NOT NULL AND stu.birthday IS NOT NULL
+AND stu.`school`=#{school} AND DATE_FORMAT(stu.`last_check_time`,'%Y-%m')=#{checkTime} AND sch.`CityName`= #{cityName} AND sch.`AreaName`= #{areaName}
+	</select>
+
+	<select id="getScYuCeForOld" resultType="map">
+SELECT stu.`id`,stu.`student_sex` sex ,stu.last_check_time checkTime,DATE_FORMAT(stu.`last_check_time`,'%Y')-SUBSTRING(stu.`identity_card`,7,4) age,stu.`dengxiaoqiujingl` DXQJL,stu.`dengxiaoqiujingr` DXQJR,stu.`naked_farvision_od` NakedOd,stu.`naked_farvision_os` NakedOs
+FROM s_student stu,s_school sch WHERE stu.`school_code`= sch.`OrgCode` AND stu.`dengxiaoqiujingl` IS NOT NULL AND stu.`dengxiaoqiujingr` IS NOT NULL AND stu.`naked_farvision_od` IS NOT NULL AND stu.`naked_farvision_os` IS NOT NULL AND stu.last_check_time IS NOT NULL
+AND stu.`school`=#{school} AND DATE_FORMAT(stu.`last_check_time`,'%Y-%m')=#{checkTime} AND sch.`CityName`= #{cityName} AND sch.`AreaName`= #{areaName}
+	</select>
+	<select id="getOptId" resultType="int">
+		SELECT t_optometry_id FROM s_result_optometry_new WHERE student_id = #{id}
+	</select>
+	<select id="getOptIdForOld" resultType="int">
+		SELECT t_optometry_id FROM s_result_optometry WHERE student_id = #{id}
+	</select>
+	<select id="getDiopterData" resultType="map">
+		SELECT IFNULL(diopter_s,0.0) dioS,IFNULL(diopter_c,0.0) dioC,IFNULL(diopter_a,0.0) dioA,ifRL FROM s_result_diopter_new WHERE t_optometry_id = #{optId} AND TYPE ='AVG'
+	</select>
+	<select id="getDiopterDataForOld" resultType="map">
+		SELECT IFNULL(diopter_s,0.0) dioS,IFNULL(diopter_c,0.0) dioC,IFNULL(diopter_a,0.0) dioA,ifRL FROM s_result_diopter WHERE t_optometry_id = #{optId} AND TYPE ='AVG'
+	</select>
+	<select id="getCornealData" resultType="map">
+		select ifnull(corneal_mm,0.0) corM,ifnull(corneal_d,0.0) corD,ifRL from s_result_corneal_new where t_optometry_id = #{optId} AND TYPE ='AVG'
+	</select>
+	<select id="getCornealDataForOld" resultType="map">
+		select ifnull(corneal_mm,0.0) corM,ifnull(corneal_d,0.0) corD,ifRL from s_result_corneal where t_optometry_id = #{optId} AND TYPE ='AVG'
+	</select>
+	<select id="getEyeAxisData" resultType="map">
+		SELECT IFNULL(first_check_od,0.0) od,IFNULL(first_check_os,0.0) os FROM s_result_eyeaxis_new WHERE student_id = #{id}
+	</select>
+	<select id="getEyeAxisDataForOld" resultType="map">
+		SELECT IFNULL(first_check_od,0.0) od,IFNULL(first_check_os,0.0) os FROM s_result_eyeaxis WHERE student_id = #{id}
+	</select>
+	<select id="getEyepressureData" resultType="map">
+SELECT IFNULL(eye_pressure_od,0.0) preOd,IFNULL(eye_pressure_os,0.0) preOs FROM s_result_eyepressure_new WHERE student_id = #{id}
+	</select>
+	<select id="getEyepressureDataForOld" resultType="map">
+SELECT IFNULL(eye_pressure_od,0.0) preOd,IFNULL(eye_pressure_os,0.0) preOs FROM s_result_eyepressure WHERE student_id = #{id}
+	</select>
+	<select id="getYuCeForPerson" resultType="map">
+SELECT id,student_sex sex,DATE_FORMAT(last_check_time,'%Y')-DATE_FORMAT(birthday,'%Y') age,last_check_time checkTime,dengxiaoqiujingl DXQJL,dengxiaoqiujingr DXQJR,naked_farvision_od NakedOd,naked_farvision_os NakedOs
+FROM s_student_new WHERE student_name = #{name} AND identity_card = #{idCard} AND DATE_FORMAT(last_check_time,'%Y-%m') = #{checkDate}
+	</select>
+	<select id="getShiFouHaveOtherTime" resultType="string">
+		SELECT DATE_FORMAT(MAX(stu.`last_check_time`),'%Y-%m') checkTime FROM s_student stu,s_school sch
+		WHERE
+		stu.`school_code`=sch.`OrgCode` AND stu.`dengxiaoqiujingl` IS NOT NULL AND stu.`dengxiaoqiujingr` IS NOT NULL AND stu.`naked_farvision_od` IS NOT NULL AND stu.`naked_farvision_os` IS NOT NULL AND stu.last_check_time IS NOT NULL
+		AND stu.`school`=#{school} AND sch.`CityName`=#{cityName} AND sch.`AreaName`=#{areaName} AND DATE_FORMAT(last_check_time,'%Y-%m') &lt; #{checkTime}
+	</select>
+	<select id="getOtherTimeCount" resultType="int">
+		select count(stu.`id`) num from s_student stu,s_school sch
+		where
+		stu.`school_code`=sch.`OrgCode` AND stu.`dengxiaoqiujingl` IS NOT NULL AND stu.`dengxiaoqiujingr` IS NOT NULL AND stu.`naked_farvision_od` IS NOT NULL AND stu.`naked_farvision_os` IS NOT NULL AND stu.last_check_time IS NOT NULL
+		AND stu.`school`=#{school} AND sch.`CityName`=#{cityName} AND sch.`AreaName`=#{areaName} AND DATE_FORMAT(last_check_time,'%Y-%m') &lt; #{checkTime}
 	</select>
 </mapper>

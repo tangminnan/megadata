@@ -69,6 +69,16 @@ public class ShiroConfig {
 		shiroFilterFactoryBean.setUnauthorizedUrl("/403");
 		LinkedHashMap<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
 		filterChainDefinitionMap.put("/css/**", "anon");
+		filterChainDefinitionMap.put("/loginForPerson", "anon");
+		filterChainDefinitionMap.put("/skip/wenjuan1", "anon");
+		filterChainDefinitionMap.put("/skip/wenjuan2", "anon");
+		filterChainDefinitionMap.put("/skip/wenjuan3", "anon");
+		filterChainDefinitionMap.put("/skip/gerenchakan", "anon");
+		filterChainDefinitionMap.put("/skip/jiancebiao", "anon");
+		filterChainDefinitionMap.put("/skip/jiaose/**", "anon");
+		filterChainDefinitionMap.put("/skip/EyeTEAS", "anon");
+		filterChainDefinitionMap.put("/skip/success", "anon");
+		filterChainDefinitionMap.put("/skip/geren", "anon");
 		filterChainDefinitionMap.put("/js/**", "anon");
 		filterChainDefinitionMap.put("/fonts/**", "anon");
 		filterChainDefinitionMap.put("/img/**", "anon");

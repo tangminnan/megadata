@@ -35,9 +35,9 @@
         <div class="box boxL">
             <h3>问答卷</h3>
             <ul>
-                <li><a href="/skip/wenjuan1">儿童青少年心理健康量表</a></li>
-                <li><a href="/skip/wenjuan2">儿童青少年体质量表</a></li>
-                <li><a href="/skip/wenjuan3">疫情期间用眼行为和体育锻炼调查问卷</a></li>
+                <li id="wj1"><a href="/skip/wenjuan1">儿童青少年心理健康量表</a></li>
+                <li id="wj2"><a href="/skip/wenjuan2">儿童青少年体质量表</a></li>
+                <li id="wj3"><a href="/skip/wenjuan3">疫情期间用眼行为和体育锻炼调查问卷</a></li>
             </ul>
         </div>
 
@@ -108,6 +108,9 @@
     var html = '';
     var JHY = '<a href="/skip/jiancebiao?name='+table[0].name+'&idCard='+table[0].idCard+'">用眼行为监测</a>';
     var TEAS = '<a href="/skip/EyeTEAS?name='+table[0].name+'&idCard='+table[0].idCard+'">Eye-TEAS治疗</a>'
+    $("#wj1").html('<a href="/skip/wenjuan1?name='+table[0].name+'&idCard='+table[0].idCard+'">儿童青少年心理健康量表</a>')
+    $("#wj2").html('<a href="/skip/wenjuan2?name='+table[0].name+'&idCard='+table[0].idCard+'">儿童青少年体质量表</a>')
+    $("#wj3").html('<a href="/skip/wenjuan3?name='+table[0].name+'&idCard='+table[0].idCard+'">疫情期间用眼行为和体育锻炼调查问卷</a>')
     $('#JHY').html(JHY)
     $('#TEAS').html(TEAS)
     if (table.length>0) {

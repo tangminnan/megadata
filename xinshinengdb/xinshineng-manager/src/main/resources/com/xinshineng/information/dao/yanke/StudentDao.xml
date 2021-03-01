@@ -360,13 +360,50 @@
 	</select>
 
 	<select id="getLiuDiaoTotalOld" resultType="java.util.Map">
-		SELECT sch.`CityName`,COUNT(*) num FROM y_student stu,y_school_new sch WHERE stu.school_id = sch.`id` AND sch.`ProvinceCode`='370000' AND stu.`last_check_time` is not null  GROUP BY sch.`CityName`;
-	</select>
-
-	<select id="getLiuDiaoTotalNew" resultType="java.util.Map">
 		SELECT sch.`CityName`,COUNT(*) num FROM y_student_old stu,y_school_new sch WHERE stu.`school`=sch.`OrgName` AND sch.`ProvinceCode`='370000' AND stu.`last_check_time` is not null GROUP BY sch.`CityName`;
 	</select>
 
+	<select id="getLiuDiaoTotalNew" resultType="java.util.Map">
+		SELECT sch.`CityName`,COUNT(*) num FROM y_student stu,y_school_new sch WHERE stu.school_id = sch.`id` AND sch.`ProvinceCode`='370000' AND stu.`last_check_time` is not null  GROUP BY sch.`CityName`;
+	</select>
+	<select id="getThisYearCheckCount" resultType="map">
+		SELECT sch.`CityName`,COUNT(*) num FROM y_student stu,y_school_new sch WHERE stu.school_id = sch.`id` AND sch.`ProvinceCode`='370000' AND stu.`last_check_time` IS NOT NULL AND  DATE_FORMAT(stu.`last_check_time`,'%Y') = #{year} GROUP BY sch.`CityName`;
+
+	</select>
+	<select id="getThisYearCheckCountForArea" resultType="long">
+		SELECT
+COUNT(*) num
+FROM
+y_student stu,y_school_new sch
+WHERE
+stu.school_id = sch.`id` AND sch.`ProvinceCode`='370000' AND stu.`last_check_time` IS NOT NULL AND  DATE_FORMAT(stu.`last_check_time`,'%Y') = #{year} AND sch.`CityName`=#{checkCity} AND sch.`AreaName`=#{areaName}
+	</select>
+	<select id="getQNCheckNum" resultType="long">
+		SELECT COUNT(*) num FROM y_student stu,y_school_new sch WHERE stu.school_id = sch.`id` AND sch.`ProvinceCode`='370000' AND stu.`last_check_time` IS NOT NULL AND  DATE_FORMAT(stu.`last_check_time`,'%Y') = #{year} AND sch.`CityName`=#{cityName}
+	</select>
+	<select id="getThisYearJinShiCount" resultType="long">
+		SELECT COUNT(dxqj) num FROM (SELECT LEAST(lopt.dxqjL,ropt.dxqjR) dxqj FROM (SELECT t_optometry_id , dengxiaoqiujing dxqjL FROM y_result_diopter WHERE t_optometry_id IN (SELECT t_optometry_id FROM y_result_optometry WHERE student_id IN (SELECT stu.`id`
+		FROM y_student stu,y_school_new sch
+		WHERE stu.school_id = sch.`id` AND sch.`ProvinceCode`='370000' AND stu.`last_check_time` IS NOT NULL AND  DATE_FORMAT(stu.`last_check_time`,'%Y') = #{year} AND sch.`CityName` = #{cityName})
+		AND DATE_FORMAT(check_date,'%Y') = #{year}) AND TYPE = 'AVG' AND first_second = 'SECOND_CHECK' AND ifRL='L') lopt,
+		(SELECT t_optometry_id , dengxiaoqiujing dxqjR FROM y_result_diopter WHERE t_optometry_id IN (SELECT t_optometry_id FROM y_result_optometry WHERE student_id IN (SELECT stu.`id`
+		FROM y_student stu,y_school_new sch
+		WHERE stu.school_id = sch.`id` AND sch.`ProvinceCode`='370000' AND stu.`last_check_time` IS NOT NULL AND  DATE_FORMAT(stu.`last_check_time`,'%Y') = #{year} AND sch.`CityName` = #{cityName})
+		AND DATE_FORMAT(check_date,'%Y') = #{year}) AND TYPE = 'AVG' AND first_second = 'SECOND_CHECK' AND ifRL='R') ropt
+		WHERE lopt.t_optometry_id = ropt.t_optometry_id ) stu WHERE dxqj &lt;= -0.5
+
+	</select>
+	<select id="getThisYearJinShiCountForArea" resultType="long">
+		SELECT COUNT(dxqj) num FROM (SELECT LEAST(lopt.dxqjL,ropt.dxqjR) dxqj FROM (SELECT t_optometry_id , dengxiaoqiujing dxqjL FROM y_result_diopter WHERE t_optometry_id IN (SELECT t_optometry_id FROM y_result_optometry WHERE student_id IN (SELECT stu.`id`
+		FROM y_student stu,y_school_new sch
+		WHERE stu.school_id = sch.`id` AND sch.`ProvinceCode`='370000' AND stu.`last_check_time` IS NOT NULL AND  DATE_FORMAT(stu.`last_check_time`,'%Y') = #{year} AND sch.`CityName` = #{checkCity} and sch.`AreaName` = #{areaName})
+		AND DATE_FORMAT(check_date,'%Y') = #{year}) AND TYPE = 'AVG' AND first_second = 'SECOND_CHECK' AND ifRL='L') lopt,
+		(SELECT t_optometry_id , dengxiaoqiujing dxqjR FROM y_result_diopter WHERE t_optometry_id IN (SELECT t_optometry_id FROM y_result_optometry WHERE student_id IN (SELECT stu.`id`
+		FROM y_student stu,y_school_new sch
+		WHERE stu.school_id = sch.`id` AND sch.`ProvinceCode`='370000' AND stu.`last_check_time` IS NOT NULL AND  DATE_FORMAT(stu.`last_check_time`,'%Y') = #{year} AND sch.`CityName` = #{checkCity} and sch.`AreaName` = #{areaName})
+		AND DATE_FORMAT(check_date,'%Y') = #{year}) AND TYPE = 'AVG' AND first_second = 'SECOND_CHECK' AND ifRL='R') ropt
+		WHERE lopt.t_optometry_id = ropt.t_optometry_id ) stu WHERE dxqj &lt;= -0.5
+	</select>
 	<select id="getLiuDiaoNewTotalNum" resultType="java.lang.Long">
 		SELECT COUNT(*) num FROM y_student
 	</select>
@@ -724,5 +761,33 @@ AND dengxiaoqiujing_od_second IS NOT NULL AND dengxiaoqiujing_os_second AND City
 	</select>
 	<select id="getLastCheckDate" resultType="string">
 		SELECT MAX(DATE_FORMAT(last_check_time,'%Y-%m')) checkdate FROM y_student_school_he WHERE student_name = #{username} AND identity_card = #{password}
+	</select>
+	<select id="getLDYuCe" resultType="map">
+SELECT stu.`id`,stu.`student_sex` sex,stu.`last_check_time` checkTime,DATE_FORMAT(stu.`last_check_time`,'%Y')-DATE_FORMAT(stu.`birthday`,'%Y') age
+FROM y_student stu,y_school_new sch WHERE stu.`school_id`=sch.`id` AND stu.`birthday` IS NOT NULL AND stu.`last_check_time` IS NOT NULL
+AND stu.`school`=#{school} AND sch.`CityName`=#{cityName} AND sch.`AreaName`=#{areaName} AND DATE_FORMAT(stu.`last_check_time`,'%Y-%m')=#{checkTime}
+	</select>
+	<select id="getEyeSightData" resultType="map">
+		SELECT IFNULL(naked_farvision_od,0.0) nakedOd,IFNULL(naked_farvision_os,0.0) nakedOs,IFNULL(life_farvision_od,0.0) lifeOd,IFNULL(life_farvision_os,0.0) lifeOs FROM y_result_eyesight WHERE student_id =#{id}
+	</select>
+	<select id="getOptId" resultType="int">
+		SELECT t_optometry_id FROM y_result_optometry WHERE student_id = #{id}
+	</select>
+	<select id="getDiopterData" resultType="map">
+		SELECT IFNULL(diopter_a,0.0) dioA,IFNULL(diopter_c,0.0) dioC,IFNULL(diopter_s,0.0) dioS,IFNULL(dengxiaoqiujing,0.0) DXQJ,ifRL,first_second FROM y_result_diopter WHERE t_optometry_id = #{optId} AND TYPE = 'AVG'
+	</select>
+	<select id="getCornealData" resultType="map">
+		SELECT IFNULL(corneal_mm,0.0) corM ,IFNULL(corneal_d,0.0) corD ,ifRL FROM y_result_corneal WHERE t_optometry_id = #{optId} AND TYPE = 'AVG' AND first_second = 'FIRST_CHECK'
+	</select>
+	<select id="getEyeAxisData" resultType="map">
+		SELECT IFNULL(first_check_od,0.0) od,IFNULL(first_check_os,0.0) os FROM y_result_eyeaxis WHERE student_id = #{id}
+	</select>
+	<select id="getEyepressureData" resultType="map">
+		SELECT IFNULL(eye_pressure_od,0.0) preOd,IFNULL(eye_pressure_os,0.0) preOs FROM y_result_eyepressure WHERE student_id = #{id}
+	</select>
+	<select id="getYuCeForPerson" resultType="map">
+SELECT id,student_sex sex,last_check_time checkTime,DATE_FORMAT(last_check_time,'%Y')-DATE_FORMAT(birthday,'%Y') age
+FROM y_student WHERE student_name = #{name} AND identity_card = #{idCard} AND DATE_FORMAT(last_check_time,'%Y-%m') = #{checkDate}
+
 	</select>
 </mapper>

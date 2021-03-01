@@ -11,11 +11,16 @@
 </head>
 <body>
 	<!--提交失败success后直接加上“fail”-->
-	<div class="success">
+	<div id="suc" class="success">
     	<p>恭喜您，提交成功！</p>
         <a href="/skip/geren">返回 》 </a>
     </div>
-    
+	<script type="text/javascript" th:inline="javascript">
+		var name = [[${name}]];
+		var idCard = [[${idCard}]];
+		var checkDate = [[${checkDate}]];
+		$("#suc").html('<p>恭喜您，提交成功！</p>\n'+'<a href="/skip/geren?name='+name+'&idCard='+idCard+'&checkdate='+checkDate+'&checkType=sc">返回 》 </a>')
+	</script>
 </body>
 </html>
 

@@ -22,10 +22,8 @@ public class TestDemo {
 
     @Test
     public void testpwd(){
-        String username = "huantaizhongxin";
-
-        String password = "123456";
-        password = MD5Utils.encrypt(username, password);
-        System.out.println(password);
+     /* String  password = MD5Utils.encrypt("huantaizhongxin", "123456");
+        System.out.println(password);*/
+        System.out.println(199/200);
     }
 }

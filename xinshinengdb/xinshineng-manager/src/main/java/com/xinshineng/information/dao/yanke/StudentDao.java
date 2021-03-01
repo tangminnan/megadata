@@ -180,4 +180,30 @@ public interface StudentDao {
     int login(@Param("username") String username, @Param("password") String password);
 
 	String getLastCheckDate(@Param("username") String username, @Param("password") String password);
+
+    List<Map<String, Object>> getLDYuCe(@Param("checkTime") String checkTime, @Param("school")String school, @Param("cityName")String cityName,@Param("areaName") String areaName);
+
+	Map<String, String> getEyeSightData(Integer id);
+
+	Integer getOptId(Integer id);
+
+	List<Map<String, Object>> getDiopterData(Integer optId);
+
+	List<Map<String, Object>> getCornealData(Integer optId);
+
+	Map<String, Double> getEyeAxisData(Integer id);
+
+	Map<String, Double> getEyepressureData(Integer id);
+
+    Map<String, Object> getYuCeForPerson(@Param("checkDate") String checkDate,@Param("name") String name,@Param("idCard") String idCard);
+
+    List<Map<String, Long>> getThisYearCheckCount(int year);
+
+	Long getThisYearJinShiCount(@Param("year") int year,@Param("cityName") String cityName);
+
+	Long getQNCheckNum(@Param("year") int year,@Param("cityName") String cityName);
+
+	Long getThisYearCheckCountForArea(@Param("checkCity") String checkCity,@Param("areaName") String areaName,@Param("year") int year);
+
+	long getThisYearJinShiCountForArea(@Param("checkCity") String checkCity,@Param("areaName") String areaName,@Param("year") int year);
 }
