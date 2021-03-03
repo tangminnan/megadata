@@ -175,6 +175,9 @@ public class schoolServiceImpl implements schoolService {
             Integer checkNumber = Integer.parseInt(map.get("checkNumber").toString());
             List<Map<String,Object>> ldataList = new ArrayList<>();
             List<Map<String,Object>> rdataList = new ArrayList<>();
+            List<Map<String,Object>> yuceqianList = new ArrayList<>();
+            List<Map<String,Object>> yucehouList = new ArrayList<>();
+
             if ("sc".equals(checkType)){
                 if (date.getYear()<2020){
                     List<Map<String,Object>> scYuce = shaichaStudentDao.getScYuCeForOld(checkTime,school, CityName, AreaName);
@@ -263,15 +266,16 @@ public class schoolServiceImpl implements schoolService {
                         }
                         String age = stuMap.get("age").toString();
                         String NakedOs = stuMap.get("NakedOs").toString() == "" ? "0" : stuMap.get("NakedOs").toString();
-                        if ("nlp".equals(NakedOs)||"NLP".equals(NakedOs)){
-                            NakedOs="0.0";
-                        }
 
-                        if (Double.parseDouble(NakedOs)<4.0){
-                            NakedOs="0.1";
-                        }
-                        if (Double.parseDouble(NakedOs)>5.0){
-                            NakedOs="1.0";
+                        try {
+                            if (Double.parseDouble(NakedOs)<4.0){
+                                NakedOs="0.1";
+                            }
+                            if (Double.parseDouble(NakedOs)>5.0){
+                                NakedOs="1.0";
+                            }
+                        } catch (Exception e) {
+                            continue;
                         }
                         if ("4.0".equals(NakedOs)){
                             NakedOs="0.1";
@@ -308,14 +312,16 @@ public class schoolServiceImpl implements schoolService {
                             NakedOs="1.0";
                         }
                         String NakedOd = stuMap.get("NakedOd").toString() == "" ? "0" : stuMap.get("NakedOd").toString();
-                        if ("nlp".equals(NakedOd)||"NLP".equals(NakedOd)){
-                            NakedOd="0.0";
-                        }
-                        if (Double.parseDouble(NakedOd)<4.0){
-                            NakedOd="0.1";
-                        }
-                        if (Double.parseDouble(NakedOd)>5.0){
-                            NakedOd="1.0";
+
+                        try {
+                            if (Double.parseDouble(NakedOd)<4.0){
+                                NakedOd="0.1";
+                            }
+                            if (Double.parseDouble(NakedOd)>5.0){
+                                NakedOd="1.0";
+                            }
+                        } catch (Exception e) {
+                            continue;
                         }
                         if ("4.0".equals(NakedOd)){
                             NakedOd="0.1";
@@ -414,6 +420,33 @@ public class schoolServiceImpl implements schoolService {
                         rMap.put("flag",2);
                         ldataList.add(lMap);
                         rdataList.add(rMap);
+                        Double naked_Farvision = Double.parseDouble(NakedOs)>Double.parseDouble(NakedOd)?Double.parseDouble(NakedOd):Double.parseDouble(NakedOs);
+                        Double dxqj = Double.parseDouble(stuMap.get("DXQJL").toString())>Double.parseDouble(stuMap.get("DXQJR").toString())?Double.parseDouble(stuMap.get("DXQJR").toString()):Double.parseDouble(stuMap.get("DXQJL").toString());
+                        Map<String,Object> yuceqianMap = new HashMap<>();
+                        if (dxqj > 0.75){
+                            yuceqianMap.put("type",1);
+                            yuceqianMap.put("id",id);
+                            yuceqianList.add(yuceqianMap);
+                            continue;
+                        }
+                        if (dxqj >= -0.5 && dxqj <= 0.75){
+                            yuceqianMap.put("type",2);
+                            yuceqianMap.put("id",id);
+                            yuceqianList.add(yuceqianMap);
+                            continue;
+                        }
+                        if (naked_Farvision >= 5.0 && dxqj<-0.5){
+                            yuceqianMap.put("type",3);
+                            yuceqianMap.put("id",id);
+                            yuceqianList.add(yuceqianMap);
+                            continue;
+                        }
+                        if (naked_Farvision < 5.0 && dxqj<-0.5){
+                            yuceqianMap.put("type",4);
+                            yuceqianMap.put("id",id);
+                            yuceqianList.add(yuceqianMap);
+                            continue;
+                        }
                         continue;
                     }
                 }
@@ -505,11 +538,15 @@ public class schoolServiceImpl implements schoolService {
                         String age = stuMap.get("age").toString();
                         String NakedOs = stuMap.get("NakedOs").toString() == "" ? "0" : stuMap.get("NakedOs").toString();
 
-                        if (Double.parseDouble(NakedOs)<4.0){
-                            NakedOs="0.1";
-                        }
-                        if (Double.parseDouble(NakedOs)>5.0){
-                            NakedOs="1.0";
+                        try {
+                            if (Double.parseDouble(NakedOs)<4.0){
+                                NakedOs="0.1";
+                            }
+                            if (Double.parseDouble(NakedOs)>5.0){
+                                NakedOs="1.0";
+                            }
+                        } catch (Exception e) {
+                            continue;
                         }
                         if ("4.0".equals(NakedOs)){
                             NakedOs="0.1";
@@ -547,11 +584,15 @@ public class schoolServiceImpl implements schoolService {
                         }
                         String NakedOd = stuMap.get("NakedOd").toString() == "" ? "0" : stuMap.get("NakedOd").toString();
 
-                        if (Double.parseDouble(NakedOd)<4.0){
-                            NakedOd="0.1";
-                        }
-                        if (Double.parseDouble(NakedOd)>5.0){
-                            NakedOd="1.0";
+                        try {
+                            if (Double.parseDouble(NakedOd)<4.0){
+                                NakedOd="0.1";
+                            }
+                            if (Double.parseDouble(NakedOd)>5.0){
+                                NakedOd="1.0";
+                            }
+                        } catch (Exception e) {
+                            continue;
                         }
                         if ("4.0".equals(NakedOd)){
                             NakedOd="0.1";
@@ -650,6 +691,33 @@ public class schoolServiceImpl implements schoolService {
                         rMap.put("flag",2);
                         ldataList.add(lMap);
                         rdataList.add(rMap);
+                        Double naked_Farvision = Double.parseDouble(NakedOs)>Double.parseDouble(NakedOd)?Double.parseDouble(NakedOd):Double.parseDouble(NakedOs);
+                        Double dxqj = Double.parseDouble(stuMap.get("DXQJL").toString())>Double.parseDouble(stuMap.get("DXQJR").toString())?Double.parseDouble(stuMap.get("DXQJR").toString()):Double.parseDouble(stuMap.get("DXQJL").toString());
+                        Map<String,Object> yuceqianMap = new HashMap<>();
+                        if (dxqj > 0.75){
+                            yuceqianMap.put("type",1);
+                            yuceqianMap.put("id",id);
+                            yuceqianList.add(yuceqianMap);
+                            continue;
+                        }
+                        if (dxqj >= -0.5 && dxqj <= 0.75){
+                            yuceqianMap.put("type",2);
+                            yuceqianMap.put("id",id);
+                            yuceqianList.add(yuceqianMap);
+                            continue;
+                        }
+                        if (naked_Farvision >= 5.0 && dxqj<-0.5){
+                            yuceqianMap.put("type",3);
+                            yuceqianMap.put("id",id);
+                            yuceqianList.add(yuceqianMap);
+                            continue;
+                        }
+                        if (naked_Farvision < 5.0 && dxqj<-0.5){
+                            yuceqianMap.put("type",4);
+                            yuceqianMap.put("id",id);
+                            yuceqianList.add(yuceqianMap);
+                            continue;
+                        }
                         continue;
                     }
                 }
@@ -894,6 +962,33 @@ public class schoolServiceImpl implements schoolService {
                     rMap.put("flag",2);
                     ldataList.add(lMap);
                     rdataList.add(rMap);
+                    Double naked_Farvision = Double.parseDouble(NakedOs)>Double.parseDouble(NakedOd)?Double.parseDouble(NakedOd):Double.parseDouble(NakedOs);
+                    Double dxqj = Double.parseDouble(stuMap.get("DXQJL").toString())>Double.parseDouble(stuMap.get("DXQJR").toString())?Double.parseDouble(stuMap.get("DXQJR").toString()):Double.parseDouble(stuMap.get("DXQJL").toString());
+                    Map<String,Object> yuceqianMap = new HashMap<>();
+                    if (dxqj > 0.75){
+                        yuceqianMap.put("type",1);
+                        yuceqianMap.put("id",id);
+                        yuceqianList.add(yuceqianMap);
+                        continue;
+                    }
+                    if (dxqj >= -0.5 && dxqj <= 0.75){
+                        yuceqianMap.put("type",2);
+                        yuceqianMap.put("id",id);
+                        yuceqianList.add(yuceqianMap);
+                        continue;
+                    }
+                    if (naked_Farvision >= 5.0 && dxqj<-0.5){
+                        yuceqianMap.put("type",3);
+                        yuceqianMap.put("id",id);
+                        yuceqianList.add(yuceqianMap);
+                        continue;
+                    }
+                    if (naked_Farvision < 5.0 && dxqj<-0.5){
+                        yuceqianMap.put("type",4);
+                        yuceqianMap.put("id",id);
+                        yuceqianList.add(yuceqianMap);
+                        continue;
+                    }
                 }
             }
             if ("ld".equals(checkType)){
@@ -1346,9 +1441,7 @@ public class schoolServiceImpl implements schoolService {
                 List<Map<String,Object>> data = (List<Map<String, Object>>) mapData.get("data");
                 rAllData.addAll(data);
             }
-            Integer zx = 0;
-            Integer jx = 0;
-            Integer lc = 0;
+
 
             for (Map<String, Object> lMap : lAllData) {
                 for (Map<String, Object> rMap : rAllData) {
@@ -1357,29 +1450,75 @@ public class schoolServiceImpl implements schoolService {
                     String idL = lMap.get("student").toString().substring(0, indexL);
                     String idR = rMap.get("student").toString().substring(0, indexR);
                     if (idL.equals(idR)){
-                        double y1YL = Double.parseDouble(lMap.get("y1Y").toString());
-                        double y1YR = Double.parseDouble(rMap.get("y1Y").toString());
-                        double y2YL = Double.parseDouble(lMap.get("y2Y").toString());
-                        double y2YR = Double.parseDouble(rMap.get("y2Y").toString());
-                        /*double nakedL = Double.parseDouble(lMap.get("nakedFarvisionY").toString());
-                        double nakedR = Double.parseDouble(rMap.get("nakedFarvisionY").toString());*/
-                        double dxqjF = y1YL > y1YR ? y1YR:y1YL;
-                        double dxqjS = y2YL > y2YR ? y2YR:y2YL;
-                        if (dxqjF<-0.5 && dxqjS>-0.5 && dxqjS-dxqjF>0.5){
-                            jx++;
+                        int ltype = Integer.parseInt(lMap.get("type").toString());
+                        int rtype = Integer.parseInt(rMap.get("type").toString());
+                        int type = ltype>rtype?ltype:rtype;
+                        Map<String,Object> yucehouMap = new HashMap<>();
+                        yucehouMap.put("type",type);
+                        yucehouMap.put("id",Integer.parseInt(idL));
+                        yucehouList.add(yucehouMap);
+                    }
+                }
+            }
+            Integer fzcNum = 0;
+            Integer flcNum = 0;
+            Integer fjxNum = 0;
+
+            Integer zcTolc = 0;
+            Integer zcTojx = 0;
+            Integer zcTozx = 0;
+
+            Integer lcTojx = 0;
+            Integer lcTozx = 0;
+
+            Integer jxTolc = 0;
+            Integer jxTozx = 0;
+
+            for (Map<String, Object> fMap : yuceqianList) {
+                for (Map<String, Object> sMap : yucehouList) {
+                    if (fMap.get("id").equals(sMap.get("id"))){
+                        int ftype = Integer.parseInt(fMap.get("type").toString());
+                        int stype = Integer.parseInt(sMap.get("type").toString());
+                        if (ftype==1){
+                            fzcNum++;
+                            if (stype==2){
+                                zcTolc++;
+                            }
+                            if (stype==3){
+                                zcTojx++;
+                            }
+                            if (stype==4){
+                                zcTozx++;
+                            }
                         }
-                        if (dxqjS>-0.5 && dxqjS<=0.75){
-                            lc++;
+                        if (ftype==2){
+                            flcNum++;
+                            if (stype==3){
+                                lcTojx++;
+                            }
+                            if (stype==4){
+                                lcTozx++;
+                            }
                         }
-                        if (dxqjS<=-0.5){
-                            zx++;
+                        if (ftype==3){
+                            fjxNum++;
+                            if (stype==2){
+                                jxTolc++;
+                            }
+                            if (stype==4){
+                                jxTozx++;
+                            }
                         }
                     }
                 }
             }
-            zxycList.add(format(getLv(zx,checkNumber)));
-            jxycList.add(format(getLv(jx,checkNumber)));
-            lcycList.add(format(getLv(lc,checkNumber)));
+
+
+
+
+            zxycList.add(format(getLv(zcTozx+lcTozx+jxTozx,fzcNum+flcNum+fjxNum)));
+            jxycList.add(format(getLv(zcTojx+lcTojx,fzcNum+flcNum)));
+            lcycList.add(format(getLv(zcTolc+jxTolc,fzcNum+fjxNum)));
         }
 
 
