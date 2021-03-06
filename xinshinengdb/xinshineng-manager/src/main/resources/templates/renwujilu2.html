@@ -1,0 +1,109 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<title>任务打卡记录</title>
+	<link rel="stylesheet" href="/css/css2.css" type="text/css">
+	<script type="text/javascript" src="/js/jquery-3.5.1.min.js"></script>
+<style>
+
+	.submit_loading {
+		position:fixed;
+		width:100%;
+		height:100%;
+		top:0;
+		left:0;
+		background-color:#000;
+		text-align:center;
+		opacity:0.3;
+	}
+	.loading_show {
+		margin-top:15%;
+	}
+	.loading_context {
+		color: #fff;
+	}
+</style>
+
+</head>
+<body>
+   <div class="topbanner">任务打卡记录</div>
+   <h3 class="h3_tit">任务打卡记录</h3>
+   <div class="main RW_jilu renwu_LB">
+   	   <div class="nameHH">
+  	   	 	<p id="time">打卡时间：</p>
+  	   </div>
+	   <table border="1" cellspacing="0" cellpadding="0">
+		  <thead id="head1">
+		  </thead>
+		  <tbody id="head2">
+		  </tbody>
+		</table>
+	</div>
+
+   <div id="loading" class="submit_loading" style="display: none">
+	   <div class="loading_show">
+		   <img src="/images/loading.gif">
+		   <p class="loading_context">数据获取中。。。</p>
+	   </div>
+   </div>
+</body>
+<script type="text/javascript" th:inline="javascript">
+    // var url = 'http://eyemonitor-api.dddmaker.com'
+    var url = 'http://localhost:8083'
+    let pcorapp=[[${pcorapp}]];
+    let startTime=[[${startTime}]];
+    let taskTime=[[${taskTime}]];
+    $("#loading").show();
+    $.ajax({
+        cache: true,
+        type: "GET",
+        url: url + "/api/gift/getRenwuDetail",
+        data: {pcorapp, startTime, taskTime},
+        async: false,
+        success: function (result) {
+            console.info(result);
+            $("#time").text('打卡时间：' + result.time);
+            let length = result.length, tr1 = "<tr><th>姓名</th>";
+            for (let i = 1; i <= length; i++) {
+                if (i < 10)
+                    tr1 += '<th>&nbsp;' + i + '&nbsp;</th>';
+                else
+                    tr1 += '<th>' + i + '</th>';
+            }
+            tr1 += "</tr>";
+            $("#head1").html(tr1);
+            let data = result.data, tr2 = "";
+            for (let i = 0; i < data.length; i++) {
+                tr2 += '<tr onClick="mainData(\''+data[i].userDO.taskIds+'\',\''+data[i].userDO.name+'\',\''+result.time+'\')"><td>' + data[i].userDO.name + '</td>';
+                let logdata = data[i].data;
+                for (let j = 0; j < logdata.length; j++) {
+                    if (logdata[j].iffinish == 0)
+                        tr2 += '<td></td>';
+                    else tr2 += ' <td class="fail"></td>';
+                }
+            }
+            $("#head2").html(tr2);
+            $("#loading").hide();
+        },
+        error: function (request) {
+            alert("Connection error");
+            $("#loading").hide();
+        }
+
+
+    });
+
+    function mainData(taskIds,name,time){
+        window.location.href="/Newhuyan/mainData?taskIds="+taskIds+"&name="+name+"&time="+time;
+
+    }
+
+</script>
+</html>
+
+
+

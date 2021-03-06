@@ -1,0 +1,106 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<title>任务记录详情</title>
+	<link rel="stylesheet" href="/css/css2.css" type="text/css">
+	<script type="text/javascript" src="/js/jquery-3.5.1.min.js"></script></head>
+<body>
+   <div class="topbanner">任务记录详情</div>
+   <h3 class="h3_tit">任务记录详情</h3>
+   <div class="main RW_jilu xiangqing_JL_HH">
+  	   <div class="nameHH">
+  	   	 	<p id="name">姓名：</p>
+  	   	 	<p id="time">时间：</p>
+  	   </div>
+   	   
+	   <table border="1" cellspacing="0" cellpadding="0">
+		  <thead>
+			<tr>
+			  <th>时间</th>
+			  <th>平均单次<br/>阅读时长</th>
+			  <th>平均阅读<br/>距离</th>
+			  <th>平均单次<br/>看手机时长</th>
+			  <th>平均坐姿<br/>倾斜度</th>
+			  <th>健康用眼<br/>评级</th>
+			  <th>平均户外<br/>时长</th>
+			  <th>平均阅读<br/>光照</th>
+			  <th>平均单次看<br/>电脑电视时长</th>
+			  <th>有效使用监<br/>护仪总时长</th>
+			</tr>
+		  </thead>
+		  <tbody id="bh">
+		  </tbody>
+		</table>
+	</div>
+</body>
+
+<script type="text/javascript" th:inline="javascript">
+    // var url = 'http://eyemonitor-api.dddmaker.com'
+    var url = 'http://localhost:8083'
+    let taskIds=[[${taskIds}]];
+    let name=[[${name}]];
+    let time=[[${time}]];
+    $("#loading").show();
+    $.ajax({
+        cache: true,
+        type: "GET",
+        url: url + "/api/gift/getMainData",
+        data: {taskIds,name,time},
+        async: false,
+        success: function (result) {
+            console.info(result);
+            let {name,time,userTaskLinshiDOS}= result.data;
+            console.info(name);
+            console.info(time);
+            console.info(userTaskLinshiDOS);
+            $("#name").text('姓名：'+name);
+			$("#time").text('时间：'+time);
+			let tr="";
+			for(let i=0;i<userTaskLinshiDOS.length;i++){
+			    let u = userTaskLinshiDOS[i];
+                tr+=`<tr>
+                	  <td>${u.day}</td>
+               		 	<td>getStr(${u.avgRead})</td>
+                	<td class="goodHH">getStr(${u.avgReadDistance})</td>
+                    <td>getStr(${u.avgLookPhone})</td>
+                    <td>getStr(${u.avgSitTilt})</td>
+                    <td>getStr(${u.eyeRate})</td>
+                    <td>getStr(${u.avgOut})</td>
+                    <td>getStr(${u.avgLight})</td>
+                    <td>getStr(${u.avgLookTv})</td>
+                    <td class="goodHH">getStr(${u.effectiveUseTime})</td>
+                    </tr>`;
+			}
+
+			$("#bh").html(tr);
+            $("#loading").hide();
+		},
+        error: function (request) {
+            alert("Connection error");
+            $("#loading").hide();
+        }
+
+
+    });
+
+    function getStr(pingji){
+
+		let result="";
+        switch(pingji){
+			case "5":result="优秀";break;
+            case "4":result="良好";break;
+            case "2":result="差";break;
+            case "1":result="极差";break;
+		}
+		return result;
+	}
+
+</script>
+</html>
+
+
+
