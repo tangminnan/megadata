@@ -1,5 +1,7 @@
 package com.xinshineng.information.service.shaicha.service;
 
+import com.xinshineng.information.domain.yanke.StudentDO;
+
 import java.util.List;
 
 public interface NewHuYanService {
@@ -11,5 +13,5 @@ public interface NewHuYanService {
 
     String getClazzJSL(String school, String cityName, String areaName, String checkType, String xuebu, String grade, String clazz);
 
-    List<String> getClazzIdCards(String school, String cityName, String areaName, String checkType, String xuebu, String grade, String clazz);
+    List<StudentDO> getClazzIdCards(String school, String cityName, String areaName, String checkType, String xuebu, String grade, String clazz);
 }

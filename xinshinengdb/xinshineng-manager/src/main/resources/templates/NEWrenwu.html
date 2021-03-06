@@ -28,6 +28,17 @@
 		.loading_context {
 			color: #fff;
 		}
+		.rwjl{
+			background: #0d8ddb;
+			color: #fff;
+			width: 200px;
+			height: 50px;
+			font-size: 22px;
+			display: block;
+			margin:auto;
+			outline: none;
+			cursor: pointer;
+		}
 	</style>
 </head>
 <body>
@@ -70,6 +81,7 @@
   			</div>
   		</div>
    </div>
+   	<input  class="rwjl" type="button" value="任务记录" onclick="renwuhistory()">
    <div class="main renwuBox" style="background:#f9ae40;padding:8px;border-radius:10px;">
    		<div class="hd" id="New_hd">
    		</div>
@@ -322,7 +334,12 @@
 					parent.layer.alert("网络超时");
 				},
 				success: function (data) {
-					idCards=data;
+				    console.info("===================");
+				    console.info(data);
+				    console.info(JSON.stringify(data));
+                    console.info("===================");
+
+                    idCards=data;
 				}
 			})
 	}
@@ -409,6 +426,10 @@
           alert("请选择平均阅读距离");
           return;
        }
+        if($("select[name='avgOut']").val() <=0 ){
+            alert("请选择平均户外时长");
+            return;
+        }
        if($("select[name='avgLight']").val() <=0 ){
           alert("请选择平均阅读光照");
           return;
@@ -430,24 +451,29 @@
           return;
        }
 
-       var signupFormData=$('#signupForm').serialize();
-       var idCards11=JSON.stringify(idCards);
-
-	   var giftId = $("#New_hd ul").find(".on").children("input").val()
-
-
-
+        let taskTime = $("select[name='taskTime']").val();
+        let eyeRate = $("select[name='eyeRate']").val();
+        let avgRead = $("select[name='avgRead']").val();
+        let avgReadDistance = $("select[name='avgReadDistance']").val();
+        let avgLight = $("select[name='avgLight']").val();
+        let avgLookPhone = $("select[name='avgLookPhone']").val();
+        let avgLookTv = $("select[name='avgLookTv']").val();
+        let avgSitTilt = $("select[name='avgSitTilt']").val();
+        let effectiveUseTime = $("select[name='effectiveUseTime']").val();
+        let avgOut = $("select[name='avgOut']").val();
+        let pcorapp=school+XueBu+Grade+Clazz;
+		let userTaskDO = {taskTime,eyeRate,avgRead,avgReadDistance,avgLight,avgLookPhone,avgLookTv,avgSitTilt,effectiveUseTime,avgOut,pcorapp}
+		let idCardsInfo=JSON.stringify(idCards);
 		$("#loading").show();
        $.ajax({
           cache: true,
-          type: "get",
+          type: "post",
           url: url+"/api/gift/customTaskPc",
-          data: signupFormData+"&idCards="+idCards11+"&giftId="+giftId,// 你的formid
-          dataType : "jsonp",
-          jsonp:"callback",
+          data: {...userTaskDO,idCardsInfo},
           async: false,
           success: function (data) {console.info(data)
             if(data.code==0){
+                alert(data.msg);
                 $("select").val("0");
                 $("#span1").text('');
                 $("#span2").text('');
@@ -456,10 +482,33 @@
           },
 		  error: function (request) {
           	alert("Connection error");
+              $("#loading").hide();
 		  },
        });
 
     }
+
+  /**
+   *  任务记录
+   */
+  function renwuhistory(){
+	let XB = $("#XB").val();
+	let grade=$("#grade").val();
+	let clazz=$("#clazz").val();
+	if(XB=="=请选择=" || XB==null){
+	    alert("学部不可为空"); return ;
+	}
+      if(grade=="=请选择=" || grade==null){
+	    alert("年级不可为空"); return;
+	}
+	if(clazz=="=请选择=" || clazz==null){
+	    alert("班级不可为空"); return ;
+	}
+
+	let pcorapp=school+XB+grade+clazz;
+    	window.location.href="/Newhuyan/getRenWuHistory?pcorapp="+pcorapp;
+
+  }
 </script>
 
 

@@ -1,5 +1,6 @@
 package com.xinshineng.information.controller;
 
+import com.xinshineng.information.domain.yanke.StudentDO;
 import com.xinshineng.information.service.shaicha.service.NewHuYanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -50,8 +51,30 @@ public class newHuYanController {
     }
     @GetMapping("/GetClazzIdCards")
     @ResponseBody
-    public List<String> getClazzIdCards(Model model,String school, String CityName, String AreaName, String checkType, String xuebu, String grade, String clazz){
-        List<String> clazzIdCards = newHuYanService.getClazzIdCards(school,CityName,AreaName,checkType,xuebu,grade,clazz);
+    public List<StudentDO> getClazzIdCards(Model model,String school, String CityName, String AreaName, String checkType, String xuebu, String grade, String clazz){
+        List<StudentDO> clazzIdCards = newHuYanService.getClazzIdCards(school,CityName,AreaName,checkType,xuebu,grade,clazz);
         return clazzIdCards;
+    }
+
+    @GetMapping("/getRenWuHistory")
+    public String getRenWuHistory(String pcorapp,Model model){
+        model.addAttribute("pcorapp",pcorapp);
+        return "renwujilu1";
+    }
+
+    @GetMapping("/getRenwuDetail")
+    public String getRenwuDetail(String pcorapp,String startTime,Integer taskTime,Model model){
+        model.addAttribute("pcorapp",pcorapp);
+        model.addAttribute("startTime",startTime);
+        model.addAttribute("taskTime",taskTime);
+        return "renwujilu2";
+    }
+
+    @GetMapping("/mainData")
+    public String mainData(String taskIds,String name,String time,Model model){
+        model.addAttribute("taskIds",taskIds);
+        model.addAttribute("name",name);
+        model.addAttribute("time",time);
+        return "renwujilu3";
     }
 }

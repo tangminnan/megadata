@@ -317,9 +317,6 @@
                         var lcqqLv = [[${dataTwo.lcqqLv}]];
                         var jxjsLv = [[${dataTwo.jxjsLv}]];
 
-                        var zxycList = [[${dataTwo.zxycList}]];
-                        var jxycList = [[${dataTwo.jxycList}]];
-                        var lcycList = [[${dataTwo.lcycList}]];
                         var everyTime = [[${dataTwo.everyTime}]];
 
 						option = {
@@ -335,7 +332,7 @@
 									fontSize: 12,
 								},
 								right:'50%',
-								data: ['临床前期', '假性近视', '真性近视','预测临床前期','预测真性近视','预测假性近视']
+								data: ['临床前期', '假性近视', '真性近视']
 							},
 							grid:{
 								x:40,
@@ -440,51 +437,6 @@
 											color: "#ffd500",//折线点的颜色
 											lineStyle: {
 												color: "#ffd500",//折线的颜色
-												width:2,
-											}
-										},
-									}
-								},
-								{
-									name: '预测临床前期',
-									type: 'line',
-									//stack: '总量',
-									data: lcycList,
-									itemStyle: {
-										normal: {
-											color: "#efff0e",//折线点的颜色
-											lineStyle: {
-												color: "#efff0e",//折线的颜色
-												width:2,
-											}
-										},
-									}
-								},
-								{
-									name: '预测真性近视',
-									type: 'line',
-									//stack: '总量',
-									data: zxycList,
-									itemStyle: {
-										normal: {
-											color: "#0eff12",//折线点的颜色
-											lineStyle: {
-												color: "#0eff12",//折线的颜色
-												width:2,
-											}
-										},
-									}
-								},
-								{
-									name: '预测假性近视',
-									type: 'line',
-									//stack: '总量',
-									data: jxycList,
-									itemStyle: {
-										normal: {
-											color: "#0e42ff",//折线点的颜色
-											lineStyle: {
-												color: "#0e42ff",//折线的颜色
 												width:2,
 											}
 										},
@@ -638,7 +590,7 @@
 								<li class="HHup"><a class="next"></a></li>
 								<li class="HHdown"><a class="prev"></a></li>
 								<li>姓名</li>
-								<li>班级</li>
+								<li>年级</li>
 								<li>年龄</li>
 								<li>左眼</li>
 								<li>右眼</li>
@@ -878,7 +830,11 @@
         $("#gradeLv").html(html)
     }
     var dataThree = [[${dataThree}]];
-	if (dataThree.length>0){
+	console.info("===========================");
+	console.info(dataThree);
+    console.info("===========================");
+
+    if (dataThree.length>0){
 	    var html = '';
 	    for (var i = 0;i<dataThree.length;i++){
 	        html+='<li><span><a href="/skip/geren?name='+dataThree[i].student_name+'&idCard='+dataThree[i].identity_card+'&checkdate='+dataThree[i].checkdate+'&checkType='+dataThree[i].checkType+'&age='+dataThree[i].age+'">'+dataThree[i].student_name+'</a></span><span>'+dataThree[i].grade+'</span><span>'+dataThree[i].age+'</span><span>'+dataThree[i].naked_farvision_od+'</span><span>'+dataThree[i].naked_farvision_os+'</span></li>'

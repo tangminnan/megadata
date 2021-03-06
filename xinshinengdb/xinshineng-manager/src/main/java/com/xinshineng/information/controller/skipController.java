@@ -200,8 +200,9 @@ public class skipController {
     }
 
     @GetMapping("/jiaose/jiazhang")
-    public String skipToJiaZhang(Model model,String idCard){
+    public String skipToJiaZhang(Model model,String idCard,String name){
         model.addAttribute("idCard",idCard);
+        model.addAttribute("name",name);
         return "jiaose-jiazhang";
     }
     @GetMapping("/jiaose/haizi")
@@ -237,6 +238,7 @@ public class skipController {
         model.addAttribute("table",table);
         model.addAttribute("echarts",echarts);
         model.addAttribute("idCard",idCard);
+        model.addAttribute("NAME",name);
 
         return "geren";
     }

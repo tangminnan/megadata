@@ -151,7 +151,7 @@ public class schoolServiceImpl implements schoolService {
 
 
 //        Map map = everyCheck.get(everyCheck.size() - 1);
-        List zxycList = new ArrayList();
+/*        List zxycList = new ArrayList();
         List jxycList = new ArrayList();
         List lcycList = new ArrayList();
         for (Map map : everyCheck) {
@@ -1361,8 +1361,8 @@ public class schoolServiceImpl implements schoolService {
                         double y1YR = Double.parseDouble(rMap.get("y1Y").toString());
                         double y2YL = Double.parseDouble(lMap.get("y2Y").toString());
                         double y2YR = Double.parseDouble(rMap.get("y2Y").toString());
-                        /*double nakedL = Double.parseDouble(lMap.get("nakedFarvisionY").toString());
-                        double nakedR = Double.parseDouble(rMap.get("nakedFarvisionY").toString());*/
+                        *//*double nakedL = Double.parseDouble(lMap.get("nakedFarvisionY").toString());
+                        double nakedR = Double.parseDouble(rMap.get("nakedFarvisionY").toString());*//*
                         double dxqjF = y1YL > y1YR ? y1YR:y1YL;
                         double dxqjS = y2YL > y2YR ? y2YR:y2YL;
                         if (dxqjF<-0.5 && dxqjS>-0.5 && dxqjS-dxqjF>0.5){
@@ -1386,14 +1386,11 @@ public class schoolServiceImpl implements schoolService {
         zxycList.add(0, 0);
         jxycList.add(0, 0);
         lcycList.add(0, 0);
-        everyTime.add("预测");
+        everyTime.add("预测");*/
         fixlist(everyTime);
         fixTheList(zxjsLv);
         fixTheList(lcqqLv);
         fixTheList(jxjsLv);
-        listMap.put("zxycList",zxycList);
-        listMap.put("jxycList",jxycList);
-        listMap.put("lcycList",lcycList);
         listMap.put("grade",grade);
         listMap.put("gradeNumber",gradeNumber);
         listMap.put("zxjsLv",zxjsLv);
