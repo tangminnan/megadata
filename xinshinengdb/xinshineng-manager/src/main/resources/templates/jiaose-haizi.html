@@ -108,17 +108,18 @@
    		</div>
    </div>
 </body>
-<script th:inline="javascript">
+<script th:inline="javascript"+
+>
     var idCard = [[${idCard}]]
-    var url = 'http://localhost:8083'
-    //  var url = 'http://eyemonitor-api.dddmaker.com'
+//    var url = 'http://localhost:8083'
+      var url = 'http://eyemonitor-api.dddmaker.com'
     $(function () {
         var  type;
         $('.HnewBtn li').click(function () {
             $(this).siblings().removeClass('on').end().addClass('on');  // 删除其他兄弟元素的样式
             $('.giftBody').html("")
             if ($('.HnewBtn ul .on').text() == "老师的任务") {
-                type = 1
+                type = 2
             } else if ($('.HnewBtn ul .on').text() == "家长的任务") {
                 type = 0
             }
@@ -137,6 +138,9 @@
 					$("#countGrade").text(getPingJI(data.countGrade));
 					$("#youxiaotime").text(data.youxiaotime);
 					var taskId=data.id==undefined?0:data.id;
+					console.info("==================");
+					console.info(taskId);
+                    console.info("==================");
 
                     $.ajax({
 						cache: true,
@@ -162,8 +166,9 @@
 								tr += '</tr>';
 							}
 							$("#taskXQ").html(tr);
-							var id = data[0].id==undefined?0:data[0].id;
-							getDetail(id,taskId,data[0].day)}
+							var id = data[0]==undefined?0:data[0].id;
+							var day=data[0]==undefined?0:data[0].day;
+							getDetail(id,taskId,day)}
                         });
 					if(result.code==-1){
 						alert(result.msg);
@@ -207,6 +212,7 @@
                 console.info(result);
 				var data2=result.data2 || {};
 				var data = result.data ||{};
+				console.info(data2);
 				$("#avgRead").text(getPingJI(data2.avgRead));
 				$("#avgReadDistance").text(getPingJI(data2.avgReadDistance));
 				$("#avgLookPhone").text(getPingJI(data2.avgLookPhone));
