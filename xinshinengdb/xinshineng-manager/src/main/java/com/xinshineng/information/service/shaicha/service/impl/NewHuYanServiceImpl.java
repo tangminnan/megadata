@@ -1,6 +1,7 @@
 package com.xinshineng.information.service.shaicha.service.impl;
 
 import com.xinshineng.information.dao.shaicha.NewHuYanDao;
+import com.xinshineng.information.domain.yanke.StudentDO;
 import com.xinshineng.information.service.shaicha.service.NewHuYanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -87,8 +88,8 @@ public class NewHuYanServiceImpl implements NewHuYanService {
     }
 
     @Override
-    public List<String> getClazzIdCards(String school, String cityName, String areaName, String checkType, String xuebu, String grade, String clazz) {
-        List<String> clazzIdCards = newHuYanDao.getClazzIdCards(school,cityName,areaName,xuebu,grade,clazz);
+    public List<StudentDO> getClazzIdCards(String school, String cityName, String areaName, String checkType, String xuebu, String grade, String clazz) {
+        List<StudentDO> clazzIdCards = newHuYanDao.getClazzIdCards(school,cityName,areaName,xuebu,grade,clazz);
         return clazzIdCards;
     }
 }

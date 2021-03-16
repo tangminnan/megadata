@@ -162,8 +162,25 @@ public class schoolServiceImpl implements schoolService {
 
 
 //        Map map = everyCheck.get(everyCheck.size() - 1);
-        List ycList = new ArrayList();
-        String checkTime = everyCheck.get(everyCheck.size() - 1).get("checkTime").toString();
+        /*List zxycList = new ArrayList();
+        List jxycList = new ArrayList();
+        List lcycList = new ArrayList();
+        for (Map map : everyCheck) {
+            String checkTime =  map.get("checkTime").toString();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
+            Date date = null;
+            try {
+                date = sdf.parse(checkTime);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            int month = date.getMonth();
+            int winter = 0;
+            if (month==9 || month == 10 || month == 11 || month == 0){
+                winter=1;
+            }else {
+                winter=0;
+            }*/
 
         List<Map<String,Object>> ldataList = new ArrayList<>();
         List<Map<String,Object>> rdataList = new ArrayList<>();

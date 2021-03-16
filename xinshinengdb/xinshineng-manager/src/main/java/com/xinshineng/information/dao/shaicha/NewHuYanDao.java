@@ -1,5 +1,6 @@
 package com.xinshineng.information.dao.shaicha;
 
+import com.xinshineng.information.domain.yanke.StudentDO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -27,5 +28,5 @@ public interface NewHuYanDao {
 
     Long getClazzJSNumForLd(@Param("school") String school,@Param("cityName") String cityName,@Param("areaName") String areaName,@Param("xuebu") String xuebu,@Param("grade") String grade,@Param("clazz") String clazz);
 
-    List<String> getClazzIdCards(@Param("school") String school,@Param("cityName") String cityName,@Param("areaName") String areaName,@Param("xuebu") String xuebu,@Param("grade") String grade,@Param("clazz") String clazz);
+    List<StudentDO> getClazzIdCards(@Param("school") String school, @Param("cityName") String cityName, @Param("areaName") String areaName, @Param("xuebu") String xuebu, @Param("grade") String grade, @Param("clazz") String clazz);
 }

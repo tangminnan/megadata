@@ -818,7 +818,11 @@
         $("#gradeLv").html(html)
     }
     var dataThree = [[${dataThree}]];
-	if (dataThree.length>0){
+	console.info("===========================");
+	console.info(dataThree);
+    console.info("===========================");
+
+    if (dataThree.length>0){
 	    var html = '';
 	    for (var i = 0;i<dataThree.length;i++){
 	        html+='<li><span><a href="/skip/geren?name='+dataThree[i].student_name+'&idCard='+dataThree[i].identity_card+'&checkdate='+dataThree[i].checkdate+'&checkType='+dataThree[i].checkType+'&age='+dataThree[i].age+'">'+dataThree[i].student_name+'</a></span><span>'+dataThree[i].grade+'</span><span>'+dataThree[i].age+'</span><span>'+dataThree[i].naked_farvision_od+'</span><span>'+dataThree[i].naked_farvision_os+'</span></li>'

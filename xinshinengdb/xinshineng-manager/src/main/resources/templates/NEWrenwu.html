@@ -11,6 +11,35 @@
 <script type="text/javascript" src="/js/jquery.SuperSlide.2.1.3.js"></script>
 <script type="text/javascript" src="/js/layui.js"></script>
 <link rel="stylesheet" href="/css/layui.css">
+	<style>
+		.submit_loading {
+			position:fixed;
+			width:100%;
+			height:100%;
+			top:0;
+			left:0;
+			background-color:#000;
+			text-align:center;
+			opacity:0.3;
+		}
+		.loading_show {
+			margin-top:15%;
+		}
+		.loading_context {
+			color: #fff;
+		}
+		.rwjl{
+			background: #0d8ddb;
+			color: #fff;
+			width: 200px;
+			height: 50px;
+			font-size: 22px;
+			display: block;
+			margin:auto;
+			outline: none;
+			cursor: pointer;
+		}
+	</style>
 </head>
 <body>
    <div class="topbanner"><img src="/img/banner.png" alt=""></div>
@@ -22,7 +51,7 @@
   				<div class="xuebu">
 					<label>学部：
 						<select id="XB" name="sel1" onChange="XueBuChange(this.value)">
-							<option>=请选择=</option>
+							<option value="0">=请选择=</option>
 						</select>
 					</label>
 				</div>
@@ -30,7 +59,7 @@
 				<div class="xuebu">
 					<label>年级：
 						<select id="grade" name="sel1" onChange="GradeChange(this.value)">
-							<option>=请选择=</option>
+							<option value="0">=请选择=</option>
 						</select>
 					</label>
 				</div>
@@ -38,7 +67,7 @@
 				<div class="xuebu">
 					<label>班级：
 						<select id="clazz" name="sel1" onChange="ClazzChange(this.value)">
-							<option>=请选择=</option>
+							<option value="0">=请选择=</option>
 						</select>
 					</label>
 				</div>
@@ -52,7 +81,7 @@
   			</div>
   		</div>
    </div>
-   <h3 class="New_h3">奖励详情</h3>
+   	<input  class="rwjl" type="button" value="任务记录" onclick="renwuhistory()">
    <div class="main renwuBox" style="background:#f9ae40;padding:8px;border-radius:10px;">
    		<div class="hd" id="New_hd">
    		</div>
@@ -69,91 +98,91 @@
 							<li><em>时长：</em>
 								<select name="taskTime" onchange="setTaskTime(this.value)">
 									<option value="0">=请选择=</option>
-									<option value="7">一周</option>
-									<option value="10">10天</option>
+									<option value="1">1天</option>
+									<option value="7">7天</option>
 									<option value="15">15天</option>
-									<option value="20">20天</option>
+									<option value="30">30天</option>
 								</select>
 							</li>
 							<li><em>健康用眼评级：</em>
 								<select name="eyeRate" onchange="setEyeRate(this.value)">
 									<option value="0">=请选择=</option>
-									<option value="1">优秀</option>
-									<option value="2">良好</option>
-									<option value="3">差</option>
-									<option value="4">极差</option>
+									<option value="5">优秀</option>
+									<option value="4">良好</option>
+									<option value="2">差</option>
+									<option value="1">极差</option>
 								</select>
 							</li>
 							<li><em>平均单次阅读时长：</em>
 								<select name="avgRead">
 									<option value="0">=请选择=</option>
-									<option value="1">优秀</option>
-									<option value="2">良好</option>
-									<option value="3">差</option>
-									<option value="4">极差</option>
+									<option value="5">优秀</option>
+									<option value="4">良好</option>
+									<option value="2">差</option>
+									<option value="1">极差</option>
 								</select>
 							</li>
 							<li><em>平均户外时长：</em>
 								<select name="avgOut" >
 									<option value="0">=请选择=</option>
-									<option value="1">优秀</option>
-									<option value="2">良好</option>
-									<option value="3">差</option>
-									<option value="3">极差</option>
+									<option value="5">优秀</option>
+									<option value="4">良好</option>
+									<option value="2">差</option>
+									<option value="1">极差</option>
 								</select>
 							</li>
 							<li><em>平均阅读距离：</em>
 								<select name="avgReadDistance">
 									<option value="0">=请选择=</option>
-									<option value="1">优秀</option>
-									<option value="2">良好</option>
-									<option value="3">差</option>
-									<option value="4">极差</option>
+									<option value="5">优秀</option>
+									<option value="4">良好</option>
+									<option value="2">差</option>
+									<option value="1">极差</option>
 								</select>
 							</li>
 							<li><em>平均阅读光照：</em>
 								<select name="avgLight">
 									<option value="0">=请选择=</option>
-									<option value="1">优秀</option>
-									<option value="2">良好</option>
-									<option value="3">差</option>
-									<option value="4">极差</option>
+									<option value="5">优秀</option>
+									<option value="4">良好</option>
+									<option value="2">差</option>
+									<option value="1">极差</option>
 								</select>
 							</li>
 							<li><em>平均单次看手机时长：</em>
 								<select name="avgLookPhone">
 									<option value="0">=请选择=</option>
-									<option value="1">优秀</option>
-									<option value="2">良好</option>
-									<option value="3">差</option>
-									<option value="4">极差</option>
+									<option value="5">优秀</option>
+									<option value="4">良好</option>
+									<option value="2">差</option>
+									<option value="1">极差</option>
 								</select>
 							</li>
 							<li><em>平均单次看电脑电视时长：</em>
 								<select name="avgLookTv">
 									<option value="0">=请选择=</option>
-									<option value="1">优秀</option>
-									<option value="2">良好</option>
-									<option value="3">差</option>
-									<option value="4">极差</option>
+									<option value="5">优秀</option>
+									<option value="4">良好</option>
+									<option value="2">差</option>
+									<option value="1">极差</option>
 								</select>
 							</li>
 							<li><em>平均坐姿倾斜度：</em>
 								<select name="avgSitTilt" >
 									<option value="0">=请选择=</option>
-									<option value="1">优秀</option>
-									<option value="2">良好</option>
-									<option value="3">差</option>
-									<option value="4">极差</option>
+									<option value="5">优秀</option>
+									<option value="4">良好</option>
+									<option value="2">差</option>
+									<option value="1">极差</option>
 								</select>
 							</li>
 							<li><em>有效使用监护仪总时长：</em>
 								<select name="effectiveUseTime" >
 									<option value="0">=请选择=</option>
-									<option value="1">优秀</option>
-									<option value="2">良好</option>
-									<option value="3">差</option>
-									<option value="4">极差</option>
+									<option value="5">优秀</option>
+									<option value="4">良好</option>
+									<option value="2">差</option>
+									<option value="1">极差</option>
 								</select>
 							</li>
 						</ul>
@@ -165,11 +194,20 @@
 			</form>
    		</div>
    </div>
+
+
+   <div id="loading" class="submit_loading" style="display: none">
+	   <div class="loading_show">
+		   <img src="/images/loading.gif">
+		   <p class="loading_context">正在提交，请稍候。。。</p>
+	   </div>
+   </div>
+
 </body>
 </html>
 <script type="text/javascript" th:inline="javascript">
    var url = 'http://eyemonitor-api.dddmaker.com'
-   //var url = 'http://localhost:8087'
+//   var url = 'http://localhost:8083'
 	var school = [[${school}]];
 	var checkType = [[${checkType}]];
 	var CityName = [[${CityName}]];
@@ -296,38 +334,43 @@
 					parent.layer.alert("网络超时");
 				},
 				success: function (data) {
-					idCards=data;
+				    console.info("===================");
+				    console.info(data);
+				    console.info(JSON.stringify(data));
+                    console.info("===================");
+
+                    idCards=data;
 				}
 			})
 	}
 
-	var initTask = function () {
-	   $.ajax({
-		  type:'get',
-		  url:url+'/api/gift/listPc',
-          async : false,
-          dataType : "jsonp",
-          jsonp:"callback",
-          success : function(data) {
-             console.log(data.data,"data")
-			 result = data.data
-			 var html = ''
-			 html+='<ul>'
-			 for(var i= 0;i<result.length;i++){
-			    html+='<li><input type="hidden" value="'+result[i].id+'"><img src="'+result[i].coverImg+'" alt=""/><p>'+result[i].giftName+'</p></li>'
-			 }
-			 html+='</ul>'
-			 $('#New_hd').html(html)
-          },
-          error : function() {
-             alert('fail');
-          }
-	   })
-    }
+//	var initTask = function () {
+//	   $.ajax({
+//		  type:'get',
+//		  url:url+'/api/gift/listPc',
+//          async : false,
+//          dataType : "jsonp",
+//          jsonp:"callback",
+//          success : function(data) {
+//             console.log(data.data,"data")
+//			 result = data.data
+//			 var html = ''
+//			 html+='<ul>'
+//			 for(var i= 0;i<result.length;i++){
+//			    html+='<li><input type="hidden" value="'+result[i].id+'"><img src="'+result[i].coverImg+'" alt=""/><p>'+result[i].giftName+'</p></li>'
+//			 }
+//			 html+='</ul>'
+//			 $('#New_hd').html(html)
+//          },
+//          error : function() {
+//             alert('fail');
+//          }
+//	   })
+//    }
 
 
 	$(function () {
-       initTask();
+//       initTask();
        setInterval("loadslide()", 1000);
     })
 	function loadslide(){
@@ -337,26 +380,26 @@
 	function setTaskTime(value) {
 	   if(value!=null && value>0){
 			if(value == 1){
-			   $('#span1').text("一周")
-			}else if(value == 2){
-			   $('#span1').text("10天")
-			}else if(value == 3){
+			   $('#span1').text("1天")
+			}else if(value == 7){
+			   $('#span1').text("7天")
+			}else if(value == 15){
 			   $('#span1').text("15天")
-			}else if(value == 4){
-			   $('#span1').text("20天")
+			}else if(value == 30){
+			   $('#span1').text("30天")
 			}
 	   }
     }
 
     function setEyeRate(value) {
        if(value!=null && value>0){
-          if(value == 1){
+          if(value == 5){
              $('#span2').text("优秀")
-          }else if(value == 2){
-             $('#span2').text("良好")
-          }else if(value == 3){
-             $('#span2').text("差")
           }else if(value == 4){
+             $('#span2').text("良好")
+          }else if(value == 2){
+             $('#span2').text("差")
+          }else if(value == 1){
              $('#span2').text("极差")
           }
        }
@@ -383,6 +426,10 @@
           alert("请选择平均阅读距离");
           return;
        }
+        if($("select[name='avgOut']").val() <=0 ){
+            alert("请选择平均户外时长");
+            return;
+        }
        if($("select[name='avgLight']").val() <=0 ){
           alert("请选择平均阅读光照");
           return;
@@ -404,32 +451,64 @@
           return;
        }
 
-       var signupFormData=$('#signupForm').serialize();
-       var idCards11=JSON.stringify(idCards);
-
-	   var giftId = $("#New_hd ul").find(".on").children("input").val()
-	   alert("请求中，请稍等")
+        let taskTime = $("select[name='taskTime']").val();
+        let eyeRate = $("select[name='eyeRate']").val();
+        let avgRead = $("select[name='avgRead']").val();
+        let avgReadDistance = $("select[name='avgReadDistance']").val();
+        let avgLight = $("select[name='avgLight']").val();
+        let avgLookPhone = $("select[name='avgLookPhone']").val();
+        let avgLookTv = $("select[name='avgLookTv']").val();
+        let avgSitTilt = $("select[name='avgSitTilt']").val();
+        let effectiveUseTime = $("select[name='effectiveUseTime']").val();
+        let avgOut = $("select[name='avgOut']").val();
+        let pcorapp=school+XueBu+Grade+Clazz;
+		let userTaskDO = {taskTime,eyeRate,avgRead,avgReadDistance,avgLight,avgLookPhone,avgLookTv,avgSitTilt,effectiveUseTime,avgOut,pcorapp}
+		let idCardsInfo=JSON.stringify(idCards);
+		$("#loading").show();
        $.ajax({
           cache: true,
-          type: "get",
+          type: "post",
           url: url+"/api/gift/customTaskPc",
-          data: signupFormData+"&idCards="+idCards11+"&giftId="+giftId,// 你的formid
-          dataType : "jsonp",
-          jsonp:"callback",
+          data: {...userTaskDO,idCardsInfo},
           async: false,
-          success: function (data) {
-			if(data.havedTaskuserName.length >0){
-			   alert("该班级学生有进行中的班级任务")
-			}else{
-               alert("已成功发布任务")
+          success: function (data) {console.info(data)
+            if(data.code==0){
+                alert(data.msg);
+                $("select").val("0");
+                $("#span1").text('');
+                $("#span2").text('');
+                $("#loading").hide();
 			}
           },
 		  error: function (request) {
           	alert("Connection error");
+              $("#loading").hide();
 		  },
        });
 
     }
+
+  /**
+   *  任务记录
+   */
+  function renwuhistory(){
+	let XB = $("#XB").val();
+	let grade=$("#grade").val();
+	let clazz=$("#clazz").val();
+	if(XB=="=请选择=" || XB==null){
+	    alert("学部不可为空"); return ;
+	}
+      if(grade=="=请选择=" || grade==null){
+	    alert("年级不可为空"); return;
+	}
+	if(clazz=="=请选择=" || clazz==null){
+	    alert("班级不可为空"); return ;
+	}
+
+	let pcorapp=school+XB+grade+clazz;
+    	window.location.href="/Newhuyan/getRenWuHistory?pcorapp="+pcorapp;
+
+  }
 </script>
 
 
