@@ -165,30 +165,30 @@ public interface ShaichaStudentDao {
 
 	Long getSchoolHuanBingNum(@Param("checkCity") String checkCity,@Param("school") String school);
 
-	Integer schoolAllNumber (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName);
-	Integer schoolAllNumberld (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName);
-	Integer schoolThisNumber (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate);
-	Integer schoolThisNumberld (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate);
-	Integer illNumber (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate);
-	Integer illNumberld (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate);
-	Integer sexThisNumber (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate,@Param("sex")Integer sex);
-	Integer sexThisNumberld (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate,@Param("sex")Integer sex);
-	List<Map> everyCheck(@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName);
-	List<Map> everyCheckld(@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName);
-	Integer mildNumber (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate);
-	Integer mildNumberld (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate);
-	Integer moderateNumber (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate);
-	Integer moderateNumberld (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate);
-	Integer highlyNumber (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate);
-	Integer highlyNumberld (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate);
-	Integer lcqqNumber (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate);
-	Integer lcqqNumberld (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate);
-	Integer jxjsNumber (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate);
-	Integer jxjsNumberld (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate);
-	List<Map> studentList (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate);
-	List<Map> studentListld (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate);
-	String getXueBu (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate);
-	String getXueBuld (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate);
+	Integer schoolAllNumber (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate,@Param("nianji")String nianji,@Param("banji")String banji);
+	Integer schoolAllNumberld (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate,@Param("nianji")String nianji,@Param("banji")String banji);
+	Integer schoolThisNumber (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate,@Param("nianji")String nianji,@Param("banji")String banji);
+	Integer schoolThisNumberld (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate,@Param("nianji")String nianji,@Param("banji")String banji);
+	Integer illNumber (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate,@Param("nianji")String nianji,@Param("banji")String banji);
+	Integer illNumberld (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate,@Param("nianji")String nianji,@Param("banji")String banji);
+	Integer sexThisNumber (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate,@Param("sex")Integer sex,@Param("nianji")String nianji,@Param("banji")String banji);
+	Integer sexThisNumberld (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate,@Param("sex")Integer sex,@Param("nianji")String nianji,@Param("banji")String banji);
+	List<Map> everyCheck(@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("nianji")String nianji,@Param("banji")String banji );
+	List<Map> everyCheckld(@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("nianji")String nianji,@Param("banji")String banji);
+	Integer mildNumber (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate,@Param("nianji")String nianji,@Param("banji")String banji);
+	Integer mildNumberld (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate,@Param("nianji")String nianji,@Param("banji")String banji);
+	Integer moderateNumber (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate,@Param("nianji")String nianji,@Param("banji")String banji);
+	Integer moderateNumberld (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate,@Param("nianji")String nianji,@Param("banji")String banji);
+	Integer highlyNumber (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate,@Param("nianji")String nianji,@Param("banji")String banji);
+	Integer highlyNumberld (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate,@Param("nianji")String nianji,@Param("banji")String banji);
+	Integer lcqqNumber (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate,@Param("nianji")String nianji,@Param("banji")String banji);
+	Integer lcqqNumberld (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate,@Param("nianji")String nianji,@Param("banji")String banji);
+	Integer jxjsNumber (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate,@Param("nianji")String nianji,@Param("banji")String banji);
+	Integer jxjsNumberld (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate,@Param("nianji")String nianji,@Param("banji")String banji);
+	List<Map> studentList (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate,@Param("nianji")String nianji,@Param("banji")String banji);
+	List<Map> studentListld (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate,@Param("nianji")String nianji,@Param("banji")String banji);
+	String getXueBu (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate,@Param("nianji")String nianji,@Param("banji")String banji);
+	String getXueBuld (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate,@Param("nianji")String nianji,@Param("banji")String banji);
 	List<Map> gradeNumber (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate);
 	List<Map> gradeNumberld (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate);
 	List<Map> paiMing (@Param("school")String school,@Param("CityName")String CityName,@Param("AreaName")String AreaName,@Param("checkdate")String checkdate);
@@ -259,7 +259,7 @@ public interface ShaichaStudentDao {
 
 	Long getSchoolHuanBingNumForOld(@Param("checkCity") String checkCity,@Param("school") String school);
 
-	List<Map<String,Object>> getScYuCe(@Param("checkTime") String checkTime, @Param("school")String school, @Param("cityName")String cityName,@Param("areaName") String areaName);
+	List<Map<String,Object>> getScYuCe(@Param("checkTime") String checkTime, @Param("school")String school, @Param("cityName")String cityName,@Param("areaName") String areaName,@Param("nianji")String nianji,@Param("banji")String banji);
 
 	Integer getOptId(Integer id);
 
@@ -298,4 +298,8 @@ public interface ShaichaStudentDao {
 	String getShiFouHaveOtherTime(@Param("checkTime") String checkTime,@Param("school") String school,@Param("cityName") String cityName,@Param("areaName") String areaName);
 
 	Integer getOtherTimeCount(@Param("checkTime") String checkTime,@Param("school") String school,@Param("cityName") String cityName,@Param("areaName") String areaName);
+
+	Map<String, Object> getYuCeForPersonForOld(@Param("checkDate") String checkDate,@Param("name") String name,@Param("idCard") String idCard);
+
+	List<Map<String, Object>> getScYuCeForProvince(@Param("year") int year, @Param("checkCity") String checkCity, @Param("checkArea") String checkArea);
 }

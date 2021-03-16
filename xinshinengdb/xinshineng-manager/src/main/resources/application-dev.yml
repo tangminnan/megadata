@@ -15,11 +15,11 @@ spring:
     minIdle: 3
     maxActive: 20
     # 配置获取连接等待超时的时间
-    maxWait: 60000
+    maxWait: 60000000
     # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
-    timeBetweenEvictionRunsMillis: 60000
+    timeBetweenEvictionRunsMillis: 60000000
     # 配置一个连接在池中最小生存的时间，单位是毫秒
-    minEvictableIdleTimeMillis: 30000
+    minEvictableIdleTimeMillis: 30000000
 #    validationQuery: select 1
     testWhileIdle: true
     testOnBorrow: true
@@ -33,11 +33,11 @@ spring:
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
 
   redis:
-      host: 127.0.0.1
-      port: 6379
+      host: 124.70.65.236
+      port: 6380
       password:
       # 连接超时时间（毫秒）
-      timeout: 10000
+      timeout: 10000000
       pool:
         # 连接池中的最大空闲连接
         max-idle: 8

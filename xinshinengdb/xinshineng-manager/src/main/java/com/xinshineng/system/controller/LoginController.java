@@ -97,14 +97,15 @@ public class LoginController extends BaseController {
 		}
 		if ("学校".equals(choseType)){
 			if ("htsyxx".equals(username) && "123456".equals(password)){
-				String admin= "admin";
-				String psw="Dmld202009&";
+				String admin= "sdjsfk";
+				String psw="123456";
 				psw = MD5Utils.encrypt(admin,psw);
 				UsernamePasswordToken token = new UsernamePasswordToken(admin, psw);
 				Subject subject = SecurityUtils.getSubject();
 				try {
 					subject.login(token);
-					return R.ok().put("url","/skip/school?school=桓台实验学校小学部&CityName=淄博市&AreaName=桓台县&checkdate=2020-11&checkType=sc");
+
+					return R.ok().put("url","/skip/school?school=桓台实验学校小学部&CityName=淄博市&AreaName=桓台县&checkdate=2020-11&checkType=sc&nianji=一年级");
 				} catch (Exception e) {
 					return R.error("用户名或密码错误");
 				}

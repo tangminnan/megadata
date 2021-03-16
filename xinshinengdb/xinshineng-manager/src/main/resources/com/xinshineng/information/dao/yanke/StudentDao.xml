@@ -368,7 +368,6 @@
 	</select>
 	<select id="getThisYearCheckCount" resultType="map">
 		SELECT sch.`CityName`,COUNT(*) num FROM y_student stu,y_school_new sch WHERE stu.school_id = sch.`id` AND sch.`ProvinceCode`='370000' AND stu.`last_check_time` IS NOT NULL AND  DATE_FORMAT(stu.`last_check_time`,'%Y') = #{year} GROUP BY sch.`CityName`;
-
 	</select>
 	<select id="getThisYearCheckCountForArea" resultType="long">
 		SELECT

@@ -18,7 +18,7 @@
 </head>
 
 <body>
-<div class="school-title">山东省儿童青少年健康与近视防控大数据平台<span th:text="${dataOne.school}"></span></div>
+<div class="school-title">山东省儿童青少年近视防控大数据平台<span th:text="${dataOne.school}"></span></div>
 <div class="bg">
 	<div class="leftMain">
 		<div class="leftMain_top">
@@ -67,17 +67,16 @@
 		<div class="leftMain_middle" style="margin-bottom: 0.1rem;">
 			<div class="leftMain_middle_left" style="width:33.33%;">
 				<div class="leftMain_middle_leftIn">
-					<h3>近2年历次筛查近视率</h3>
+					<h3>人工智能预测明年发病率</h3>
 					<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
 					<div class="biaoge" style="height:24vh;" id="chartmain"></div>
 					<script type="text/javascript" th:inline="javascript">
 						// window.onload = function () {
 						//指定图表的配置项和数据
-						var dataAxis = [[${dataTwo.everyTime}]];
-						dataAxis=dataAxis.slice(0,dataAxis.length-1)
-						var data = [[${dataTwo.zxjsLv}]];
+						var dataAxis = ['假性近视','近视临床前期','真性近视']
+						var data = [[${dataTwo.ycList}]];
 						var yMax = 500;
-						var dataShadow = [[${dataTwo.zxjsLv}]];
+						var dataShadow = [[${dataTwo.ycList}]];
 						dataShadow=dataShadow.slice(0,dataShadow.length-1)
 
 						for (var i = 0; i < data.length; i++) {
@@ -150,16 +149,6 @@
 								}
 							],
 							series: [
-								{ // For shadow
-									type: 'bar',
-									itemStyle: {
-										color: 'rgba(0,0,0,0.05)'
-									},
-									barGap: '-100%',
-									barCategoryGap: '40%',
-									data: dataShadow,
-									animation: false
-								},
 								{
 									type: 'bar',
 									itemStyle: {
@@ -316,10 +305,6 @@
                         var zxjsLv = [[${dataTwo.zxjsLv}]];
                         var lcqqLv = [[${dataTwo.lcqqLv}]];
                         var jxjsLv = [[${dataTwo.jxjsLv}]];
-
-                        var zxycList = [[${dataTwo.zxycList}]];
-                        var jxycList = [[${dataTwo.jxycList}]];
-                        var lcycList = [[${dataTwo.lcycList}]];
                         var everyTime = [[${dataTwo.everyTime}]];
 
 						option = {
@@ -335,7 +320,7 @@
 									fontSize: 12,
 								},
 								right:'50%',
-								data: ['临床前期', '假性近视', '真性近视','预测临床前期','预测真性近视','预测假性近视']
+								data: ['临床前期', '假性近视', '真性近视']
 							},
 							grid:{
 								x:40,
@@ -440,51 +425,6 @@
 											color: "#ffd500",//折线点的颜色
 											lineStyle: {
 												color: "#ffd500",//折线的颜色
-												width:2,
-											}
-										},
-									}
-								},
-								{
-									name: '预测临床前期',
-									type: 'line',
-									//stack: '总量',
-									data: lcycList,
-									itemStyle: {
-										normal: {
-											color: "#efff0e",//折线点的颜色
-											lineStyle: {
-												color: "#efff0e",//折线的颜色
-												width:2,
-											}
-										},
-									}
-								},
-								{
-									name: '预测真性近视',
-									type: 'line',
-									//stack: '总量',
-									data: zxycList,
-									itemStyle: {
-										normal: {
-											color: "#0eff12",//折线点的颜色
-											lineStyle: {
-												color: "#0eff12",//折线的颜色
-												width:2,
-											}
-										},
-									}
-								},
-								{
-									name: '预测假性近视',
-									type: 'line',
-									//stack: '总量',
-									data: jxycList,
-									itemStyle: {
-										normal: {
-											color: "#0e42ff",//折线点的颜色
-											lineStyle: {
-												color: "#0e42ff",//折线的颜色
 												width:2,
 											}
 										},

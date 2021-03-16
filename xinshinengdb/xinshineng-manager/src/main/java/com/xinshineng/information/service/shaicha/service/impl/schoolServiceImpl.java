@@ -2,6 +2,7 @@ package com.xinshineng.information.service.shaicha.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.xinshineng.common.utils.JSONUtils;
+import com.xinshineng.common.utils.ShiLiZhuanHuanUtils;
 import com.xinshineng.common.utils.ShiroUtils;
 import com.xinshineng.common.utils.TimeUtils;
 import com.xinshineng.information.dao.shaicha.ShaichaStudentDao;
@@ -9,6 +10,7 @@ import com.xinshineng.information.dao.yanke.StudentDao;
 import com.xinshineng.information.domain.yanke.ResultDiopterDO;
 import com.xinshineng.information.service.shaicha.service.schoolService;
 import org.apache.commons.lang.StringUtils;
+import org.apache.poi.ss.formula.functions.Na;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpEntity;
@@ -34,22 +36,22 @@ public class schoolServiceImpl implements schoolService {
 
 
     @Override
-    public Map<String, String> dataOne(String school, String CityName, String AreaName, String checkdate,String checkType) {
+    public Map<String, String> dataOne(String school, String CityName, String AreaName, String checkdate,String checkType,String nianji,String banji) {
         Map<String, String> map = new HashMap<>();
         Integer schoolAllNumber,schoolThisNumber,illNumber;
         Integer manNumber,wumanNumber;
         if ("sc".equals(checkType)) {
-            schoolAllNumber = shaichaStudentDao.schoolAllNumber(school, CityName, AreaName);
-            schoolThisNumber = shaichaStudentDao.schoolThisNumber(school, CityName, AreaName, checkdate);
-            illNumber = shaichaStudentDao.illNumber(school, CityName, AreaName, checkdate);
-            manNumber = shaichaStudentDao.sexThisNumber(school, CityName, AreaName, checkdate, 1);
-            wumanNumber = shaichaStudentDao.sexThisNumber(school, CityName, AreaName, checkdate, 2);
+            schoolAllNumber = shaichaStudentDao.schoolAllNumber(school, CityName, AreaName, checkdate,nianji,banji);
+            schoolThisNumber = shaichaStudentDao.schoolThisNumber(school, CityName, AreaName, checkdate,nianji,banji);
+            illNumber = shaichaStudentDao.illNumber(school, CityName, AreaName, checkdate,nianji,banji);
+            manNumber = shaichaStudentDao.sexThisNumber(school, CityName, AreaName, checkdate, 1,nianji,banji);
+            wumanNumber = shaichaStudentDao.sexThisNumber(school, CityName, AreaName, checkdate, 2,nianji,banji);
         }else {
-            schoolAllNumber = shaichaStudentDao.schoolAllNumberld(school, CityName, AreaName);
-            schoolThisNumber = shaichaStudentDao.schoolThisNumberld(school, CityName, AreaName, checkdate);
-            illNumber = shaichaStudentDao.illNumberld(school, CityName, AreaName, checkdate);
-            manNumber = shaichaStudentDao.sexThisNumberld(school, CityName, AreaName, checkdate, 1);
-            wumanNumber = shaichaStudentDao.sexThisNumberld(school, CityName, AreaName, checkdate, 2);
+            schoolAllNumber = shaichaStudentDao.schoolAllNumberld(school, CityName, AreaName, checkdate,nianji,banji);
+            schoolThisNumber = shaichaStudentDao.schoolThisNumberld(school, CityName, AreaName, checkdate,nianji,banji);
+            illNumber = shaichaStudentDao.illNumberld(school, CityName, AreaName, checkdate,nianji,banji);
+            manNumber = shaichaStudentDao.sexThisNumberld(school, CityName, AreaName, checkdate, 1, nianji,banji);
+            wumanNumber = shaichaStudentDao.sexThisNumberld(school, CityName, AreaName, checkdate, 2, nianji,banji);
         }
         Double illLv = getLv(illNumber,schoolThisNumber);
         BigDecimal le;
@@ -72,7 +74,16 @@ public class schoolServiceImpl implements schoolService {
         if ("0 : 1".equals(map.get("man"))) map.put("man","1:1");
         map.put("school",school);
         map.put("checkdate",checkdate);
-        redisTemplate.opsForHash().putAll(school+AreaName+checkdate+checkType+"dataOne",map);
+        if (StringUtils.isBlank(nianji) && StringUtils.isBlank(banji)){
+            redisTemplate.opsForHash().putAll(school+AreaName+checkdate+checkType+"dataOne",map);
+        }else {
+            if (StringUtils.isBlank(banji)){
+                redisTemplate.opsForHash().putAll(school+AreaName+checkdate+checkType+nianji+"dataOne",map);
+            }else {
+                redisTemplate.opsForHash().putAll(school+AreaName+checkdate+checkType+nianji+banji+"dataOne",map);
+            }
+        }
+
         return map;
     }
 
@@ -82,7 +93,7 @@ public class schoolServiceImpl implements schoolService {
     @Autowired
     private StudentDao liuDiaoDao;
     @Override
-    public Map<String, List> dataTwo(String school, String CityName, String AreaName,String checkdate,String checkType) {
+    public Map<String, List> dataTwo(String school, String CityName, String AreaName,String checkdate,String checkType,String nianji,String banji) {
         Map<String, List> listMap = new HashMap<>();
         List zxjsLv = new ArrayList();
         List everyTime = new ArrayList();
@@ -91,22 +102,22 @@ public class schoolServiceImpl implements schoolService {
         List jxjsLv = new ArrayList();
         List<Map> everyCheck;
         if ("sc".equals(checkType)){
-            everyCheck = shaichaStudentDao.everyCheck(school, CityName, AreaName);
+            everyCheck = shaichaStudentDao.everyCheck(school, CityName, AreaName,nianji,banji);
         }else {
-            everyCheck = shaichaStudentDao.everyCheckld(school, CityName, AreaName);
+            everyCheck = shaichaStudentDao.everyCheckld(school, CityName, AreaName,nianji,banji);
         }
         //轻度，中度，高度，正常
         Integer mildNumber,moderateNumber,highlyNumber,thisNumber1;
         if ("sc".equals(checkType)){
-            mildNumber = shaichaStudentDao.mildNumber(school, CityName, AreaName, checkdate);
-            moderateNumber = shaichaStudentDao.moderateNumber(school, CityName, AreaName, checkdate);
-            highlyNumber = shaichaStudentDao.highlyNumber(school, CityName, AreaName, checkdate);
-            thisNumber1 = shaichaStudentDao.schoolThisNumber(school, CityName, AreaName, checkdate);
+            mildNumber = shaichaStudentDao.mildNumber(school, CityName, AreaName, checkdate,nianji,banji);
+            moderateNumber = shaichaStudentDao.moderateNumber(school, CityName, AreaName, checkdate,nianji,banji);
+            highlyNumber = shaichaStudentDao.highlyNumber(school, CityName, AreaName, checkdate,nianji,banji);
+            thisNumber1 = shaichaStudentDao.schoolThisNumber(school, CityName, AreaName, checkdate,nianji,banji);
         }else {
-            mildNumber = shaichaStudentDao.mildNumberld(school, CityName, AreaName, checkdate);
-            moderateNumber = shaichaStudentDao.moderateNumberld(school, CityName, AreaName, checkdate);
-            highlyNumber = shaichaStudentDao.highlyNumberld(school, CityName, AreaName, checkdate);
-            thisNumber1 = shaichaStudentDao.schoolThisNumberld(school, CityName, AreaName, checkdate);
+            mildNumber = shaichaStudentDao.mildNumberld(school, CityName, AreaName, checkdate,nianji,banji);
+            moderateNumber = shaichaStudentDao.moderateNumberld(school, CityName, AreaName, checkdate,nianji,banji);
+            highlyNumber = shaichaStudentDao.highlyNumberld(school, CityName, AreaName, checkdate,nianji,banji);
+            thisNumber1 = shaichaStudentDao.schoolThisNumberld(school, CityName, AreaName, checkdate,nianji,banji);
         }
         Integer normal = thisNumber1-mildNumber-moderateNumber-highlyNumber;
         myopia.add(normal);
@@ -120,13 +131,13 @@ public class schoolServiceImpl implements schoolService {
             everyTime.add(checkTime);
             Integer thisNumber,lcqqNumber,jxjsNumber;
             if ("sc".equals(checkType)){
-                thisNumber = shaichaStudentDao.illNumber(school, CityName, AreaName, checkTime);
-                lcqqNumber = shaichaStudentDao.lcqqNumber(school, CityName, AreaName, checkTime);
-                jxjsNumber = shaichaStudentDao.jxjsNumber(school, CityName, AreaName, checkTime);
+                thisNumber = shaichaStudentDao.illNumber(school, CityName, AreaName, checkTime,nianji,banji);
+                lcqqNumber = shaichaStudentDao.lcqqNumber(school, CityName, AreaName, checkTime,nianji,banji);
+                jxjsNumber = shaichaStudentDao.jxjsNumber(school, CityName, AreaName, checkTime,nianji,banji);
             }else {
-                thisNumber = shaichaStudentDao.illNumberld(school, CityName, AreaName, checkTime);
-                lcqqNumber = shaichaStudentDao.lcqqNumberld(school, CityName, AreaName, checkTime);
-                jxjsNumber = shaichaStudentDao.jxjsNumberld(school, CityName, AreaName, checkTime);
+                thisNumber = shaichaStudentDao.illNumberld(school, CityName, AreaName, checkTime,nianji,banji);
+                lcqqNumber = shaichaStudentDao.lcqqNumberld(school, CityName, AreaName, checkTime,nianji,banji);
+                jxjsNumber = shaichaStudentDao.jxjsNumberld(school, CityName, AreaName, checkTime,nianji,banji);
             }
             jxjsLv.add(format(getLv(jxjsNumber,Integer.parseInt(allNumber))));
             zxjsLv.add(format(getLv(thisNumber,Integer.parseInt(allNumber))));
@@ -138,10 +149,10 @@ public class schoolServiceImpl implements schoolService {
         String xueBu;
         List<Map> gradeNumberList;
         if ("sc".equals(checkType)){
-            xueBu = shaichaStudentDao.getXueBu(school, CityName, AreaName, checkdate);
+            xueBu = shaichaStudentDao.getXueBu(school, CityName, AreaName, checkdate,nianji,banji);
             gradeNumberList = shaichaStudentDao.gradeNumber(school, CityName, AreaName, checkdate);
         }else {
-            xueBu = shaichaStudentDao.getXueBuld(school, CityName, AreaName, checkdate);
+            xueBu = shaichaStudentDao.getXueBuld(school, CityName, AreaName, checkdate,nianji,banji);
             gradeNumberList = shaichaStudentDao.gradeNumberld(school, CityName, AreaName, checkdate);
         }
         for(Map map : gradeNumberList){
@@ -151,578 +162,17 @@ public class schoolServiceImpl implements schoolService {
 
 
 //        Map map = everyCheck.get(everyCheck.size() - 1);
-        List zxycList = new ArrayList();
-        List jxycList = new ArrayList();
-        List lcycList = new ArrayList();
-        for (Map map : everyCheck) {
-            String checkTime =  map.get("checkTime").toString();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
-            Date date = null;
-            try {
-                date = sdf.parse(checkTime);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            int month = date.getMonth();
-            int winter = 0;
-            if (month==9 || month == 10 || month == 11 || month == 0){
-                winter=1;
-            }else {
-                winter=0;
-            }
+        List ycList = new ArrayList();
+        String checkTime = everyCheck.get(everyCheck.size() - 1).get("checkTime").toString();
 
+        List<Map<String,Object>> ldataList = new ArrayList<>();
+        List<Map<String,Object>> rdataList = new ArrayList<>();
+        List<Map<String,Integer>> yuceqianList = new ArrayList<>();
+        List<Map<String,Integer>> yucehouList = new ArrayList<>();
+        if ("sc".equals(checkType)){
+            List<Map<String,Object>> scYuce = shaichaStudentDao.getScYuCe(checkTime,school, CityName, AreaName,nianji,banji);
 
-            Integer checkNumber = Integer.parseInt(map.get("checkNumber").toString());
-            List<Map<String,Object>> ldataList = new ArrayList<>();
-            List<Map<String,Object>> rdataList = new ArrayList<>();
-            List<Map<String,Object>> yuceqianList = new ArrayList<>();
-            List<Map<String,Object>> yucehouList = new ArrayList<>();
-
-            if ("sc".equals(checkType)){
-                if (date.getYear()<2020){
-                    List<Map<String,Object>> scYuce = shaichaStudentDao.getScYuCeForOld(checkTime,school, CityName, AreaName);
-                    Double dioAL = 0.0;
-                    Double dioSL = 0.0;
-                    Double dioCL = 0.0;
-                    Double dioAR = 0.0;
-                    Double dioSR = 0.0;
-                    Double dioCR = 0.0;
-                    Double corML = 0.0;
-                    Double corDL = 0.0;
-                    Double corMR = 0.0;
-                    Double corDR = 0.0;
-                    Double eyeaxisOd = 0.0;
-                    Double eyeaxisOs = 0.0;
-                    Double preOd = 0.0;
-                    Double preOs = 0.0;
-                    Double eyeaxis_corneal_L = 0.0;
-                    Double eyeaxis_corneal_R = 0.0;
-                    for (Map<String, Object> stuMap : scYuce) {
-                        if ("塑形镜".equals(stuMap.get("NakedOs"))||"塑形镜".equals(stuMap.get("NakedOd"))){
-                            continue;
-                        }
-                        Map<String,Object> lMap = new HashMap<>();
-                        Map<String,Object> rMap = new HashMap<>();
-                        Integer id = (Integer) stuMap.get("id");
-                        Integer sex = (Integer) stuMap.get("sex");
-                        if (sex == 1){
-                            sex=1;
-                        }
-                        if (sex == 2){
-                            sex=0;
-                        }
-                        String lasy_check_time = stuMap.get("checkTime").toString();
-                        Integer optId = shaichaStudentDao.getOptIdForOld(id);
-                        List<Map<String,Object>> diopterData = shaichaStudentDao.getDiopterDataForOld(optId);
-
-                        for (Map<String, Object> dioMap : diopterData) {
-                            String ifRl = dioMap.get("ifRL").toString();
-                            if ("L".equals(ifRl)){
-                                dioAL = Double.parseDouble(dioMap.get("dioA")==null?"0.0":dioMap.get("dioA")==""?"0.0":dioMap.get("dioA").toString());
-                                dioSL = Double.parseDouble(dioMap.get("dioS")==null?"0.0":dioMap.get("dioS")==""?"0.0":dioMap.get("dioS").toString());
-                                dioCL = Double.parseDouble(dioMap.get("dioC")==null?"0.0":dioMap.get("dioC")==""?"0.0":dioMap.get("dioC").toString());
-                            }
-
-                            if ("R".equals(ifRl)){
-                                dioAR = Double.parseDouble(dioMap.get("dioA")==null?"0.0":dioMap.get("dioA")==""?"0.0":dioMap.get("dioA").toString());
-                                dioSR = Double.parseDouble(dioMap.get("dioS")==null?"0.0":dioMap.get("dioS")==""?"0.0":dioMap.get("dioS").toString());
-                                dioCR = Double.parseDouble(dioMap.get("dioC")==null?"0.0":dioMap.get("dioC")==""?"0.0":dioMap.get("dioC").toString());
-                            }
-                        }
-                        List<Map<String,Object>> corData = shaichaStudentDao.getCornealDataForOld(optId);
-                        for (Map<String, Object> corMap : corData) {
-                            String ifRL = corMap.get("ifRL").toString();
-                            if ("L".equals(ifRL)){
-                                corML = Double.parseDouble(corMap.get("corM")==null?"0.0":corMap.get("corM")==""?"0.0":corMap.get("corM").toString());
-                                corDL = Double.parseDouble(corMap.get("corD")==null?"0.0":corMap.get("corD")==""?"0.0":corMap.get("corD").toString());
-                            }
-                            if ("R".equals(ifRL)){
-                                corMR = Double.parseDouble(corMap.get("corM")==null?"0.0":corMap.get("corM")==""?"0.0":corMap.get("corM").toString());
-                                corDR = Double.parseDouble(corMap.get("corD")==null?"0.0":corMap.get("corD")==""?"0.0":corMap.get("corD").toString());
-                            }
-                        }
-
-                        Map<String,Double> eyeaxisData = shaichaStudentDao.getEyeAxisDataForOld(id);
-                        if (eyeaxisData!=null){
-                            eyeaxisOd = eyeaxisData.get("od");
-                            eyeaxisOs = eyeaxisData.get("os");
-                        }
-                        Map<String,Double> eyepressureData = shaichaStudentDao.getEyepressureDataForOld(id);
-
-                        if (eyepressureData != null){
-                            preOd = eyepressureData.get("preOd");
-                            preOs = eyepressureData.get("preOs");
-                        }
-
-                        if (eyeaxisOd == 0.0 || corMR ==0.0){
-                            eyeaxis_corneal_R = 0.0;
-                        }else {
-                            eyeaxis_corneal_R = eyeaxisOd/corMR;
-                        }
-                        if (eyeaxisOs == 0.0 || corML==0.0){
-                            eyeaxis_corneal_L = 0.0;
-                        }else {
-                            eyeaxis_corneal_L = eyeaxisOs/corML;
-                        }
-                        String age = stuMap.get("age").toString();
-                        String NakedOs = stuMap.get("NakedOs").toString() == "" ? "0" : stuMap.get("NakedOs").toString();
-
-                        try {
-                            if (Double.parseDouble(NakedOs)<4.0){
-                                NakedOs="0.1";
-                            }
-                            if (Double.parseDouble(NakedOs)>5.0){
-                                NakedOs="1.0";
-                            }
-                        } catch (Exception e) {
-                            continue;
-                        }
-                        if ("4.0".equals(NakedOs)){
-                            NakedOs="0.1";
-                        }
-
-                        if ("4.1".equals(NakedOs)){
-                            NakedOs="0.12";
-                        }
-                        if ("4.2".equals(NakedOs)){
-                            NakedOs="0.15";
-                        }
-                        if ("4.3".equals(NakedOs)){
-                            NakedOs="0.2";
-                        }
-                        if ("4.4".equals(NakedOs)){
-                            NakedOs="0.25";
-                        }
-                        if ("4.5".equals(NakedOs)){
-                            NakedOs="0.3";
-                        }
-                        if ("4.6".equals(NakedOs)){
-                            NakedOs="0.4";
-                        }
-                        if ("4.7".equals(NakedOs)){
-                            NakedOs="0.5";
-                        }
-                        if ("4.8".equals(NakedOs)){
-                            NakedOs="0.6";
-                        }
-                        if ("4.9".equals(NakedOs)){
-                            NakedOs="0.8";
-                        }
-                        if ("5.0".equals(NakedOs)){
-                            NakedOs="1.0";
-                        }
-                        String NakedOd = stuMap.get("NakedOd").toString() == "" ? "0" : stuMap.get("NakedOd").toString();
-
-                        try {
-                            if (Double.parseDouble(NakedOd)<4.0){
-                                NakedOd="0.1";
-                            }
-                            if (Double.parseDouble(NakedOd)>5.0){
-                                NakedOd="1.0";
-                            }
-                        } catch (Exception e) {
-                            continue;
-                        }
-                        if ("4.0".equals(NakedOd)){
-                            NakedOd="0.1";
-                        }
-
-                        if ("4.1".equals(NakedOd)){
-                            NakedOd="0.12";
-                        }
-                        if ("4.2".equals(NakedOd)){
-                            NakedOd="0.15";
-                        }
-                        if ("4.3".equals(NakedOd)){
-                            NakedOd="0.2";
-                        }
-                        if ("4.4".equals(NakedOd)){
-                            NakedOd="0.25";
-                        }
-                        if ("4.5".equals(NakedOd)){
-                            NakedOd="0.3";
-                        }
-                        if ("4.6".equals(NakedOd)){
-                            NakedOd="0.4";
-                        }
-                        if ("4.7".equals(NakedOd)){
-                            NakedOd="0.5";
-                        }
-                        if ("4.8".equals(NakedOd)){
-                            NakedOd="0.6";
-                        }
-                        if ("4.9".equals(NakedOd)){
-                            NakedOd="0.8";
-                        }
-                        if ("5.0".equals(NakedOd)){
-                            NakedOd="1.0";
-                        }
-                        lMap.put("student",id+"|L");
-                        lMap.put("lasy_check_time",lasy_check_time);
-                        lMap.put("studeny_sex",sex);
-                        lMap.put("shifou_tangwo",0);
-                        lMap.put("zuizhong_tizhi",0);
-                        lMap.put("gzr_sm",0);
-                        lMap.put("zm_sm",0);
-                        lMap.put("zm_swhd",0);
-                        lMap.put("zm_mtgz",0);
-                        lMap.put("zx_swhd",0);
-                        lMap.put("xw_swhd",0);
-                        lMap.put("life_farvision",0);
-                        lMap.put("naked_farvision",NakedOs);
-                        lMap.put("diopter_s1",dioSL);
-                        lMap.put("diopter_c1",dioCL);
-                        lMap.put("diopter_a1",dioAL);
-                        lMap.put("y1_x",stuMap.get("DXQJL"));
-                        lMap.put("diopter_s2",0);
-                        lMap.put("diopter_c2",0);
-                        lMap.put("diopter_a2",0);
-                        lMap.put("y2_x",0);
-                        lMap.put("corneal_mm",corML);
-                        lMap.put("corneal_d",corDL);
-                        lMap.put("eyeaxis",eyeaxisOs);
-                        lMap.put("eyepressure",preOs);
-                        lMap.put("age",age);
-                        lMap.put("eyeaxis_corneal",eyeaxis_corneal_L);
-                        lMap.put("winter",winter);
-                        lMap.put("flag",2);
-
-
-
-                        rMap.put("student",id+"|R");
-                        rMap.put("lasy_check_time",lasy_check_time);
-                        rMap.put("studeny_sex",sex);
-                        rMap.put("shifou_tangwo",0);
-                        rMap.put("zuizhong_tizhi",0);
-                        rMap.put("gzr_sm",0);
-                        rMap.put("zm_sm",0);
-                        rMap.put("zm_swhd",0);
-                        rMap.put("zm_mtgz",0);
-                        rMap.put("zx_swhd",0);
-                        rMap.put("xw_swhd",0);
-                        rMap.put("life_farvision",0);
-                        rMap.put("naked_farvision",NakedOd);
-                        rMap.put("diopter_s1",dioSR);
-                        rMap.put("diopter_c1",dioCR);
-                        rMap.put("diopter_a1",dioAR);
-                        rMap.put("y1_x",stuMap.get("DXQJR"));
-                        rMap.put("diopter_s2",0);
-                        rMap.put("diopter_c2",0);
-                        rMap.put("diopter_a2",0);
-                        rMap.put("y2_x",0);
-                        rMap.put("corneal_mm",corMR);
-                        rMap.put("corneal_d",corDR);
-                        rMap.put("eyeaxis",eyeaxisOd);
-                        rMap.put("eyepressure",preOd);
-                        rMap.put("age",age);
-                        rMap.put("eyeaxis_corneal",eyeaxis_corneal_R);
-                        rMap.put("winter",winter);
-                        rMap.put("flag",2);
-                        ldataList.add(lMap);
-                        rdataList.add(rMap);
-                        Double naked_Farvision = Double.parseDouble(NakedOs)>Double.parseDouble(NakedOd)?Double.parseDouble(NakedOd):Double.parseDouble(NakedOs);
-                        Double dxqj = Double.parseDouble(stuMap.get("DXQJL").toString())>Double.parseDouble(stuMap.get("DXQJR").toString())?Double.parseDouble(stuMap.get("DXQJR").toString()):Double.parseDouble(stuMap.get("DXQJL").toString());
-                        Map<String,Object> yuceqianMap = new HashMap<>();
-                        if (dxqj > 0.75){
-                            yuceqianMap.put("type",1);
-                            yuceqianMap.put("id",id);
-                            yuceqianList.add(yuceqianMap);
-                            continue;
-                        }
-                        if (dxqj >= -0.5 && dxqj <= 0.75){
-                            yuceqianMap.put("type",2);
-                            yuceqianMap.put("id",id);
-                            yuceqianList.add(yuceqianMap);
-                            continue;
-                        }
-                        if (naked_Farvision >= 5.0 && dxqj<-0.5){
-                            yuceqianMap.put("type",3);
-                            yuceqianMap.put("id",id);
-                            yuceqianList.add(yuceqianMap);
-                            continue;
-                        }
-                        if (naked_Farvision < 5.0 && dxqj<-0.5){
-                            yuceqianMap.put("type",4);
-                            yuceqianMap.put("id",id);
-                            yuceqianList.add(yuceqianMap);
-                            continue;
-                        }
-                        continue;
-                    }
-                }
-                if (date.getYear()==2020 && date.getMonth()<5){
-                    List<Map<String,Object>> scYuce = shaichaStudentDao.getScYuCeForOld(checkTime,school, CityName, AreaName);
-                    Double dioAL = 0.0;
-                    Double dioSL = 0.0;
-                    Double dioCL = 0.0;
-                    Double dioAR = 0.0;
-                    Double dioSR = 0.0;
-                    Double dioCR = 0.0;
-                    Double corML = 0.0;
-                    Double corDL = 0.0;
-                    Double corMR = 0.0;
-                    Double corDR = 0.0;
-                    Double eyeaxisOd = 0.0;
-                    Double eyeaxisOs = 0.0;
-                    Double preOd = 0.0;
-                    Double preOs = 0.0;
-                    Double eyeaxis_corneal_L = 0.0;
-                    Double eyeaxis_corneal_R = 0.0;
-                    for (Map<String, Object> stuMap : scYuce) {
-                        if ("塑形镜".equals(stuMap.get("NakedOs"))||"塑形镜".equals(stuMap.get("NakedOd"))){
-                            continue;
-                        }
-                        Map<String,Object> lMap = new HashMap<>();
-                        Map<String,Object> rMap = new HashMap<>();
-                        Integer id = (Integer) stuMap.get("id");
-                        Integer sex = (Integer) stuMap.get("sex");
-                        if (sex == 1){
-                            sex=1;
-                        }
-                        if (sex == 2){
-                            sex=0;
-                        }
-                        String lasy_check_time = stuMap.get("checkTime").toString();
-                        Integer optId = shaichaStudentDao.getOptIdForOld(id);
-                        List<Map<String,Object>> diopterData = shaichaStudentDao.getDiopterDataForOld(optId);
-
-                        for (Map<String, Object> dioMap : diopterData) {
-                            String ifRl = dioMap.get("ifRL").toString();
-                            if ("L".equals(ifRl)){
-                                dioAL = Double.parseDouble(dioMap.get("dioA")==null?"0.0":dioMap.get("dioA")==""?"0.0":dioMap.get("dioA").toString());
-                                dioSL = Double.parseDouble(dioMap.get("dioS")==null?"0.0":dioMap.get("dioS")==""?"0.0":dioMap.get("dioS").toString());
-                                dioCL = Double.parseDouble(dioMap.get("dioC")==null?"0.0":dioMap.get("dioC")==""?"0.0":dioMap.get("dioC").toString());
-                            }
-
-                            if ("R".equals(ifRl)){
-                                dioAR = Double.parseDouble(dioMap.get("dioA")==null?"0.0":dioMap.get("dioA")==""?"0.0":dioMap.get("dioA").toString());
-                                dioSR = Double.parseDouble(dioMap.get("dioS")==null?"0.0":dioMap.get("dioS")==""?"0.0":dioMap.get("dioS").toString());
-                                dioCR = Double.parseDouble(dioMap.get("dioC")==null?"0.0":dioMap.get("dioC")==""?"0.0":dioMap.get("dioC").toString());
-                            }
-                        }
-                        List<Map<String,Object>> corData = shaichaStudentDao.getCornealDataForOld(optId);
-                        for (Map<String, Object> corMap : corData) {
-                            String ifRL = corMap.get("ifRL").toString();
-                            if ("L".equals(ifRL)){
-                                corML = Double.parseDouble(corMap.get("corM")==null?"0.0":corMap.get("corM")==""?"0.0":corMap.get("corM").toString());
-                                corDL = Double.parseDouble(corMap.get("corD")==null?"0.0":corMap.get("corD")==""?"0.0":corMap.get("corD").toString());
-                            }
-                            if ("R".equals(ifRL)){
-                                corMR = Double.parseDouble(corMap.get("corM")==null?"0.0":corMap.get("corM")==""?"0.0":corMap.get("corM").toString());
-                                corDR = Double.parseDouble(corMap.get("corD")==null?"0.0":corMap.get("corD")==""?"0.0":corMap.get("corD").toString());
-                            }
-                        }
-
-                        Map<String,Double> eyeaxisData = shaichaStudentDao.getEyeAxisDataForOld(id);
-                        if (eyeaxisData!=null){
-                            eyeaxisOd = eyeaxisData.get("od");
-                            eyeaxisOs = eyeaxisData.get("os");
-                        }
-                        Map<String,Double> eyepressureData = shaichaStudentDao.getEyepressureDataForOld(id);
-
-                        if (eyepressureData != null){
-                            preOd = eyepressureData.get("preOd");
-                            preOs = eyepressureData.get("preOs");
-                        }
-
-                        if (eyeaxisOd == 0.0 || corMR ==0.0){
-                            eyeaxis_corneal_R = 0.0;
-                        }else {
-                            eyeaxis_corneal_R = eyeaxisOd/corMR;
-                        }
-                        if (eyeaxisOs == 0.0 || corML==0.0){
-                            eyeaxis_corneal_L = 0.0;
-                        }else {
-                            eyeaxis_corneal_L = eyeaxisOs/corML;
-                        }
-                        String age = stuMap.get("age").toString();
-                        String NakedOs = stuMap.get("NakedOs").toString() == "" ? "0" : stuMap.get("NakedOs").toString();
-
-                        try {
-                            if (Double.parseDouble(NakedOs)<4.0){
-                                NakedOs="0.1";
-                            }
-                            if (Double.parseDouble(NakedOs)>5.0){
-                                NakedOs="1.0";
-                            }
-                        } catch (Exception e) {
-                            continue;
-                        }
-                        if ("4.0".equals(NakedOs)){
-                            NakedOs="0.1";
-                        }
-
-                        if ("4.1".equals(NakedOs)){
-                            NakedOs="0.12";
-                        }
-                        if ("4.2".equals(NakedOs)){
-                            NakedOs="0.15";
-                        }
-                        if ("4.3".equals(NakedOs)){
-                            NakedOs="0.2";
-                        }
-                        if ("4.4".equals(NakedOs)){
-                            NakedOs="0.25";
-                        }
-                        if ("4.5".equals(NakedOs)){
-                            NakedOs="0.3";
-                        }
-                        if ("4.6".equals(NakedOs)){
-                            NakedOs="0.4";
-                        }
-                        if ("4.7".equals(NakedOs)){
-                            NakedOs="0.5";
-                        }
-                        if ("4.8".equals(NakedOs)){
-                            NakedOs="0.6";
-                        }
-                        if ("4.9".equals(NakedOs)){
-                            NakedOs="0.8";
-                        }
-                        if ("5.0".equals(NakedOs)){
-                            NakedOs="1.0";
-                        }
-                        String NakedOd = stuMap.get("NakedOd").toString() == "" ? "0" : stuMap.get("NakedOd").toString();
-
-                        try {
-                            if (Double.parseDouble(NakedOd)<4.0){
-                                NakedOd="0.1";
-                            }
-                            if (Double.parseDouble(NakedOd)>5.0){
-                                NakedOd="1.0";
-                            }
-                        } catch (Exception e) {
-                            continue;
-                        }
-                        if ("4.0".equals(NakedOd)){
-                            NakedOd="0.1";
-                        }
-
-                        if ("4.1".equals(NakedOd)){
-                            NakedOd="0.12";
-                        }
-                        if ("4.2".equals(NakedOd)){
-                            NakedOd="0.15";
-                        }
-                        if ("4.3".equals(NakedOd)){
-                            NakedOd="0.2";
-                        }
-                        if ("4.4".equals(NakedOd)){
-                            NakedOd="0.25";
-                        }
-                        if ("4.5".equals(NakedOd)){
-                            NakedOd="0.3";
-                        }
-                        if ("4.6".equals(NakedOd)){
-                            NakedOd="0.4";
-                        }
-                        if ("4.7".equals(NakedOd)){
-                            NakedOd="0.5";
-                        }
-                        if ("4.8".equals(NakedOd)){
-                            NakedOd="0.6";
-                        }
-                        if ("4.9".equals(NakedOd)){
-                            NakedOd="0.8";
-                        }
-                        if ("5.0".equals(NakedOd)){
-                            NakedOd="1.0";
-                        }
-                        lMap.put("student",id+"|L");
-                        lMap.put("lasy_check_time",lasy_check_time);
-                        lMap.put("studeny_sex",sex);
-                        lMap.put("shifou_tangwo",0);
-                        lMap.put("zuizhong_tizhi",0);
-                        lMap.put("gzr_sm",0);
-                        lMap.put("zm_sm",0);
-                        lMap.put("zm_swhd",0);
-                        lMap.put("zm_mtgz",0);
-                        lMap.put("zx_swhd",0);
-                        lMap.put("xw_swhd",0);
-                        lMap.put("life_farvision",0);
-                        lMap.put("naked_farvision",NakedOs);
-                        lMap.put("diopter_s1",dioSL);
-                        lMap.put("diopter_c1",dioCL);
-                        lMap.put("diopter_a1",dioAL);
-                        lMap.put("y1_x",stuMap.get("DXQJL"));
-                        lMap.put("diopter_s2",0);
-                        lMap.put("diopter_c2",0);
-                        lMap.put("diopter_a2",0);
-                        lMap.put("y2_x",0);
-                        lMap.put("corneal_mm",corML);
-                        lMap.put("corneal_d",corDL);
-                        lMap.put("eyeaxis",eyeaxisOs);
-                        lMap.put("eyepressure",preOs);
-                        lMap.put("age",age);
-                        lMap.put("eyeaxis_corneal",eyeaxis_corneal_L);
-                        lMap.put("winter",winter);
-                        lMap.put("flag",2);
-
-
-
-                        rMap.put("student",id+"|R");
-                        rMap.put("lasy_check_time",lasy_check_time);
-                        rMap.put("studeny_sex",sex);
-                        rMap.put("shifou_tangwo",0);
-                        rMap.put("zuizhong_tizhi",0);
-                        rMap.put("gzr_sm",0);
-                        rMap.put("zm_sm",0);
-                        rMap.put("zm_swhd",0);
-                        rMap.put("zm_mtgz",0);
-                        rMap.put("zx_swhd",0);
-                        rMap.put("xw_swhd",0);
-                        rMap.put("life_farvision",0);
-                        rMap.put("naked_farvision",NakedOd);
-                        rMap.put("diopter_s1",dioSR);
-                        rMap.put("diopter_c1",dioCR);
-                        rMap.put("diopter_a1",dioAR);
-                        rMap.put("y1_x",stuMap.get("DXQJR"));
-                        rMap.put("diopter_s2",0);
-                        rMap.put("diopter_c2",0);
-                        rMap.put("diopter_a2",0);
-                        rMap.put("y2_x",0);
-                        rMap.put("corneal_mm",corMR);
-                        rMap.put("corneal_d",corDR);
-                        rMap.put("eyeaxis",eyeaxisOd);
-                        rMap.put("eyepressure",preOd);
-                        rMap.put("age",age);
-                        rMap.put("eyeaxis_corneal",eyeaxis_corneal_R);
-                        rMap.put("winter",winter);
-                        rMap.put("flag",2);
-                        ldataList.add(lMap);
-                        rdataList.add(rMap);
-                        Double naked_Farvision = Double.parseDouble(NakedOs)>Double.parseDouble(NakedOd)?Double.parseDouble(NakedOd):Double.parseDouble(NakedOs);
-                        Double dxqj = Double.parseDouble(stuMap.get("DXQJL").toString())>Double.parseDouble(stuMap.get("DXQJR").toString())?Double.parseDouble(stuMap.get("DXQJR").toString()):Double.parseDouble(stuMap.get("DXQJL").toString());
-                        Map<String,Object> yuceqianMap = new HashMap<>();
-                        if (dxqj > 0.75){
-                            yuceqianMap.put("type",1);
-                            yuceqianMap.put("id",id);
-                            yuceqianList.add(yuceqianMap);
-                            continue;
-                        }
-                        if (dxqj >= -0.5 && dxqj <= 0.75){
-                            yuceqianMap.put("type",2);
-                            yuceqianMap.put("id",id);
-                            yuceqianList.add(yuceqianMap);
-                            continue;
-                        }
-                        if (naked_Farvision >= 5.0 && dxqj<-0.5){
-                            yuceqianMap.put("type",3);
-                            yuceqianMap.put("id",id);
-                            yuceqianList.add(yuceqianMap);
-                            continue;
-                        }
-                        if (naked_Farvision < 5.0 && dxqj<-0.5){
-                            yuceqianMap.put("type",4);
-                            yuceqianMap.put("id",id);
-                            yuceqianList.add(yuceqianMap);
-                            continue;
-                        }
-                        continue;
-                    }
-                }
-
-                List<Map<String,Object>> scYuce = shaichaStudentDao.getScYuCe(checkTime,school, CityName, AreaName);
+            for (Map<String, Object> stuMap : scYuce) {
                 Double dioAL = 0.0;
                 Double dioSL = 0.0;
                 Double dioCL = 0.0;
@@ -735,734 +185,551 @@ public class schoolServiceImpl implements schoolService {
                 Double corDR = 0.0;
                 Double eyeaxisOd = 0.0;
                 Double eyeaxisOs = 0.0;
-                Double preOd = 0.0;
-                Double preOs = 0.0;
                 Double eyeaxis_corneal_L = 0.0;
                 Double eyeaxis_corneal_R = 0.0;
-                for (Map<String, Object> stuMap : scYuce) {
-                    String NakedOs = stuMap.get("NakedOs").toString() == "" ? "0" : stuMap.get("NakedOs").toString();
+                String NakedOs = stuMap.get("NakedOs").toString() == "" ? "0" : stuMap.get("NakedOs").toString();
+                String NakedOd = stuMap.get("NakedOd").toString() == "" ? "0" : stuMap.get("NakedOd").toString();
+                Double dxqjl = 0.0;
+                Double dxqjr = 0.0;
+                try {
+                NakedOs = ShiLiZhuanHuanUtils.zhuanhuanshiliForSc(NakedOs);
+                NakedOd = ShiLiZhuanHuanUtils.zhuanhuanshiliForSc(NakedOd);
+                dxqjl= Double.parseDouble(stuMap.get("DXQJL").toString());
+                dxqjr= Double.parseDouble(stuMap.get("DXQJR").toString());
+                } catch (Exception e) {
+                    continue;
+                }
 
 
-                    if ("4.0".equals(NakedOs)){
-                        NakedOs="0.1";
+                Map<String,Object> lMap = new HashMap<>();
+                Map<String,Object> rMap = new HashMap<>();
+                Integer id = (Integer) stuMap.get("id");
+                Integer optId = shaichaStudentDao.getOptId(id);
+                List<Map<String,Object>> diopterData = shaichaStudentDao.getDiopterData(optId);
+
+                for (Map<String, Object> dioMap : diopterData) {
+                    String ifRl = dioMap.get("ifRL").toString();
+                    if ("L".equals(ifRl)){
+                        dioAL = Double.parseDouble(dioMap.get("dioA")==null?"0.0":dioMap.get("dioA")==""?"0.0":dioMap.get("dioA").toString());
+                        dioSL = Double.parseDouble(dioMap.get("dioS")==null?"0.0":dioMap.get("dioS")==""?"0.0":dioMap.get("dioS").toString());
+                        dioCL = Double.parseDouble(dioMap.get("dioC")==null?"0.0":dioMap.get("dioC")==""?"0.0":dioMap.get("dioC").toString());
                     }
 
-                    if ("4.1".equals(NakedOs)){
-                        NakedOs="0.12";
+                    if ("R".equals(ifRl)){
+                        dioAR = Double.parseDouble(dioMap.get("dioA")==null?"0.0":dioMap.get("dioA")==""?"0.0":dioMap.get("dioA").toString());
+                        dioSR = Double.parseDouble(dioMap.get("dioS")==null?"0.0":dioMap.get("dioS")==""?"0.0":dioMap.get("dioS").toString());
+                        dioCR = Double.parseDouble(dioMap.get("dioC")==null?"0.0":dioMap.get("dioC")==""?"0.0":dioMap.get("dioC").toString());
                     }
-                    if ("4.2".equals(NakedOs)){
-                        NakedOs="0.15";
+                }
+                List<Map<String,Object>> corData = shaichaStudentDao.getCornealData(optId);
+                for (Map<String, Object> corMap : corData) {
+                    String ifRL = corMap.get("ifRL").toString();
+                    if ("L".equals(ifRL)){
+                        corML = Double.parseDouble(corMap.get("corM")==null?"0.0":corMap.get("corM")==""?"0.0":corMap.get("corM").toString());
+                        corDL = Double.parseDouble(corMap.get("corD")==null?"0.0":corMap.get("corD")==""?"0.0":corMap.get("corD").toString());
                     }
-                    if ("4.3".equals(NakedOs)){
-                        NakedOs="0.2";
+                    if ("R".equals(ifRL)){
+                        corMR = Double.parseDouble(corMap.get("corM")==null?"0.0":corMap.get("corM")==""?"0.0":corMap.get("corM").toString());
+                        corDR = Double.parseDouble(corMap.get("corD")==null?"0.0":corMap.get("corD")==""?"0.0":corMap.get("corD").toString());
                     }
-                    if ("4.4".equals(NakedOs)){
-                        NakedOs="0.25";
-                    }
-                    if ("4.5".equals(NakedOs)){
-                        NakedOs="0.3";
-                    }
-                    if ("4.6".equals(NakedOs)){
-                        NakedOs="0.4";
-                    }
-                    if ("4.7".equals(NakedOs)){
-                        NakedOs="0.5";
-                    }
-                    if ("4.8".equals(NakedOs)){
-                        NakedOs="0.6";
-                    }
-                    if ("4.9".equals(NakedOs)){
-                        NakedOs="0.8";
-                    }
-                    if ("5.0".equals(NakedOs)){
-                        NakedOs="1.0";
-                    }
-                    try {
-                        if (Double.parseDouble(NakedOs)<4.0){
-                            NakedOs="0.1";
-                        }
-                        if (Double.parseDouble(NakedOs)>5.0){
-                            NakedOs="1.0";
-                        }
-                    }catch (Exception e){
-                        continue;
-                    }
-                    String NakedOd = stuMap.get("NakedOd").toString() == "" ? "0" : stuMap.get("NakedOd").toString();
+                }
+
+                Map<String,Double> eyeaxisData = shaichaStudentDao.getEyeAxisData(id);
+                if (eyeaxisData!=null){
+                    eyeaxisOd = eyeaxisData.get("od");
+                    eyeaxisOs = eyeaxisData.get("os");
+                }
+
+                if (eyeaxisOd == 0.0 || corMR ==0.0){
+                    eyeaxis_corneal_R = 0.0;
+                }else {
+                    eyeaxis_corneal_R = eyeaxisOd/corMR;
+                }
+                if (eyeaxisOs == 0.0 || corML==0.0){
+                    eyeaxis_corneal_L = 0.0;
+                }else {
+                    eyeaxis_corneal_L = eyeaxisOs/corML;
+                }
+                Double age = Double.parseDouble(stuMap.get("age").toString());
+
+                lMap.put("student",id+"|L");
+                lMap.put("life_farvision",0);
+                lMap.put("naked_farvision",Double.parseDouble(NakedOs));
+                lMap.put("diopter_s1",dioSL);
+                lMap.put("diopter_c1",dioCL);
+                lMap.put("diopter_a1",dioAL);
+                lMap.put("y1",dxqjl);
+                lMap.put("corneal_mm",corML);
+                lMap.put("corneal_d",corDL);
+                lMap.put("eyeaxis",eyeaxisOs);
+                lMap.put("age",age);
+                lMap.put("eyeaxis_corneal",eyeaxis_corneal_L);
 
 
-                    if ("4.0".equals(NakedOd)){
-                        NakedOd="0.1";
-                    }
+                rMap.put("student",id+"|R");
+                rMap.put("life_farvision",0);
+                rMap.put("naked_farvision",Double.parseDouble(NakedOd));
+                rMap.put("diopter_s1",dioSR);
+                rMap.put("diopter_c1",dioCR);
+                rMap.put("diopter_a1",dioAR);
+                rMap.put("y1",dxqjr);
+                rMap.put("corneal_mm",corMR);
+                rMap.put("corneal_d",corDR);
+                rMap.put("eyeaxis",eyeaxisOd);
+                rMap.put("age",age);
+                rMap.put("eyeaxis_corneal",eyeaxis_corneal_R);
+                ldataList.add(lMap);
+                rdataList.add(rMap);
 
-                    if ("4.1".equals(NakedOd)){
-                        NakedOd="0.12";
-                    }
-                    if ("4.2".equals(NakedOd)){
-                        NakedOd="0.15";
-                    }
-                    if ("4.3".equals(NakedOd)){
-                        NakedOd="0.2";
-                    }
-                    if ("4.4".equals(NakedOd)){
-                        NakedOd="0.25";
-                    }
-                    if ("4.5".equals(NakedOd)){
-                        NakedOd="0.3";
-                    }
-                    if ("4.6".equals(NakedOd)){
-                        NakedOd="0.4";
-                    }
-                    if ("4.7".equals(NakedOd)){
-                        NakedOd="0.5";
-                    }
-                    if ("4.8".equals(NakedOd)){
-                        NakedOd="0.6";
-                    }
-                    if ("4.9".equals(NakedOd)){
-                        NakedOd="0.8";
-                    }
-                    if ("5.0".equals(NakedOd)){
-                        NakedOd="1.0";
-                    }
-                    try {
-                        if (Double.parseDouble(NakedOd)<4.0){
-                            NakedOd="0.1";
-                        }
-                        if (Double.parseDouble(NakedOd)>5.0){
-                            NakedOd="1.0";
-                        }
-                    } catch (Exception e) {
-                        continue;
-                    }
-                    Map<String,Object> lMap = new HashMap<>();
-                    Map<String,Object> rMap = new HashMap<>();
-                    Integer id = (Integer) stuMap.get("id");
-                    Integer sex = (Integer) stuMap.get("sex");
-                    if (sex == 1){
-                        sex=1;
-                    }
-                    if (sex == 2){
-                        sex=0;
-                    }
-                    String lasy_check_time = stuMap.get("checkTime").toString();
-                    Integer optId = shaichaStudentDao.getOptId(id);
-                    List<Map<String,Object>> diopterData = shaichaStudentDao.getDiopterData(optId);
+                NakedOs = stuMap.get("NakedOs").toString() == "" ? "0" : stuMap.get("NakedOs").toString();
+                NakedOd = stuMap.get("NakedOd").toString() == "" ? "0" : stuMap.get("NakedOs").toString();
 
-                    for (Map<String, Object> dioMap : diopterData) {
-                        String ifRl = dioMap.get("ifRL").toString();
-                        if ("L".equals(ifRl)){
-                            dioAL = Double.parseDouble(dioMap.get("dioA")==null?"0.0":dioMap.get("dioA")==""?"0.0":dioMap.get("dioA").toString());
-                            dioSL = Double.parseDouble(dioMap.get("dioS")==null?"0.0":dioMap.get("dioS")==""?"0.0":dioMap.get("dioS").toString());
-                            dioCL = Double.parseDouble(dioMap.get("dioC")==null?"0.0":dioMap.get("dioC")==""?"0.0":dioMap.get("dioC").toString());
-                        }
-
-                        if ("R".equals(ifRl)){
-                            dioAR = Double.parseDouble(dioMap.get("dioA")==null?"0.0":dioMap.get("dioA")==""?"0.0":dioMap.get("dioA").toString());
-                            dioSR = Double.parseDouble(dioMap.get("dioS")==null?"0.0":dioMap.get("dioS")==""?"0.0":dioMap.get("dioS").toString());
-                            dioCR = Double.parseDouble(dioMap.get("dioC")==null?"0.0":dioMap.get("dioC")==""?"0.0":dioMap.get("dioC").toString());
-                        }
-                    }
-                    List<Map<String,Object>> corData = shaichaStudentDao.getCornealData(optId);
-                    for (Map<String, Object> corMap : corData) {
-                        String ifRL = corMap.get("ifRL").toString();
-                        if ("L".equals(ifRL)){
-                            corML = Double.parseDouble(corMap.get("corM")==null?"0.0":corMap.get("corM")==""?"0.0":corMap.get("corM").toString());
-                            corDL = Double.parseDouble(corMap.get("corD")==null?"0.0":corMap.get("corD")==""?"0.0":corMap.get("corD").toString());
-                        }
-                        if ("R".equals(ifRL)){
-                            corMR = Double.parseDouble(corMap.get("corM")==null?"0.0":corMap.get("corM")==""?"0.0":corMap.get("corM").toString());
-                            corDR = Double.parseDouble(corMap.get("corD")==null?"0.0":corMap.get("corD")==""?"0.0":corMap.get("corD").toString());
-                        }
-                    }
-
-                    Map<String,Double> eyeaxisData = shaichaStudentDao.getEyeAxisData(id);
-                    if (eyeaxisData!=null){
-                        eyeaxisOd = eyeaxisData.get("od");
-                        eyeaxisOs = eyeaxisData.get("os");
-                    }
-                    Map<String,Double> eyepressureData = shaichaStudentDao.getEyepressureData(id);
-
-                    if (eyepressureData != null){
-                        preOd = eyepressureData.get("preOd");
-                        preOs = eyepressureData.get("preOs");
-                    }
-
-                    if (eyeaxisOd == 0.0 || corMR ==0.0){
-                        eyeaxis_corneal_R = 0.0;
-                    }else {
-                        eyeaxis_corneal_R = eyeaxisOd/corMR;
-                    }
-                    if (eyeaxisOs == 0.0 || corML==0.0){
-                        eyeaxis_corneal_L = 0.0;
-                    }else {
-                        eyeaxis_corneal_L = eyeaxisOs/corML;
-                    }
-                    String age = stuMap.get("age").toString();
-
-                    lMap.put("student",id+"|L");
-                    lMap.put("lasy_check_time",lasy_check_time);
-                    lMap.put("studeny_sex",sex);
-                    lMap.put("shifou_tangwo",0);
-                    lMap.put("zuizhong_tizhi",0);
-                    lMap.put("gzr_sm",0);
-                    lMap.put("zm_sm",0);
-                    lMap.put("zm_swhd",0);
-                    lMap.put("zm_mtgz",0);
-                    lMap.put("zx_swhd",0);
-                    lMap.put("xw_swhd",0);
-                    lMap.put("life_farvision",0);
-                    lMap.put("naked_farvision",NakedOs);
-                    lMap.put("diopter_s1",dioSL);
-                    lMap.put("diopter_c1",dioCL);
-                    lMap.put("diopter_a1",dioAL);
-                    lMap.put("y1_x",stuMap.get("DXQJL"));
-                    lMap.put("diopter_s2",0);
-                    lMap.put("diopter_c2",0);
-                    lMap.put("diopter_a2",0);
-                    lMap.put("y2_x",0);
-                    lMap.put("corneal_mm",corML);
-                    lMap.put("corneal_d",corDL);
-                    lMap.put("eyeaxis",eyeaxisOs);
-                    lMap.put("eyepressure",preOs);
-                    lMap.put("age",age);
-                    lMap.put("eyeaxis_corneal",eyeaxis_corneal_L);
-                    lMap.put("winter",winter);
-                    lMap.put("flag",2);
-
-
-
-                    rMap.put("student",id+"|R");
-                    rMap.put("lasy_check_time",lasy_check_time);
-                    rMap.put("studeny_sex",sex);
-                    rMap.put("shifou_tangwo",0);
-                    rMap.put("zuizhong_tizhi",0);
-                    rMap.put("gzr_sm",0);
-                    rMap.put("zm_sm",0);
-                    rMap.put("zm_swhd",0);
-                    rMap.put("zm_mtgz",0);
-                    rMap.put("zx_swhd",0);
-                    rMap.put("xw_swhd",0);
-                    rMap.put("life_farvision",0);
-                    rMap.put("naked_farvision",NakedOd);
-                    rMap.put("diopter_s1",dioSR);
-                    rMap.put("diopter_c1",dioCR);
-                    rMap.put("diopter_a1",dioAR);
-                    rMap.put("y1_x",stuMap.get("DXQJR"));
-                    rMap.put("diopter_s2",0);
-                    rMap.put("diopter_c2",0);
-                    rMap.put("diopter_a2",0);
-                    rMap.put("y2_x",0);
-                    rMap.put("corneal_mm",corMR);
-                    rMap.put("corneal_d",corDR);
-                    rMap.put("eyeaxis",eyeaxisOd);
-                    rMap.put("eyepressure",preOd);
-                    rMap.put("age",age);
-                    rMap.put("eyeaxis_corneal",eyeaxis_corneal_R);
-                    rMap.put("winter",winter);
-                    rMap.put("flag",2);
-                    ldataList.add(lMap);
-                    rdataList.add(rMap);
-                    Double naked_Farvision = Double.parseDouble(NakedOs)>Double.parseDouble(NakedOd)?Double.parseDouble(NakedOd):Double.parseDouble(NakedOs);
-                    Double dxqj = Double.parseDouble(stuMap.get("DXQJL").toString())>Double.parseDouble(stuMap.get("DXQJR").toString())?Double.parseDouble(stuMap.get("DXQJR").toString()):Double.parseDouble(stuMap.get("DXQJL").toString());
-                    Map<String,Object> yuceqianMap = new HashMap<>();
-                    if (dxqj > 0.75){
-                        yuceqianMap.put("type",1);
-                        yuceqianMap.put("id",id);
-                        yuceqianList.add(yuceqianMap);
-                        continue;
-                    }
-                    if (dxqj >= -0.5 && dxqj <= 0.75){
-                        yuceqianMap.put("type",2);
-                        yuceqianMap.put("id",id);
-                        yuceqianList.add(yuceqianMap);
-                        continue;
-                    }
-                    if (naked_Farvision >= 5.0 && dxqj<-0.5){
-                        yuceqianMap.put("type",3);
-                        yuceqianMap.put("id",id);
-                        yuceqianList.add(yuceqianMap);
-                        continue;
-                    }
-                    if (naked_Farvision < 5.0 && dxqj<-0.5){
-                        yuceqianMap.put("type",4);
-                        yuceqianMap.put("id",id);
-                        yuceqianList.add(yuceqianMap);
-                        continue;
-                    }
+                Double naked_Farvision = Double.parseDouble(NakedOs)>Double.parseDouble(NakedOd)?Double.parseDouble(NakedOd):Double.parseDouble(NakedOs);
+                Double dxqj = Double.parseDouble(stuMap.get("DXQJL").toString())>Double.parseDouble(stuMap.get("DXQJR").toString())?Double.parseDouble(stuMap.get("DXQJR").toString()):Double.parseDouble(stuMap.get("DXQJL").toString());
+                Map<String,Integer> yuceqianMap = new HashMap<>();
+                if (dxqj > 0.75){
+                    yuceqianMap.put("type",1);
+                    yuceqianMap.put("id",id);
+                    yuceqianList.add(yuceqianMap);
+                    continue;
+                }
+                if (dxqj >= -0.5 && dxqj <= 0.75){
+                    yuceqianMap.put("type",2);
+                    yuceqianMap.put("id",id);
+                    yuceqianList.add(yuceqianMap);
+                    continue;
+                }
+                if (naked_Farvision >= 5.0 && dxqj<-0.5){
+                    yuceqianMap.put("type",3);
+                    yuceqianMap.put("id",id);
+                    yuceqianList.add(yuceqianMap);
+                    continue;
+                }
+                if (naked_Farvision < 5.0 && dxqj<-0.5){
+                    yuceqianMap.put("type",4);
+                    yuceqianMap.put("id",id);
+                    yuceqianList.add(yuceqianMap);
+                    continue;
                 }
             }
-            if ("ld".equals(checkType)){
-                List<Map<String,Object>> ldYuce = liuDiaoDao.getLDYuCe(checkTime,school, CityName, AreaName);
-                for (Map<String, Object> stuMap : ldYuce) {
-                    Map<String,Object> lMap = new HashMap<>();
-                    Map<String,Object> rMap = new HashMap<>();
-                    Integer id = (Integer) stuMap.get("id");
-                    Integer sex = (Integer) stuMap.get("sex");
-                    if (sex == 1){
-                        sex=1;
-                    }
-                    if (sex == 2){
-                        sex=0;
-                    }
-                    String lasy_check_time = stuMap.get("checkTime").toString();
-                    Map<String,String> eyeSightData = liuDiaoDao.getEyeSightData(id);
-                    String nakedOd = eyeSightData.get("nakedOd")==""?"0.0":eyeSightData.get("nakedOd");
-                    String nakedOs = eyeSightData.get("nakedOs")==""?"0.0":eyeSightData.get("nakedOs");
-                    String lifeOd = eyeSightData.get("lifeOd")==""?"0.0":eyeSightData.get("lifeOd");
-                    String lifeOs = eyeSightData.get("lifeOs")==""?"0.0":eyeSightData.get("lifeOs");
-
-
-                    try {
-                        if ("10/100".equals(nakedOd)){
-                            nakedOd="0.1";
-                        }
-                        if ("10/80".equals(nakedOd)){
-                            nakedOd="0.12";
-                        }
-                        if ("10/60".equals(nakedOd)){
-                            nakedOd="0.15";
-                        }
-                        if ("10/50".equals(nakedOd)){
-                            nakedOd="0.2";
-                        }
-                        if ("10/40".equals(nakedOd)){
-                            nakedOd="0.25";
-                        }
-                        if ("10/30".equals(nakedOd)){
-                            nakedOd="0.3";
-                        }
-                        if ("10/25".equals(nakedOd)){
-                            nakedOd="0.4";
-                        }
-                        if ("10/20".equals(nakedOd)){
-                            nakedOd="0.5";
-                        }
-                        if ("10/15".equals(nakedOd)){
-                            nakedOd="0.6";
-                        }
-                        if ("10/12.5".equals(nakedOd)){
-                            nakedOd="0.8";
-                        }
-                        if ("10/10".equals(nakedOd)){
-                            nakedOd="1.0";
-                        }
-                        if (Double.parseDouble(nakedOd)>1.0){
-                            nakedOd="1.0";
-                        }
-                        if (Double.parseDouble(nakedOd)<0.1){
-                            nakedOd="0.1";
-                        }
-
-                        if ("10/100".equals(nakedOs)){
-                            nakedOs="0.1";
-                        }
-                        if ("10/80".equals(nakedOs)){
-                            nakedOs="0.12";
-                        }
-                        if ("10/60".equals(nakedOs)){
-                            nakedOs="0.15";
-                        }
-                        if ("10/50".equals(nakedOs)){
-                            nakedOs="0.2";
-                        }
-                        if ("10/40".equals(nakedOs)){
-                            nakedOs="0.25";
-                        }
-                        if ("10/30".equals(nakedOs)){
-                            nakedOs="0.3";
-                        }
-                        if ("10/25".equals(nakedOs)){
-                            nakedOs="0.4";
-                        }
-                        if ("10/20".equals(nakedOs)){
-                            nakedOs="0.5";
-                        }
-                        if ("10/15".equals(nakedOs)){
-                            nakedOs="0.6";
-                        }
-                        if ("10/12.5".equals(nakedOs)){
-                            nakedOs="0.8";
-                        }
-                        if ("10/10".equals(nakedOs)){
-                            nakedOs="1.0";
-                        }
-                        if (Double.parseDouble(nakedOs)>1.0){
-                            nakedOs="1.0";
-                        }
-                        if (Double.parseDouble(nakedOs)<0.1){
-                            nakedOs="0.1";
-                        }
-
-                        if ("10/100".equals(lifeOd)){
-                            lifeOd="0.1";
-                        }
-                        if ("10/80".equals(lifeOd)){
-                            lifeOd="0.12";
-                        }
-                        if ("10/60".equals(lifeOd)){
-                            lifeOd="0.15";
-                        }
-                        if ("10/50".equals(lifeOd)){
-                            lifeOd="0.2";
-                        }
-                        if ("10/40".equals(lifeOd)){
-                            lifeOd="0.25";
-                        }
-                        if ("10/30".equals(lifeOd)){
-                            lifeOd="0.3";
-                        }
-                        if ("10/25".equals(lifeOd)){
-                            lifeOd="0.4";
-                        }
-                        if ("10/20".equals(lifeOd)){
-                            lifeOd="0.5";
-                        }
-                        if ("10/15".equals(lifeOd)){
-                            lifeOd="0.6";
-                        }
-                        if ("10/12.5".equals(lifeOd)){
-                            lifeOd="0.8";
-                        }
-                        if ("10/10".equals(lifeOd)){
-                            lifeOd="1.0";
-                        }
-                        if (Double.parseDouble(lifeOd)>1.0){
-                            lifeOd="1.0";
-                        }
-                        if (Double.parseDouble(lifeOd)<0.1){
-                            lifeOd="0.1";
-                        }
-
-                        if ("10/100".equals(lifeOs)){
-                            lifeOs="0.1";
-                        }
-                        if ("10/80".equals(lifeOs)){
-                            lifeOs="0.12";
-                        }
-                        if ("10/60".equals(lifeOs)){
-                            lifeOs="0.15";
-                        }
-                        if ("10/50".equals(lifeOs)){
-                            lifeOs="0.2";
-                        }
-                        if ("10/40".equals(lifeOs)){
-                            lifeOs="0.25";
-                        }
-                        if ("10/30".equals(lifeOs)){
-                            lifeOs="0.3";
-                        }
-                        if ("10/25".equals(lifeOs)){
-                            lifeOs="0.4";
-                        }
-                        if ("10/20".equals(lifeOs)){
-                            lifeOs="0.5";
-                        }
-                        if ("10/15".equals(lifeOs)){
-                            lifeOs="0.6";
-                        }
-                        if ("10/12.5".equals(lifeOs)){
-                            lifeOs="0.8";
-                        }
-                        if ("10/10".equals(lifeOs)){
-                            lifeOs="1.0";
-                        }
-                        if (Double.parseDouble(lifeOs)>1.0){
-                            lifeOs="1.0";
-                        }
-                        if (Double.parseDouble(lifeOs)<0.1){
-                            lifeOs="0.1";
-                        }
-                    } catch (Exception e) {
-                        continue;
-                    }
-                    Integer optId = liuDiaoDao.getOptId(id);
-                    Double dioAFL = 0.0;
-                    Double dioSFL = 0.0;
-                    Double dioCFL = 0.0;
-                    Double DXQJFL = 0.0;
-
-                    Double dioAFR = 0.0;
-                    Double dioSFR = 0.0;
-                    Double dioCFR = 0.0;
-                    Double DXQJFR = 0.0;
-
-                    Double dioASL = 0.0;
-                    Double dioSSL = 0.0;
-                    Double dioCSL = 0.0;
-                    Double DXQJSL = 0.0;
-
-                    Double dioASR = 0.0;
-                    Double dioSSR = 0.0;
-                    Double dioCSR = 0.0;
-                    Double DXQJSR = 0.0;
-
-
-                    Double corML = 0.0;
-                    Double corDL = 0.0;
-                    Double corMR = 0.0;
-                    Double corDR = 0.0;
-
-                    Double eyeaxisOd = 0.0;
-                    Double eyeaxisOs = 0.0;
-
-                    Double preOd = 0.0;
-                    Double preOs = 0.0;
-
-                    Double eyeaxis_corneal_L = 0.0;
-                    Double eyeaxis_corneal_R = 0.0;
-                    List<Map<String,Object>> diopterData = liuDiaoDao.getDiopterData(optId);
-                    for (Map<String, Object> dioMap : diopterData) {
-                        String ifRL = dioMap.get("ifRL").toString();
-                        if ("L".equals(ifRL)){
-                            String first_second = dioMap.get("first_second").toString();
-                            if ("FIRST_CHECK".equals(first_second)){
-                                dioAFL = Double.parseDouble(dioMap.get("dioA")==null?"0.0":dioMap.get("dioA")==""?"0.0":dioMap.get("dioA").toString());
-                                dioSFL = Double.parseDouble(dioMap.get("dioS")==null?"0.0":dioMap.get("dioS")==""?"0.0":dioMap.get("dioS").toString());
-                                dioCFL = Double.parseDouble(dioMap.get("dioC")==null?"0.0":dioMap.get("dioC")==""?"0.0":dioMap.get("dioC").toString());
-                                DXQJFL = Double.parseDouble(dioMap.get("DXQJ")==null?"0.0":dioMap.get("DXQJ")==""?"0.0":dioMap.get("DXQJ").toString());
-                            }
-                            if ("SECOND_CHECK".equals(first_second)){
-                                dioASL = Double.parseDouble(dioMap.get("dioA")==null?"0.0":dioMap.get("dioA")==""?"0.0":dioMap.get("dioA").toString());
-                                dioSSL = Double.parseDouble(dioMap.get("dioS")==null?"0.0":dioMap.get("dioS")==""?"0.0":dioMap.get("dioS").toString());
-                                dioCSL = Double.parseDouble(dioMap.get("dioC")==null?"0.0":dioMap.get("dioC")==""?"0.0":dioMap.get("dioC").toString());
-                                DXQJSL = Double.parseDouble(dioMap.get("DXQJ")==null?"0.0":dioMap.get("DXQJ")==""?"0.0":dioMap.get("DXQJ").toString());
-                            }
-                        }
-                        if ("R".equals(ifRL)){
-                            String first_second = dioMap.get("first_second").toString();
-                            if ("FIRST_CHECK".equals(first_second)){
-                                dioAFR = Double.parseDouble(dioMap.get("dioA")==null?"0.0":dioMap.get("dioA")==""?"0.0":dioMap.get("dioA").toString());
-                                dioSFR = Double.parseDouble(dioMap.get("dioS")==null?"0.0":dioMap.get("dioS")==""?"0.0":dioMap.get("dioS").toString());
-                                dioCFR = Double.parseDouble(dioMap.get("dioC")==null?"0.0":dioMap.get("dioC")==""?"0.0":dioMap.get("dioC").toString());
-                                DXQJFR = Double.parseDouble(dioMap.get("DXQJ")==null?"0.0":dioMap.get("DXQJ")==""?"0.0":dioMap.get("DXQJ").toString());
-                            }
-                            if ("SECOND_CHECK".equals(first_second)){
-                                dioASR = Double.parseDouble(dioMap.get("dioA")==null?"0.0":dioMap.get("dioA")==""?"0.0":dioMap.get("dioA").toString());
-                                dioSSR = Double.parseDouble(dioMap.get("dioS")==null?"0.0":dioMap.get("dioS")==""?"0.0":dioMap.get("dioS").toString());
-                                dioCSR = Double.parseDouble(dioMap.get("dioC")==null?"0.0":dioMap.get("dioC")==""?"0.0":dioMap.get("dioC").toString());
-                                DXQJSR = Double.parseDouble(dioMap.get("DXQJ")==null?"0.0":dioMap.get("DXQJ")==""?"0.0":dioMap.get("DXQJ").toString());
-                            }
-                        }
-                    }
-                    List<Map<String,Object>> corData = liuDiaoDao.getCornealData(optId);
-                    for (Map<String, Object> corMap : corData) {
-                        String ifRL = corMap.get("ifRL").toString();
-                        if ("L".equals(ifRL)){
-                            corML = Double.parseDouble(corMap.get("corM")==null?"0.0":corMap.get("corM")==""?"0.0":corMap.get("corM").toString());
-                            corDL = Double.parseDouble(corMap.get("corD")==null?"0.0":corMap.get("corD")==""?"0.0":corMap.get("corD").toString());
-                        }
-                        if ("R".equals(ifRL)){
-                            corMR = Double.parseDouble(corMap.get("corM")==null?"0.0":corMap.get("corM")==""?"0.0":corMap.get("corM").toString());
-                            corDR = Double.parseDouble(corMap.get("corD")==null?"0.0":corMap.get("corD")==""?"0.0":corMap.get("corD").toString());
-                        }
-                    }
-
-                    Map<String,Double> eyeaxisData = liuDiaoDao.getEyeAxisData(id);
-                    if (eyeaxisData!=null){
-                        eyeaxisOd = eyeaxisData.get("od");
-                        eyeaxisOs = eyeaxisData.get("os");
-                    }
-                    Map<String,Double> eyepressureData = liuDiaoDao.getEyepressureData(id);
-                    if (eyepressureData != null){
-                        preOd = eyepressureData.get("preOd");
-                        preOs = eyepressureData.get("preOs");
-                    }
-                    if (eyeaxisOd == 0.0 || corMR ==0.0){
-                        eyeaxis_corneal_R = 0.0;
-                    }else {
-                        eyeaxis_corneal_R = eyeaxisOd/corMR;
-                    }
-                    if (eyeaxisOs == 0.0 || corML==0.0){
-                        eyeaxis_corneal_L = 0.0;
-                    }else {
-                        eyeaxis_corneal_L = eyeaxisOs/corML;
-                    }
-                    String age = stuMap.get("age").toString();
-
-                    lMap.put("student",id+"|L");
-                    lMap.put("lasy_check_time",lasy_check_time);
-                    lMap.put("studeny_sex",sex);
-                    lMap.put("shifou_tangwo",0);
-                    lMap.put("zuizhong_tizhi",0);
-                    lMap.put("gzr_sm",0);
-                    lMap.put("zm_sm",0);
-                    lMap.put("zm_swhd",0);
-                    lMap.put("zm_mtgz",0);
-                    lMap.put("zx_swhd",0);
-                    lMap.put("xw_swhd",0);
-                    lMap.put("life_farvision",lifeOs);
-                    lMap.put("naked_farvision",nakedOs);
-                    lMap.put("diopter_s1",dioSFL);
-                    lMap.put("diopter_c1",dioCFL);
-                    lMap.put("diopter_a1",dioAFL);
-                    lMap.put("y1_x",DXQJFL);
-                    lMap.put("diopter_s2",dioSSL);
-                    lMap.put("diopter_c2",dioCSL);
-                    lMap.put("diopter_a2",dioASL);
-                    lMap.put("y2_x",DXQJSL);
-                    lMap.put("corneal_mm",corML);
-                    lMap.put("corneal_d",corDL);
-                    lMap.put("eyeaxis",eyeaxisOs);
-                    lMap.put("eyepressure",preOs);
-                    lMap.put("age",age);
-                    lMap.put("eyeaxis_corneal",eyeaxis_corneal_L);
-                    lMap.put("winter",winter);
-                    lMap.put("flag",1);
-
-                    rMap.put("student",id+"|R");
-                    rMap.put("lasy_check_time",lasy_check_time);
-                    rMap.put("studeny_sex",sex);
-                    rMap.put("shifou_tangwo",0);
-                    rMap.put("zuizhong_tizhi",0);
-                    rMap.put("gzr_sm",0);
-                    rMap.put("zm_sm",0);
-                    rMap.put("zm_swhd",0);
-                    rMap.put("zm_mtgz",0);
-                    rMap.put("zx_swhd",0);
-                    rMap.put("xw_swhd",0);
-                    rMap.put("life_farvision",lifeOd);
-                    rMap.put("naked_farvision",nakedOd);
-                    rMap.put("diopter_s1",dioSFR);
-                    rMap.put("diopter_c1",dioCFR);
-                    rMap.put("diopter_a1",dioAFR);
-                    rMap.put("y1_x",DXQJFR);
-                    rMap.put("diopter_s2",dioSSR);
-                    rMap.put("diopter_c2",dioCSR);
-                    rMap.put("diopter_a2",dioASR);
-                    rMap.put("y2_x",DXQJSR);
-                    rMap.put("corneal_mm",corMR);
-                    rMap.put("corneal_d",corDR);
-                    rMap.put("eyeaxis",eyeaxisOd);
-                    rMap.put("eyepressure",preOd);
-                    rMap.put("age",age);
-                    rMap.put("eyeaxis_corneal",eyeaxis_corneal_R);
-                    rMap.put("winter",winter);
-                    rMap.put("flag",1);
-                    ldataList.add(lMap);
-                    rdataList.add(rMap);
+        }
+        if ("ld".equals(checkType)){
+            List<Map<String,Object>> ldYuce = liuDiaoDao.getLDYuCe(checkTime,school, CityName, AreaName);
+            for (Map<String, Object> stuMap : ldYuce) {
+                Map<String,Object> lMap = new HashMap<>();
+                Map<String,Object> rMap = new HashMap<>();
+                Integer id = (Integer) stuMap.get("id");
+                Integer sex = (Integer) stuMap.get("sex");
+                if (sex == 1){
+                    sex=1;
                 }
+                if (sex == 2){
+                    sex=0;
+                }
+                String lasy_check_time = stuMap.get("checkTime").toString();
+                Map<String,String> eyeSightData = liuDiaoDao.getEyeSightData(id);
+                String nakedOd = eyeSightData.get("nakedOd")==""?"0.0":eyeSightData.get("nakedOd");
+                String nakedOs = eyeSightData.get("nakedOs")==""?"0.0":eyeSightData.get("nakedOs");
+                String lifeOd = eyeSightData.get("lifeOd")==""?"0.0":eyeSightData.get("lifeOd");
+                String lifeOs = eyeSightData.get("lifeOs")==""?"0.0":eyeSightData.get("lifeOs");
+
+
+                try {
+                    if ("10/100".equals(nakedOd)){
+                        nakedOd="0.1";
+                    }
+                    if ("10/80".equals(nakedOd)){
+                        nakedOd="0.12";
+                    }
+                    if ("10/60".equals(nakedOd)){
+                        nakedOd="0.15";
+                    }
+                    if ("10/50".equals(nakedOd)){
+                        nakedOd="0.2";
+                    }
+                    if ("10/40".equals(nakedOd)){
+                        nakedOd="0.25";
+                    }
+                    if ("10/30".equals(nakedOd)){
+                        nakedOd="0.3";
+                    }
+                    if ("10/25".equals(nakedOd)){
+                        nakedOd="0.4";
+                    }
+                    if ("10/20".equals(nakedOd)){
+                        nakedOd="0.5";
+                    }
+                    if ("10/15".equals(nakedOd)){
+                        nakedOd="0.6";
+                    }
+                    if ("10/12.5".equals(nakedOd)){
+                        nakedOd="0.8";
+                    }
+                    if ("10/10".equals(nakedOd)){
+                        nakedOd="1.0";
+                    }
+                    if (Double.parseDouble(nakedOd)>1.0){
+                        nakedOd="1.0";
+                    }
+                    if (Double.parseDouble(nakedOd)<0.1){
+                        nakedOd="0.1";
+                    }
+
+                    if ("10/100".equals(nakedOs)){
+                        nakedOs="0.1";
+                    }
+                    if ("10/80".equals(nakedOs)){
+                        nakedOs="0.12";
+                    }
+                    if ("10/60".equals(nakedOs)){
+                        nakedOs="0.15";
+                    }
+                    if ("10/50".equals(nakedOs)){
+                        nakedOs="0.2";
+                    }
+                    if ("10/40".equals(nakedOs)){
+                        nakedOs="0.25";
+                    }
+                    if ("10/30".equals(nakedOs)){
+                        nakedOs="0.3";
+                    }
+                    if ("10/25".equals(nakedOs)){
+                        nakedOs="0.4";
+                    }
+                    if ("10/20".equals(nakedOs)){
+                        nakedOs="0.5";
+                    }
+                    if ("10/15".equals(nakedOs)){
+                        nakedOs="0.6";
+                    }
+                    if ("10/12.5".equals(nakedOs)){
+                        nakedOs="0.8";
+                    }
+                    if ("10/10".equals(nakedOs)){
+                        nakedOs="1.0";
+                    }
+                    if (Double.parseDouble(nakedOs)>1.0){
+                        nakedOs="1.0";
+                    }
+                    if (Double.parseDouble(nakedOs)<0.1){
+                        nakedOs="0.1";
+                    }
+
+                    if ("10/100".equals(lifeOd)){
+                        lifeOd="0.1";
+                    }
+                    if ("10/80".equals(lifeOd)){
+                        lifeOd="0.12";
+                    }
+                    if ("10/60".equals(lifeOd)){
+                        lifeOd="0.15";
+                    }
+                    if ("10/50".equals(lifeOd)){
+                        lifeOd="0.2";
+                    }
+                    if ("10/40".equals(lifeOd)){
+                        lifeOd="0.25";
+                    }
+                    if ("10/30".equals(lifeOd)){
+                        lifeOd="0.3";
+                    }
+                    if ("10/25".equals(lifeOd)){
+                        lifeOd="0.4";
+                    }
+                    if ("10/20".equals(lifeOd)){
+                        lifeOd="0.5";
+                    }
+                    if ("10/15".equals(lifeOd)){
+                        lifeOd="0.6";
+                    }
+                    if ("10/12.5".equals(lifeOd)){
+                        lifeOd="0.8";
+                    }
+                    if ("10/10".equals(lifeOd)){
+                        lifeOd="1.0";
+                    }
+                    if (Double.parseDouble(lifeOd)>1.0){
+                        lifeOd="1.0";
+                    }
+                    if (Double.parseDouble(lifeOd)<0.1){
+                        lifeOd="0.1";
+                    }
+
+                    if ("10/100".equals(lifeOs)){
+                        lifeOs="0.1";
+                    }
+                    if ("10/80".equals(lifeOs)){
+                        lifeOs="0.12";
+                    }
+                    if ("10/60".equals(lifeOs)){
+                        lifeOs="0.15";
+                    }
+                    if ("10/50".equals(lifeOs)){
+                        lifeOs="0.2";
+                    }
+                    if ("10/40".equals(lifeOs)){
+                        lifeOs="0.25";
+                    }
+                    if ("10/30".equals(lifeOs)){
+                        lifeOs="0.3";
+                    }
+                    if ("10/25".equals(lifeOs)){
+                        lifeOs="0.4";
+                    }
+                    if ("10/20".equals(lifeOs)){
+                        lifeOs="0.5";
+                    }
+                    if ("10/15".equals(lifeOs)){
+                        lifeOs="0.6";
+                    }
+                    if ("10/12.5".equals(lifeOs)){
+                        lifeOs="0.8";
+                    }
+                    if ("10/10".equals(lifeOs)){
+                        lifeOs="1.0";
+                    }
+                    if (Double.parseDouble(lifeOs)>1.0){
+                        lifeOs="1.0";
+                    }
+                    if (Double.parseDouble(lifeOs)<0.1){
+                        lifeOs="0.1";
+                    }
+                } catch (Exception e) {
+                    continue;
+                }
+                Integer optId = liuDiaoDao.getOptId(id);
+                Double dioAFL = 0.0;
+                Double dioSFL = 0.0;
+                Double dioCFL = 0.0;
+                Double DXQJFL = 0.0;
+
+                Double dioAFR = 0.0;
+                Double dioSFR = 0.0;
+                Double dioCFR = 0.0;
+                Double DXQJFR = 0.0;
+
+                Double dioASL = 0.0;
+                Double dioSSL = 0.0;
+                Double dioCSL = 0.0;
+                Double DXQJSL = 0.0;
+
+                Double dioASR = 0.0;
+                Double dioSSR = 0.0;
+                Double dioCSR = 0.0;
+                Double DXQJSR = 0.0;
+
+
+                Double corML = 0.0;
+                Double corDL = 0.0;
+                Double corMR = 0.0;
+                Double corDR = 0.0;
+
+                Double eyeaxisOd = 0.0;
+                Double eyeaxisOs = 0.0;
+
+                Double preOd = 0.0;
+                Double preOs = 0.0;
+
+                Double eyeaxis_corneal_L = 0.0;
+                Double eyeaxis_corneal_R = 0.0;
+                List<Map<String,Object>> diopterData = liuDiaoDao.getDiopterData(optId);
+                for (Map<String, Object> dioMap : diopterData) {
+                    String ifRL = dioMap.get("ifRL").toString();
+                    if ("L".equals(ifRL)){
+                        String first_second = dioMap.get("first_second").toString();
+                        if ("FIRST_CHECK".equals(first_second)){
+                            dioAFL = Double.parseDouble(dioMap.get("dioA")==null?"0.0":dioMap.get("dioA")==""?"0.0":dioMap.get("dioA").toString());
+                            dioSFL = Double.parseDouble(dioMap.get("dioS")==null?"0.0":dioMap.get("dioS")==""?"0.0":dioMap.get("dioS").toString());
+                            dioCFL = Double.parseDouble(dioMap.get("dioC")==null?"0.0":dioMap.get("dioC")==""?"0.0":dioMap.get("dioC").toString());
+                            DXQJFL = Double.parseDouble(dioMap.get("DXQJ")==null?"0.0":dioMap.get("DXQJ")==""?"0.0":dioMap.get("DXQJ").toString());
+                        }
+                        if ("SECOND_CHECK".equals(first_second)){
+                            dioASL = Double.parseDouble(dioMap.get("dioA")==null?"0.0":dioMap.get("dioA")==""?"0.0":dioMap.get("dioA").toString());
+                            dioSSL = Double.parseDouble(dioMap.get("dioS")==null?"0.0":dioMap.get("dioS")==""?"0.0":dioMap.get("dioS").toString());
+                            dioCSL = Double.parseDouble(dioMap.get("dioC")==null?"0.0":dioMap.get("dioC")==""?"0.0":dioMap.get("dioC").toString());
+                            DXQJSL = Double.parseDouble(dioMap.get("DXQJ")==null?"0.0":dioMap.get("DXQJ")==""?"0.0":dioMap.get("DXQJ").toString());
+                        }
+                    }
+                    if ("R".equals(ifRL)){
+                        String first_second = dioMap.get("first_second").toString();
+                        if ("FIRST_CHECK".equals(first_second)){
+                            dioAFR = Double.parseDouble(dioMap.get("dioA")==null?"0.0":dioMap.get("dioA")==""?"0.0":dioMap.get("dioA").toString());
+                            dioSFR = Double.parseDouble(dioMap.get("dioS")==null?"0.0":dioMap.get("dioS")==""?"0.0":dioMap.get("dioS").toString());
+                            dioCFR = Double.parseDouble(dioMap.get("dioC")==null?"0.0":dioMap.get("dioC")==""?"0.0":dioMap.get("dioC").toString());
+                            DXQJFR = Double.parseDouble(dioMap.get("DXQJ")==null?"0.0":dioMap.get("DXQJ")==""?"0.0":dioMap.get("DXQJ").toString());
+                        }
+                        if ("SECOND_CHECK".equals(first_second)){
+                            dioASR = Double.parseDouble(dioMap.get("dioA")==null?"0.0":dioMap.get("dioA")==""?"0.0":dioMap.get("dioA").toString());
+                            dioSSR = Double.parseDouble(dioMap.get("dioS")==null?"0.0":dioMap.get("dioS")==""?"0.0":dioMap.get("dioS").toString());
+                            dioCSR = Double.parseDouble(dioMap.get("dioC")==null?"0.0":dioMap.get("dioC")==""?"0.0":dioMap.get("dioC").toString());
+                            DXQJSR = Double.parseDouble(dioMap.get("DXQJ")==null?"0.0":dioMap.get("DXQJ")==""?"0.0":dioMap.get("DXQJ").toString());
+                        }
+                    }
+                }
+                List<Map<String,Object>> corData = liuDiaoDao.getCornealData(optId);
+                for (Map<String, Object> corMap : corData) {
+                    String ifRL = corMap.get("ifRL").toString();
+                    if ("L".equals(ifRL)){
+                        corML = Double.parseDouble(corMap.get("corM")==null?"0.0":corMap.get("corM")==""?"0.0":corMap.get("corM").toString());
+                        corDL = Double.parseDouble(corMap.get("corD")==null?"0.0":corMap.get("corD")==""?"0.0":corMap.get("corD").toString());
+                    }
+                    if ("R".equals(ifRL)){
+                        corMR = Double.parseDouble(corMap.get("corM")==null?"0.0":corMap.get("corM")==""?"0.0":corMap.get("corM").toString());
+                        corDR = Double.parseDouble(corMap.get("corD")==null?"0.0":corMap.get("corD")==""?"0.0":corMap.get("corD").toString());
+                    }
+                }
+
+                Map<String,Double> eyeaxisData = liuDiaoDao.getEyeAxisData(id);
+                if (eyeaxisData!=null){
+                    eyeaxisOd = eyeaxisData.get("od");
+                    eyeaxisOs = eyeaxisData.get("os");
+                }
+                Map<String,Double> eyepressureData = liuDiaoDao.getEyepressureData(id);
+                if (eyepressureData != null){
+                    preOd = eyepressureData.get("preOd");
+                    preOs = eyepressureData.get("preOs");
+                }
+                if (eyeaxisOd == 0.0 || corMR ==0.0){
+                    eyeaxis_corneal_R = 0.0;
+                }else {
+                    eyeaxis_corneal_R = eyeaxisOd/corMR;
+                }
+                if (eyeaxisOs == 0.0 || corML==0.0){
+                    eyeaxis_corneal_L = 0.0;
+                }else {
+                    eyeaxis_corneal_L = eyeaxisOs/corML;
+                }
+                String age = stuMap.get("age").toString();
+
+                lMap.put("student",id+"|L");
+                lMap.put("lasy_check_time",lasy_check_time);
+                lMap.put("studeny_sex",sex);
+                lMap.put("shifou_tangwo",0);
+                lMap.put("zuizhong_tizhi",0);
+                lMap.put("gzr_sm",0);
+                lMap.put("zm_sm",0);
+                lMap.put("zm_swhd",0);
+                lMap.put("zm_mtgz",0);
+                lMap.put("zx_swhd",0);
+                lMap.put("xw_swhd",0);
+                lMap.put("life_farvision",lifeOs);
+                lMap.put("naked_farvision",nakedOs);
+                lMap.put("diopter_s1",dioSFL);
+                lMap.put("diopter_c1",dioCFL);
+                lMap.put("diopter_a1",dioAFL);
+                lMap.put("y1_x",DXQJFL);
+                lMap.put("diopter_s2",dioSSL);
+                lMap.put("diopter_c2",dioCSL);
+                lMap.put("diopter_a2",dioASL);
+                lMap.put("y2_x",DXQJSL);
+                lMap.put("corneal_mm",corML);
+                lMap.put("corneal_d",corDL);
+                lMap.put("eyeaxis",eyeaxisOs);
+                lMap.put("eyepressure",preOs);
+                lMap.put("age",age);
+                lMap.put("eyeaxis_corneal",eyeaxis_corneal_L);
+                lMap.put("flag",1);
+
+                rMap.put("student",id+"|R");
+                rMap.put("lasy_check_time",lasy_check_time);
+                rMap.put("studeny_sex",sex);
+                rMap.put("shifou_tangwo",0);
+                rMap.put("zuizhong_tizhi",0);
+                rMap.put("gzr_sm",0);
+                rMap.put("zm_sm",0);
+                rMap.put("zm_swhd",0);
+                rMap.put("zm_mtgz",0);
+                rMap.put("zx_swhd",0);
+                rMap.put("xw_swhd",0);
+                rMap.put("life_farvision",lifeOd);
+                rMap.put("naked_farvision",nakedOd);
+                rMap.put("diopter_s1",dioSFR);
+                rMap.put("diopter_c1",dioCFR);
+                rMap.put("diopter_a1",dioAFR);
+                rMap.put("y1_x",DXQJFR);
+                rMap.put("diopter_s2",dioSSR);
+                rMap.put("diopter_c2",dioCSR);
+                rMap.put("diopter_a2",dioASR);
+                rMap.put("y2_x",DXQJSR);
+                rMap.put("corneal_mm",corMR);
+                rMap.put("corneal_d",corDR);
+                rMap.put("eyeaxis",eyeaxisOd);
+                rMap.put("eyepressure",preOd);
+                rMap.put("age",age);
+                rMap.put("eyeaxis_corneal",eyeaxis_corneal_R);
+                rMap.put("flag",1);
+                ldataList.add(lMap);
+                rdataList.add(rMap);
             }
-            List<Map<String,Object>> lAllData = new ArrayList<>();
-            List<Map<String,Object>> rAllData = new ArrayList<>();
+        }
+        List<Map<String,Object>> lAllData = new ArrayList<>();
+        List<Map<String,Object>> rAllData = new ArrayList<>();
 
+        if ("sc".equals(checkType)){
 
-            int l = ldataList.size() / 200;
-            for (int j = 1; j <= l+1; j++) {
-                if (l==0){
-                    HttpHeaders httpHeadersL = new HttpHeaders();
-                    httpHeadersL.setContentType(MediaType.APPLICATION_JSON_UTF8);
-                    HttpEntity<List<Map<String, Object>>> entityL = new HttpEntity<>(ldataList, httpHeadersL);
-                    ResponseEntity<String> responseEntityL = restTemplate.postForEntity("http://121.36.21.238:8081/vision_analyze/api/vision/visionAnalyze", entityL, String.class);
-                    String responseL = responseEntityL.getBody();
-                    Map mapData = JSON.parseObject(responseL, Map.class);
-                    List<Map<String,Object>> Ldata = (List<Map<String, Object>>) mapData.get("data");
-                    lAllData.addAll(Ldata);
-                    continue;
+            int lsize = ldataList.size();
+            int rsize = rdataList.size();
+            int ltoIndex = 200;
+            int rtoIndex = 200;
+            for (int i = 0; i < ldataList.size(); i+=200) {
+                if (i+200>lsize){
+                    ltoIndex=lsize-i;
                 }
-                if (j==1){
-                    List<Map<String, Object>> mapList = ldataList.subList(j * 200 - 200, j * 200 + 1);
-                    HttpHeaders httpHeadersL = new HttpHeaders();
-                    httpHeadersL.setContentType(MediaType.APPLICATION_JSON_UTF8);
-                    HttpEntity<List<Map<String, Object>>> entityL = new HttpEntity<>(mapList, httpHeadersL);
-                    ResponseEntity<String> responseEntityL = restTemplate.postForEntity("http://121.36.21.238:8081/vision_analyze/api/vision/visionAnalyze", entityL, String.class);
-                    String responseL = responseEntityL.getBody();
-                    Map mapData = JSON.parseObject(responseL, Map.class);
-                    List<Map<String,Object>> Ldata = (List<Map<String, Object>>) mapData.get("data");
-                    lAllData.addAll(Ldata);
-                    continue;
-                }
-                if (j==l+1){
-                    List<Map<String, Object>> mapList = ldataList.subList((j * 200 - 200)+1, ldataList.size());
-                    HttpHeaders httpHeadersL = new HttpHeaders();
-                    httpHeadersL.setContentType(MediaType.APPLICATION_JSON_UTF8);
-                    HttpEntity<List<Map<String, Object>>> entityL = new HttpEntity<>(mapList, httpHeadersL);
-                    ResponseEntity<String> responseEntityL = restTemplate.postForEntity("http://121.36.21.238:8081/vision_analyze/api/vision/visionAnalyze", entityL, String.class);
-                    String responseL = responseEntityL.getBody();
-                    Map mapData = JSON.parseObject(responseL, Map.class);
-                    List<Map<String,Object>> Ldata = (List<Map<String, Object>>) mapData.get("data");
-                    lAllData.addAll(Ldata);
-                    continue;
-                }
-                List<Map<String, Object>> mapList = ldataList.subList((j * 200 - 200)+1, j * 200 + 1);
-                HttpHeaders httpHeadersL = new HttpHeaders();
-                httpHeadersL.setContentType(MediaType.APPLICATION_JSON_UTF8);
-                HttpEntity<List<Map<String, Object>>> entityL = new HttpEntity<>(mapList, httpHeadersL);
-                ResponseEntity<String> responseEntityL = restTemplate.postForEntity("http://121.36.21.238:8081/vision_analyze/api/vision/visionAnalyze", entityL, String.class);
-                String responseL = responseEntityL.getBody();
-                Map mapData = JSON.parseObject(responseL, Map.class);
-                List<Map<String,Object>> data = (List<Map<String, Object>>) mapData.get("data");
-                lAllData.addAll(data);
-            }
-            int r = rdataList.size() / 200;
-            for (int j = 1; j <= r+1; j++) {
-                if (r==0){
-                    HttpHeaders httpHeaders = new HttpHeaders();
-                    httpHeaders.setContentType(MediaType.APPLICATION_JSON_UTF8);
-                    HttpEntity<List<Map<String, Object>>> entity = new HttpEntity<>(rdataList, httpHeaders);
-                    ResponseEntity<String> responseEntityL = restTemplate.postForEntity("http://121.36.21.238:8081/vision_analyze/api/vision/visionAnalyze", entity, String.class);
-                    String responseL = responseEntityL.getBody();
-                    Map mapData = JSON.parseObject(responseL, Map.class);
-                    List<Map<String,Object>> data = (List<Map<String, Object>>) mapData.get("data");
-                    rAllData.addAll(data);
-                    continue;
-                }
-                if (j==1){
-                    List<Map<String, Object>> mapList = rdataList.subList(j * 200 - 200, j * 200 + 1);
-                    HttpHeaders httpHeaders = new HttpHeaders();
-                    httpHeaders.setContentType(MediaType.APPLICATION_JSON_UTF8);
-                    HttpEntity<List<Map<String, Object>>> entity = new HttpEntity<>(mapList, httpHeaders);
-                    ResponseEntity<String> responseEntityL = restTemplate.postForEntity("http://121.36.21.238:8081/vision_analyze/api/vision/visionAnalyze", entity, String.class);
-                    String responseL = responseEntityL.getBody();
-                    Map mapData = JSON.parseObject(responseL, Map.class);
-                    List<Map<String,Object>> data = (List<Map<String, Object>>) mapData.get("data");
-                    rAllData.addAll(data);
-                    continue;
-                }
-                if (j==r+1){
-                    List<Map<String, Object>> mapList = rdataList.subList((j * 200 - 200)+1, ldataList.size());
-                    HttpHeaders httpHeaders = new HttpHeaders();
-                    httpHeaders.setContentType(MediaType.APPLICATION_JSON_UTF8);
-                    HttpEntity<List<Map<String, Object>>> entity = new HttpEntity<>(mapList, httpHeaders);
-                    ResponseEntity<String> responseEntityL = restTemplate.postForEntity("http://121.36.21.238:8081/vision_analyze/api/vision/visionAnalyze", entity, String.class);
-                    String responseL = responseEntityL.getBody();
-                    Map mapData = JSON.parseObject(responseL, Map.class);
-                    List<Map<String,Object>> data = (List<Map<String, Object>>) mapData.get("data");
-                    rAllData.addAll(data);
-
-                    continue;
-                }
-                List<Map<String, Object>> mapList = rdataList.subList((j * 200 - 200)+1, j * 200 + 1);
+                List<Map<String, Object>> subList = ldataList.subList(i, i+ltoIndex);
                 HttpHeaders httpHeaders = new HttpHeaders();
                 httpHeaders.setContentType(MediaType.APPLICATION_JSON_UTF8);
-                HttpEntity<List<Map<String, Object>>> entity = new HttpEntity<>(mapList, httpHeaders);
-                ResponseEntity<String> responseEntityL = restTemplate.postForEntity("http://121.36.21.238:8081/vision_analyze/api/vision/visionAnalyze", entity, String.class);
-                String responseL = responseEntityL.getBody();
-                Map mapData = JSON.parseObject(responseL, Map.class);
-                List<Map<String,Object>> data = (List<Map<String, Object>>) mapData.get("data");
-                rAllData.addAll(data);
-            }
-
-
-            for (Map<String, Object> lMap : lAllData) {
-                for (Map<String, Object> rMap : rAllData) {
-                    int indexL = lMap.get("student").toString().indexOf("|");
-                    int indexR = rMap.get("student").toString().indexOf("|");
-                    String idL = lMap.get("student").toString().substring(0, indexL);
-                    String idR = rMap.get("student").toString().substring(0, indexR);
-                    if (idL.equals(idR)){
-                        int ltype = Integer.parseInt(lMap.get("type").toString());
-                        int rtype = Integer.parseInt(rMap.get("type").toString());
-                        int type = ltype>rtype?ltype:rtype;
-                        Map<String,Object> yucehouMap = new HashMap<>();
-                        yucehouMap.put("type",type);
-                        yucehouMap.put("id",Integer.parseInt(idL));
-                        yucehouList.add(yucehouMap);
-                    }
+                HttpEntity<List<Map<String, Object>>> entity = new HttpEntity<>(subList, httpHeaders);
+                ResponseEntity<String> responseEntity = restTemplate.postForEntity("http://121.36.21.238:5000/shaicha_model", entity, String.class);
+                String response = responseEntity.getBody();
+                lAllData .addAll(JSON.parseObject(response, List.class));
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
+
+            for (int i = 0; i < rdataList.size(); i+=200) {
+                if (i+200>rsize){
+                    rtoIndex=rsize-i;
+                }
+                List<Map<String, Object>> subList = rdataList.subList(i, i+rtoIndex);
+                HttpHeaders httpHeaders = new HttpHeaders();
+                httpHeaders.setContentType(MediaType.APPLICATION_JSON_UTF8);
+                HttpEntity<List<Map<String, Object>>> entity = new HttpEntity<>(subList, httpHeaders);
+                ResponseEntity<String> responseEntity = restTemplate.postForEntity("http://121.36.21.238:5000/shaicha_model", entity, String.class);
+                String response = responseEntity.getBody();
+                rAllData .addAll(JSON.parseObject(response, List.class));
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+
+        for (Map<String, Object> lMap : lAllData) {
+            for (Map<String, Object> rMap : rAllData) {
+                int indexL = lMap.get("student").toString().indexOf("|");
+                int indexR = rMap.get("student").toString().indexOf("|");
+                String idL = lMap.get("student").toString().substring(0, indexL);
+                String idR = rMap.get("student").toString().substring(0, indexR);
+                if (idL.equals(idR)){
+                    Map<String,Integer> yucehouMap = new HashMap<>();
+                    int ltype = Integer.parseInt(lMap.get("type").toString());
+                    int rtype = Integer.parseInt(rMap.get("type").toString());
+                    int type = ltype>rtype?ltype:rtype;
+                    yucehouMap.put("type",type);
+                    yucehouMap.put("id",Integer.parseInt(idL));
+                    yucehouList.add(yucehouMap);
+                }
+            }
+        }
             Integer fzcNum = 0;
             Integer flcNum = 0;
             Integer fjxNum = 0;
+            Integer fzxNum = 0;
 
             Integer zcTolc = 0;
             Integer zcTojx = 0;
@@ -1474,65 +741,62 @@ public class schoolServiceImpl implements schoolService {
             Integer jxTolc = 0;
             Integer jxTozx = 0;
 
-            for (Map<String, Object> fMap : yuceqianList) {
-                for (Map<String, Object> sMap : yucehouList) {
-                    if (fMap.get("id").equals(sMap.get("id"))){
+            for (Map<String, Integer> fMap : yuceqianList) {
+                for (Map<String, Integer> sMap : yucehouList) {
+                    if (fMap.get("id").equals(sMap.get("id"))) {
                         int ftype = Integer.parseInt(fMap.get("type").toString());
                         int stype = Integer.parseInt(sMap.get("type").toString());
-                        if (ftype==1){
+                        if (1==ftype){
                             fzcNum++;
-                            if (stype==2){
+                            if (2==stype){
                                 zcTolc++;
                             }
-                            if (stype==3){
+                            if (3==stype){
                                 zcTojx++;
                             }
-                            if (stype==4){
+                            if (stype>=4){
                                 zcTozx++;
                             }
                         }
-                        if (ftype==2){
+                        if (2==ftype){
                             flcNum++;
-                            if (stype==3){
+                            if (3==stype){
                                 lcTojx++;
                             }
-                            if (stype==4){
+                            if (stype>=4){
                                 lcTozx++;
                             }
                         }
-                        if (ftype==3){
+                        if (3==ftype){
                             fjxNum++;
-                            if (stype==2){
+                            if (2==stype){
                                 jxTolc++;
                             }
-                            if (stype==4){
+                            if (stype>=4){
                                 jxTozx++;
                             }
+                        }
+                        if (4==ftype){
+                            fzxNum++;
                         }
                     }
                 }
             }
 
 
+        ycList.add(format2(getLv2(zcTojx + lcTojx, fzcNum + flcNum)));
+        ycList.add(format2(getLv2(zcTolc+jxTolc,fzcNum+fjxNum)));
+        ycList.add(format2(getLv2(zcTozx+jxTozx+lcTozx,fzcNum+flcNum+fjxNum)));
 
-
-            zxycList.add(format(getLv(zcTozx+lcTozx+jxTozx,fzcNum+flcNum+fjxNum)));
-            jxycList.add(format(getLv(zcTojx+lcTojx,fzcNum+flcNum)));
-            lcycList.add(format(getLv(zcTolc+jxTolc,fzcNum+fjxNum)));
-        }
-
-
-        zxycList.add(0, 0);
-        jxycList.add(0, 0);
-        lcycList.add(0, 0);
+        zxjsLv.add(format2(getLv2(zcTozx+lcTozx+jxTozx,fzcNum+fjxNum+flcNum+fzxNum)));
+        jxjsLv.add(format2(getLv2(zcTojx+lcTojx,fzcNum+fjxNum+flcNum+fzxNum)));
+        lcqqLv.add(format2(getLv2(zcTolc+jxTolc,fzcNum+fjxNum+flcNum+fzxNum)));
         everyTime.add("预测");
         fixlist(everyTime);
         fixTheList(zxjsLv);
         fixTheList(lcqqLv);
         fixTheList(jxjsLv);
-        listMap.put("zxycList",zxycList);
-        listMap.put("jxycList",jxycList);
-        listMap.put("lcycList",lcycList);
+
         listMap.put("grade",grade);
         listMap.put("gradeNumber",gradeNumber);
         listMap.put("zxjsLv",zxjsLv);
@@ -1540,20 +804,30 @@ public class schoolServiceImpl implements schoolService {
         listMap.put("jxjsLv",jxjsLv);
         listMap.put("myopia",myopia);
         listMap.put("everyTime",everyTime);
-        redisTemplate.opsForHash().putAll(school+AreaName+checkdate+checkType+"dataTwo",listMap);
+        listMap.put("ycList",ycList);
+        if (StringUtils.isBlank(nianji) && StringUtils.isBlank(banji)){
+            redisTemplate.opsForHash().putAll(school+AreaName+checkdate+checkType+"dataTwo",listMap);
+        }else {
+            if (StringUtils.isBlank(banji)){
+                redisTemplate.opsForHash().putAll(school+AreaName+checkdate+checkType+nianji+"dataTwo",listMap);
+            }else {
+                redisTemplate.opsForHash().putAll(school+AreaName+checkdate+checkType+nianji+banji+"dataTwo",listMap);
+            }
+        }
+
         return listMap;
     }
 
     @Override
-    public List<Map> dataThree(String school, String CityName, String AreaName, String checkdate,String checkType) {
+    public List<Map> dataThree(String school, String CityName, String AreaName, String checkdate,String checkType,String nianji,String banji) {
         List<Map> studentList;
         String xueBu;
         if ("sc".equals(checkType)) {
-            studentList = shaichaStudentDao.studentList(school, CityName, AreaName, checkdate);
-            xueBu = shaichaStudentDao.getXueBu(school, CityName, AreaName, checkdate);
+            studentList = shaichaStudentDao.studentList(school, CityName, AreaName, checkdate,nianji,banji);
+            xueBu = shaichaStudentDao.getXueBu(school, CityName, AreaName, checkdate,nianji,banji);
         }else {
-            studentList = shaichaStudentDao.studentListld(school, CityName, AreaName, checkdate);
-            xueBu = shaichaStudentDao.getXueBuld(school, CityName, AreaName, checkdate);
+            studentList = shaichaStudentDao.studentListld(school, CityName, AreaName, checkdate,nianji,banji);
+            xueBu = shaichaStudentDao.getXueBuld(school, CityName, AreaName, checkdate,nianji,banji);
         }
         for (int a = 0; a<studentList.size();a++){
             Map student = studentList.get(a);
@@ -1562,19 +836,28 @@ public class schoolServiceImpl implements schoolService {
             studentList.get(a).put("checkdate",checkdate);
             studentList.get(a).put("checkType",checkType);
         }
-        redisTemplate.opsForList().rightPushAll(school+AreaName+checkdate+checkType+"dataThree",studentList);
+
+        if (StringUtils.isBlank(nianji) && StringUtils.isBlank(banji)){
+            redisTemplate.opsForList().rightPushAll(school+AreaName+checkdate+checkType+"dataThree",studentList);
+        }else {
+            if (StringUtils.isBlank(banji)){
+                redisTemplate.opsForList().rightPushAll(school+AreaName+checkdate+checkType+nianji+"dataThree",studentList);
+            }else {
+                redisTemplate.opsForList().rightPushAll(school+AreaName+checkdate+checkType+nianji+banji+"dataThree",studentList);
+            }
+        }
         return studentList;
     }
 
     @Override
-    public List<Map> dataFour(String school, String CityName, String AreaName, String checkdate,String checkType) {
+    public List<Map> dataFour(String school, String CityName, String AreaName, String checkdate,String checkType,String nianji,String banji) {
         String xueBu;
         List<Map> paiMing;
         if ("sc".equals(checkType)) {
-            xueBu = shaichaStudentDao.getXueBu(school, CityName, AreaName, checkdate);
+            xueBu = shaichaStudentDao.getXueBu(school, CityName, AreaName, checkdate,nianji,banji);
             paiMing = shaichaStudentDao.paiMing(school, CityName, AreaName, checkdate);
         }else {
-            xueBu = shaichaStudentDao.getXueBuld(school, CityName, AreaName, checkdate);
+            xueBu = shaichaStudentDao.getXueBuld(school, CityName, AreaName, checkdate,nianji,banji);
             paiMing = shaichaStudentDao.paiMingld(school, CityName, AreaName, checkdate);
         }
         for (int b = 0;b<paiMing.size();b++){
@@ -1582,45 +865,75 @@ public class schoolServiceImpl implements schoolService {
             String grade = gradeClass.get("年级")==null?"":xueBu(xueBu,gradeClass.get("年级").toString());
             paiMing.get(b).put("gradeClass",grade+gradeClass.get("班级"));
         }
-        redisTemplate.opsForList().rightPushAll(school+AreaName+checkdate+checkType+"dataFour",paiMing);
+
+        if (StringUtils.isBlank(nianji) && StringUtils.isBlank(banji)){
+            redisTemplate.opsForList().rightPushAll(school+AreaName+checkdate+checkType+"dataFour",paiMing);
+        }else {
+            if (StringUtils.isBlank(banji)){
+                redisTemplate.opsForList().rightPushAll(school+AreaName+checkdate+checkType+nianji+"dataFour",paiMing);
+
+            }else {
+                redisTemplate.opsForList().rightPushAll(school+AreaName+checkdate+checkType+nianji+banji+"dataFour",paiMing);
+            }
+        }
         return paiMing;
     }
 
     @Override
-    public List<Map> dataFive(String school, String CityName, String AreaName, String checkdate,String checkType) {
+    public List<Map> dataFive(String school, String CityName, String AreaName, String checkdate,String checkType,String nianji,String banji) {
         String xueBu;
         List<Map> gradeLv;
         if ("sc".equals(checkType)) {
-            xueBu = shaichaStudentDao.getXueBu(school, CityName, AreaName, checkdate);
+            xueBu = shaichaStudentDao.getXueBu(school, CityName, AreaName, checkdate,nianji,banji);
             gradeLv = shaichaStudentDao.gradeLv(school, CityName, AreaName, checkdate);
         }else {
-            xueBu = shaichaStudentDao.getXueBuld(school, CityName, AreaName, checkdate);
+            xueBu = shaichaStudentDao.getXueBuld(school, CityName, AreaName, checkdate,nianji,banji);
             gradeLv = shaichaStudentDao.gradeLvld(school, CityName, AreaName, checkdate);
         }
         for (int i = 0; i <gradeLv.size() ; i++) {
             Map map = gradeLv.get(i);
             gradeLv.get(i).put("grade",map.get("grade")==null?"":xueBu(xueBu,map.get("grade").toString()));
         }
-        redisTemplate.opsForList().rightPushAll(school+AreaName+checkdate+checkType+"dataFive",gradeLv);
+
+        if (StringUtils.isBlank(nianji) && StringUtils.isBlank(banji)){
+            redisTemplate.opsForList().rightPushAll(school+AreaName+checkdate+checkType+"dataFive",gradeLv);
+        }else {
+            if (StringUtils.isBlank(banji)){
+                redisTemplate.opsForList().rightPushAll(school+AreaName+checkdate+checkType+nianji+"dataFive",gradeLv);
+            }else {
+                redisTemplate.opsForList().rightPushAll(school+AreaName+checkdate+checkType+nianji+banji+"dataFive",gradeLv);
+            }
+        }
         return gradeLv;
     }
 
     @Override
-    public List<Map> dataSix(String school, String CityName, String AreaName, String checkdate,String checkType) {
+    public List<Map> dataSix(String school, String CityName, String AreaName, String checkdate,String checkType,String nianji,String banji) {
         String xueBu;
         List<Map> gradeNumberList;
         if ("sc".equals(checkType)) {
-            xueBu = shaichaStudentDao.getXueBu(school, CityName, AreaName, checkdate);
+            xueBu = shaichaStudentDao.getXueBu(school, CityName, AreaName, checkdate,nianji,banji);
             gradeNumberList = shaichaStudentDao.gradeNumber(school, CityName, AreaName, checkdate);
         }else {
-            xueBu = shaichaStudentDao.getXueBuld(school, CityName, AreaName, checkdate);
+            xueBu = shaichaStudentDao.getXueBuld(school, CityName, AreaName, checkdate,nianji,banji);
             gradeNumberList = shaichaStudentDao.gradeNumberld(school, CityName, AreaName, checkdate);
         }
         for(int s = 0;s<gradeNumberList.size();s++){
             Map map = gradeNumberList.get(s);
             gradeNumberList.get(s).put("name",map.get("name")==null ? "" :xueBu(xueBu,map.get("name").toString()));
         }
-        redisTemplate.opsForList().rightPushAll(school+AreaName+checkdate+checkType+"dataSix",gradeNumberList);
+
+        if (StringUtils.isBlank(nianji) && StringUtils.isBlank(banji)){
+            redisTemplate.opsForList().rightPushAll(school+AreaName+checkdate+checkType+"dataSix",gradeNumberList);
+
+        }else {
+            if (StringUtils.isBlank(banji)){
+                redisTemplate.opsForList().rightPushAll(school+AreaName+checkdate+checkType+nianji+"dataSix",gradeNumberList);
+
+            }else {
+                redisTemplate.opsForList().rightPushAll(school+AreaName+checkdate+checkType+nianji+banji+"dataSix",gradeNumberList);
+            }
+        }
         return gradeNumberList;
     }
 
@@ -1892,6 +1205,7 @@ public class schoolServiceImpl implements schoolService {
         List dengxiaoqiujingr = new ArrayList();
         List dengxiaoqiujingl = new ArrayList();
         List dengxiaoqiujingtime = new ArrayList();
+
         fixList(luoyan);
         fixList(dengxiaoqiujing);
         if (yanzhou.size()==0){
@@ -1936,232 +1250,323 @@ public class schoolServiceImpl implements schoolService {
             winter=0;
         }
         List<Map<String,Object>> dataList = new ArrayList<>();
+
+        List<Map<String,Object>> syuceList = new ArrayList<>();
+        List<Map<String,Object>> fyuceList = new ArrayList<>();
+        Integer stype =0;
+        Integer ftype =0;
+        List<Integer> typeList = new ArrayList<>();
         if ("sc".equals(checkType)){
-            Map<String,Object> stuMap = shaichaStudentDao.getYuCeForPerson(checkDate,name,idCard);
-            Double dioAL = 0.0;
-            Double dioSL = 0.0;
-            Double dioCL = 0.0;
-            Double dioAR = 0.0;
-            Double dioSR = 0.0;
-            Double dioCR = 0.0;
-            Double corML = 0.0;
-            Double corDL = 0.0;
-            Double corMR = 0.0;
-            Double corDR = 0.0;
-            Double eyeaxisOd = 0.0;
-            Double eyeaxisOs = 0.0;
-            Double preOd = 0.0;
-            Double preOs = 0.0;
-            Double eyeaxis_corneal_L = 0.0;
-            Double eyeaxis_corneal_R = 0.0;
-            Map<String,Object> lMap = new HashMap<>();
-            Map<String,Object> rMap = new HashMap<>();
-            Integer id = (Integer) stuMap.get("id");
-            Integer sex = (Integer) stuMap.get("sex");
-            if (sex == 1){
-                sex=1;
-            }
-            if (sex == 2){
-                sex=0;
-            }
-            String lasy_check_time = stuMap.get("checkTime").toString();
-            Integer optId = shaichaStudentDao.getOptId(id);
-            List<Map<String,Object>> diopterData = shaichaStudentDao.getDiopterData(optId);
+            for (int i = 0; i < luoyantime.size(); i++) {
+                if (i==luoyantime.size()-1){
+                    checkDate = luoyantime.get(i).toString();
+                    Map<String,Object> stuMap = shaichaStudentDao.getYuCeForPerson(checkDate,name,idCard);
+                    Double dioAL = 0.0;
+                    Double dioSL = 0.0;
+                    Double dioCL = 0.0;
+                    Double dioAR = 0.0;
+                    Double dioSR = 0.0;
+                    Double dioCR = 0.0;
+                    Double corML = 0.0;
+                    Double corDL = 0.0;
+                    Double corMR = 0.0;
+                    Double corDR = 0.0;
+                    Double eyeaxisOd = 0.0;
+                    Double eyeaxisOs = 0.0;
+                    Double preOd = 0.0;
+                    Double preOs = 0.0;
+                    Double eyeaxis_corneal_L = 0.0;
+                    Double eyeaxis_corneal_R = 0.0;
+                    Map<String,Object> lMap = new HashMap<>();
+                    Map<String,Object> rMap = new HashMap<>();
+                    Integer id = (Integer) stuMap.get("id");
+                    Integer sex = (Integer) stuMap.get("sex");
+                    if (sex == 1){
+                        sex=1;
+                    }
+                    if (sex == 2){
+                        sex=0;
+                    }
+                    String lasy_check_time = stuMap.get("checkTime").toString();
+                    Integer optId = shaichaStudentDao.getOptId(id);
+                    List<Map<String,Object>> diopterData = shaichaStudentDao.getDiopterData(optId);
 
-            for (Map<String, Object> dioMap : diopterData) {
-                String ifRl = dioMap.get("ifRL").toString();
-                if ("L".equals(ifRl)){
-                    dioAL = Double.parseDouble(dioMap.get("dioA")==null?"0.0":dioMap.get("dioA")==""?"0.0":dioMap.get("dioA").toString());
-                    dioSL = Double.parseDouble(dioMap.get("dioS")==null?"0.0":dioMap.get("dioS")==""?"0.0":dioMap.get("dioS").toString());
-                    dioCL = Double.parseDouble(dioMap.get("dioC")==null?"0.0":dioMap.get("dioC")==""?"0.0":dioMap.get("dioC").toString());
+                    for (Map<String, Object> dioMap : diopterData) {
+                        String ifRl = dioMap.get("ifRL").toString();
+                        if ("L".equals(ifRl)){
+                            dioAL = Double.parseDouble(dioMap.get("dioA")==null?"0.0":dioMap.get("dioA")==""?"0.0":dioMap.get("dioA").toString());
+                            dioSL = Double.parseDouble(dioMap.get("dioS")==null?"0.0":dioMap.get("dioS")==""?"0.0":dioMap.get("dioS").toString());
+                            dioCL = Double.parseDouble(dioMap.get("dioC")==null?"0.0":dioMap.get("dioC")==""?"0.0":dioMap.get("dioC").toString());
+                        }
+
+                        if ("R".equals(ifRl)){
+                            dioAR = Double.parseDouble(dioMap.get("dioA")==null?"0.0":dioMap.get("dioA")==""?"0.0":dioMap.get("dioA").toString());
+                            dioSR = Double.parseDouble(dioMap.get("dioS")==null?"0.0":dioMap.get("dioS")==""?"0.0":dioMap.get("dioS").toString());
+                            dioCR = Double.parseDouble(dioMap.get("dioC")==null?"0.0":dioMap.get("dioC")==""?"0.0":dioMap.get("dioC").toString());
+                        }
+                    }
+                    List<Map<String,Object>> corData = shaichaStudentDao.getCornealData(optId);
+                    for (Map<String, Object> corMap : corData) {
+                        String ifRL = corMap.get("ifRL").toString();
+                        if ("L".equals(ifRL)){
+                            corML = Double.parseDouble(corMap.get("corM")==null?"0.0":corMap.get("corM")==""?"0.0":corMap.get("corM").toString());
+                            corDL = Double.parseDouble(corMap.get("corD")==null?"0.0":corMap.get("corD")==""?"0.0":corMap.get("corD").toString());
+                        }
+                        if ("R".equals(ifRL)){
+                            corMR = Double.parseDouble(corMap.get("corM")==null?"0.0":corMap.get("corM")==""?"0.0":corMap.get("corM").toString());
+                            corDR = Double.parseDouble(corMap.get("corD")==null?"0.0":corMap.get("corD")==""?"0.0":corMap.get("corD").toString());
+                        }
+                    }
+
+                    Map<String,Double> eyeaxisData = shaichaStudentDao.getEyeAxisData(id);
+                    if (eyeaxisData!=null){
+                        eyeaxisOd = eyeaxisData.get("od");
+                        eyeaxisOs = eyeaxisData.get("os");
+                    }
+                    Map<String,Double> eyepressureData = shaichaStudentDao.getEyepressureData(id);
+
+                    if (eyepressureData != null){
+                        preOd = eyepressureData.get("preOd");
+                        preOs = eyepressureData.get("preOs");
+                    }
+
+                    if (eyeaxisOd == 0.0 || corMR ==0.0){
+                        eyeaxis_corneal_R = 0.0;
+                    }else {
+                        eyeaxis_corneal_R = eyeaxisOd/corMR;
+                    }
+                    if (eyeaxisOs == 0.0 || corML==0.0){
+                        eyeaxis_corneal_L = 0.0;
+                    }else {
+                        eyeaxis_corneal_L = eyeaxisOs/corML;
+                    }
+                    String age = stuMap.get("age").toString();
+                    String NakedOs = stuMap.get("NakedOs").toString() == "" ? "0" : stuMap.get("NakedOs").toString();
+                    String NakedOd = stuMap.get("NakedOd").toString() == "" ? "0" : stuMap.get("NakedOd").toString();
+
+                    Double dxqjl = 0.0;
+                    Double dxqjr = 0.0;
+                    try {
+                        NakedOs = ShiLiZhuanHuanUtils.zhuanhuanshiliForSc(NakedOs);
+                        NakedOd = ShiLiZhuanHuanUtils.zhuanhuanshiliForSc(NakedOd);
+                        dxqjl= Double.parseDouble(stuMap.get("DXQJL").toString());
+                        dxqjr= Double.parseDouble(stuMap.get("DXQJR").toString());
+                    } catch (Exception e) {
+                        NakedOs = "0.1";
+                        NakedOd = "0.1";
+                    }
+                    lMap.put("student",id+"|L");
+                    lMap.put("lasy_check_time",lasy_check_time);
+                    lMap.put("studeny_sex",sex);
+                    lMap.put("shifou_tangwo",0);
+                    lMap.put("zuizhong_tizhi",0);
+                    lMap.put("gzr_sm",0);
+                    lMap.put("zm_sm",0);
+                    lMap.put("zm_swhd",0);
+                    lMap.put("zm_mtgz",0);
+                    lMap.put("zx_swhd",0);
+                    lMap.put("xw_swhd",0);
+                    lMap.put("life_farvision",0);
+                    lMap.put("naked_farvision",NakedOs);
+                    lMap.put("diopter_s1",dioSL);
+                    lMap.put("diopter_c1",dioCL);
+                    lMap.put("diopter_a1",dioAL);
+                    lMap.put("y1_x",stuMap.get("DXQJL"));
+                    lMap.put("diopter_s2",0);
+                    lMap.put("diopter_c2",0);
+                    lMap.put("diopter_a2",0);
+                    lMap.put("y2_x",0);
+                    lMap.put("corneal_mm",corML);
+                    lMap.put("corneal_d",corDL);
+                    lMap.put("eyeaxis",eyeaxisOs);
+                    lMap.put("eyepressure",preOs);
+                    lMap.put("age",age);
+                    lMap.put("eyeaxis_corneal",eyeaxis_corneal_L);
+                    lMap.put("winter",winter);
+                    lMap.put("flag",2);
+
+                    rMap.put("student",id+"|R");
+                    rMap.put("lasy_check_time",lasy_check_time);
+                    rMap.put("studeny_sex",sex);
+                    rMap.put("shifou_tangwo",0);
+                    rMap.put("zuizhong_tizhi",0);
+                    rMap.put("gzr_sm",0);
+                    rMap.put("zm_sm",0);
+                    rMap.put("zm_swhd",0);
+                    rMap.put("zm_mtgz",0);
+                    rMap.put("zx_swhd",0);
+                    rMap.put("xw_swhd",0);
+                    rMap.put("life_farvision",0);
+                    rMap.put("naked_farvision",NakedOd);
+                    rMap.put("diopter_s1",dioSR);
+                    rMap.put("diopter_c1",dioCR);
+                    rMap.put("diopter_a1",dioAR);
+                    rMap.put("y1_x",stuMap.get("DXQJR"));
+                    rMap.put("diopter_s2",0);
+                    rMap.put("diopter_c2",0);
+                    rMap.put("diopter_a2",0);
+                    rMap.put("y2_x",0);
+                    rMap.put("corneal_mm",corMR);
+                    rMap.put("corneal_d",corDR);
+                    rMap.put("eyeaxis",eyeaxisOd);
+                    rMap.put("eyepressure",preOd);
+                    rMap.put("age",age);
+                    rMap.put("eyeaxis_corneal",eyeaxis_corneal_R);
+                    rMap.put("winter",winter);
+                    rMap.put("flag",2);
+                    dataList.add(lMap);
+                    dataList.add(rMap);
+
+                    Map<String,Object> lMap2 = new HashMap<>();
+                    Map<String,Object> rMap2 = new HashMap<>();
+
+                    lMap2.put("student",id+"|L");
+                    lMap2.put("life_farvision",0);
+                    lMap2.put("naked_farvision",Double.parseDouble(NakedOs));
+                    lMap2.put("diopter_s1",dioSL);
+                    lMap2.put("diopter_c1",dioCL);
+                    lMap2.put("diopter_a1",dioAL);
+                    lMap2.put("y1",dxqjl);
+                    lMap2.put("corneal_mm",corML);
+                    lMap2.put("corneal_d",corDL);
+                    lMap2.put("eyeaxis",eyeaxisOs);
+                    lMap2.put("age",age);
+                    lMap2.put("eyeaxis_corneal",eyeaxis_corneal_L);
+
+
+                    rMap2.put("student",id+"|R");
+                    rMap2.put("life_farvision",0);
+                    rMap2.put("naked_farvision",Double.parseDouble(NakedOd));
+                    rMap2.put("diopter_s1",dioSR);
+                    rMap2.put("diopter_c1",dioCR);
+                    rMap2.put("diopter_a1",dioAR);
+                    rMap2.put("y1",dxqjr);
+                    rMap2.put("corneal_mm",corMR);
+                    rMap2.put("corneal_d",corDR);
+                    rMap2.put("eyeaxis",eyeaxisOd);
+                    rMap2.put("age",age);
+                    rMap2.put("eyeaxis_corneal",eyeaxis_corneal_R);
+                    fyuceList.add(lMap2);
+                    fyuceList.add(rMap2);
+
+                    NakedOs = stuMap.get("NakedOs").toString() == "" ? "0" : stuMap.get("NakedOs").toString();
+                    NakedOd = stuMap.get("NakedOd").toString() == "" ? "0" : stuMap.get("NakedOd").toString();
+                    Double naked_Farvision = Double.parseDouble(NakedOs)>Double.parseDouble(NakedOd)?Double.parseDouble(NakedOd):Double.parseDouble(NakedOs);
+                    Double dxqj = Double.parseDouble(stuMap.get("DXQJL").toString())>Double.parseDouble(stuMap.get("DXQJR").toString())?Double.parseDouble(stuMap.get("DXQJR").toString()):Double.parseDouble(stuMap.get("DXQJL").toString());
+                    if (dxqj > 0.75){
+                        typeList.add(1);
+                        ftype=1;
+                    }else if (dxqj >= -0.5 && dxqj <= 0.75){
+                        typeList.add(2);
+                        ftype=2;
+                    }else if (naked_Farvision >= 5.0 && dxqj<-0.5){
+                        typeList.add(3);
+                        ftype=3;
+                    }else if (naked_Farvision < 5.0 && dxqj<-0.5 && dxqj>=-3.0){
+                        typeList.add(4);
+                        ftype=4;
+                    }else if (naked_Farvision < 5.0 && dxqj<-3.0 && dxqj>=-6.0){
+                        typeList.add(5);
+                        ftype=5;
+                    }else if (naked_Farvision < 5.0 && dxqj<-6.0){
+                        typeList.add(6);
+                        ftype=6;
+                    }
+                    continue;
                 }
 
-                if ("R".equals(ifRl)){
-                    dioAR = Double.parseDouble(dioMap.get("dioA")==null?"0.0":dioMap.get("dioA")==""?"0.0":dioMap.get("dioA").toString());
-                    dioSR = Double.parseDouble(dioMap.get("dioS")==null?"0.0":dioMap.get("dioS")==""?"0.0":dioMap.get("dioS").toString());
-                    dioCR = Double.parseDouble(dioMap.get("dioC")==null?"0.0":dioMap.get("dioC")==""?"0.0":dioMap.get("dioC").toString());
+                checkDate = luoyantime.get(i).toString();
+
+                String[] split = checkDate.split("-");
+                int Year = Integer.parseInt(split[0]);
+                int Month = Integer.parseInt(split[1]);
+                if (Year<2020){
+                    Map<String,Object> stuMap = shaichaStudentDao.getYuCeForPersonForOld(checkDate,name,idCard);
+                    String NakedOs = stuMap.get("NakedOs").toString() == "" ? "0" : stuMap.get("NakedOs").toString();
+                    String NakedOd = stuMap.get("NakedOd").toString() == "" ? "0" : stuMap.get("NakedOd").toString();
+                    String dxqjl = stuMap.get("DXQJL").toString();
+                    String dxqjr = stuMap.get("DXQJR").toString();
+
+                    Double naked_Farvision = null;
+                    Double dxqj = null;
+                    try {
+                        naked_Farvision = Double.parseDouble(NakedOs)>Double.parseDouble(NakedOd)?Double.parseDouble(NakedOd):Double.parseDouble(NakedOs);
+                        dxqj = Double.parseDouble(dxqjl)>Double.parseDouble(dxqjr)?Double.parseDouble(dxqjl):Double.parseDouble(dxqjr);
+                    } catch (NumberFormatException e) {
+                        naked_Farvision = 4.0;
+                        dxqj=-0.5;
+                    }
+
+                    if (dxqj > 0.75){
+                        typeList.add(1);
+                    }else if (dxqj >= -0.5 && dxqj <= 0.75){
+                        typeList.add(2);
+                    }else if (naked_Farvision >= 5.0 && dxqj<-0.5){
+                        typeList.add(3);
+                    }else if (naked_Farvision < 5.0 && dxqj<-0.5 && dxqj>=-3.0){
+                        typeList.add(4);
+                    }else if (naked_Farvision < 5.0 && dxqj<-3.0 && dxqj>=-6.0){
+                        typeList.add(5);
+                    }else if (naked_Farvision < 5.0 && dxqj<-6.0){
+                        typeList.add(6);
+                    }
+                    continue;
+                }
+                if (Year==2020 && Month<6){
+                    Map<String,Object> stuMap = shaichaStudentDao.getYuCeForPersonForOld(checkDate,name,idCard);
+                    String NakedOs = stuMap.get("NakedOs").toString() == "" ? "0" : stuMap.get("NakedOs").toString();
+                    String NakedOd = stuMap.get("NakedOd").toString() == "" ? "0" : stuMap.get("NakedOd").toString();
+                    String dxqjl = stuMap.get("DXQJL").toString();
+                    String dxqjr = stuMap.get("DXQJR").toString();
+
+                    Double naked_Farvision = null;
+                    Double dxqj = null;
+                    try {
+                        naked_Farvision = Double.parseDouble(NakedOs)>Double.parseDouble(NakedOd)?Double.parseDouble(NakedOd):Double.parseDouble(NakedOs);
+                        dxqj = Double.parseDouble(dxqjl)>Double.parseDouble(dxqjr)?Double.parseDouble(dxqjl):Double.parseDouble(dxqjr);
+                    } catch (NumberFormatException e) {
+                        naked_Farvision = 4.0;
+                        dxqj=-0.5;
+                    }
+                    if (dxqj > 0.75){
+                        typeList.add(1);
+                    }else if (dxqj >= -0.5 && dxqj <= 0.75){
+                        typeList.add(2);
+                    }else if (naked_Farvision >= 5.0 && dxqj<-0.5){
+                        typeList.add(3);
+                    }else if (naked_Farvision < 5.0 && dxqj<-0.5 && dxqj>=-3.0){
+                        typeList.add(4);
+                    }else if (naked_Farvision < 5.0 && dxqj<-3.0 && dxqj>=-6.0){
+                        typeList.add(5);
+                    }else if (naked_Farvision < 5.0 && dxqj<-6.0){
+                        typeList.add(6);
+                    }
+                    continue;
+                }
+                if (Year>=2020 && Month>=6){
+                    Map<String,Object> stuMap = shaichaStudentDao.getYuCeForPerson(checkDate,name,idCard);
+                    String NakedOs = stuMap.get("NakedOs").toString() == "" ? "0" : stuMap.get("NakedOs").toString();
+                    String NakedOd = stuMap.get("NakedOd").toString() == "" ? "0" : stuMap.get("NakedOd").toString();
+                    Double naked_Farvision = Double.parseDouble(NakedOs)>Double.parseDouble(NakedOd)?Double.parseDouble(NakedOd):Double.parseDouble(NakedOs);
+                    Double dxqj = Double.parseDouble(stuMap.get("DXQJL").toString())>Double.parseDouble(stuMap.get("DXQJR").toString())?Double.parseDouble(stuMap.get("DXQJR").toString()):Double.parseDouble(stuMap.get("DXQJL").toString());
+                    if (dxqj > 0.75){
+                        typeList.add(1);
+                    }else if (dxqj >= -0.5 && dxqj <= 0.75){
+                        typeList.add(2);
+                    }else if (naked_Farvision >= 5.0 && dxqj<-0.5){
+                        typeList.add(3);
+                    }else if (naked_Farvision < 5.0 && dxqj<-0.5 && dxqj>=-3.0){
+                        typeList.add(4);
+                    }else if (naked_Farvision < 5.0 && dxqj<-3.0 && dxqj>=-6.0){
+                        typeList.add(5);
+                    }else if (naked_Farvision < 5.0 && dxqj<-6.0){
+                        typeList.add(6);
+                    }
+                    continue;
                 }
             }
-            List<Map<String,Object>> corData = shaichaStudentDao.getCornealData(optId);
-            for (Map<String, Object> corMap : corData) {
-                String ifRL = corMap.get("ifRL").toString();
-                if ("L".equals(ifRL)){
-                    corML = Double.parseDouble(corMap.get("corM")==null?"0.0":corMap.get("corM")==""?"0.0":corMap.get("corM").toString());
-                    corDL = Double.parseDouble(corMap.get("corD")==null?"0.0":corMap.get("corD")==""?"0.0":corMap.get("corD").toString());
-                }
-                if ("R".equals(ifRL)){
-                    corMR = Double.parseDouble(corMap.get("corM")==null?"0.0":corMap.get("corM")==""?"0.0":corMap.get("corM").toString());
-                    corDR = Double.parseDouble(corMap.get("corD")==null?"0.0":corMap.get("corD")==""?"0.0":corMap.get("corD").toString());
-                }
-            }
-
-            Map<String,Double> eyeaxisData = shaichaStudentDao.getEyeAxisData(id);
-            if (eyeaxisData!=null){
-                eyeaxisOd = eyeaxisData.get("od");
-                eyeaxisOs = eyeaxisData.get("os");
-            }
-            Map<String,Double> eyepressureData = shaichaStudentDao.getEyepressureData(id);
-
-            if (eyepressureData != null){
-                preOd = eyepressureData.get("preOd");
-                preOs = eyepressureData.get("preOs");
-            }
-
-            if (eyeaxisOd == 0.0 || corMR ==0.0){
-                eyeaxis_corneal_R = 0.0;
-            }else {
-                eyeaxis_corneal_R = eyeaxisOd/corMR;
-            }
-            if (eyeaxisOs == 0.0 || corML==0.0){
-                eyeaxis_corneal_L = 0.0;
-            }else {
-                eyeaxis_corneal_L = eyeaxisOs/corML;
-            }
-            String age = stuMap.get("age").toString();
-            String NakedOs = stuMap.get("NakedOs").toString() == "" ? "0" : stuMap.get("NakedOs").toString();
-            if (Double.parseDouble(NakedOs)<4.0){
-                NakedOs="0.1";
-            }
-            if (Double.parseDouble(NakedOs)>5.0){
-                NakedOs="1.0";
-            }
-            if ("4.0".equals(NakedOs)){
-                NakedOs="0.1";
-            }
-            if ("4.1".equals(NakedOs)){
-                NakedOs="0.12";
-            }
-            if ("4.2".equals(NakedOs)){
-                NakedOs="0.15";
-            }
-            if ("4.3".equals(NakedOs)){
-                NakedOs="0.2";
-            }
-            if ("4.4".equals(NakedOs)){
-                NakedOs="0.25";
-            }
-            if ("4.5".equals(NakedOs)){
-                NakedOs="0.3";
-            }
-            if ("4.6".equals(NakedOs)){
-                NakedOs="0.4";
-            }
-            if ("4.7".equals(NakedOs)){
-                NakedOs="0.5";
-            }
-            if ("4.8".equals(NakedOs)){
-                NakedOs="0.6";
-            }
-            if ("4.9".equals(NakedOs)){
-                NakedOs="0.8";
-            }
-            if ("5.0".equals(NakedOs)){
-                NakedOs="1.0";
-            }
-            String NakedOd = stuMap.get("NakedOd").toString() == "" ? "0" : stuMap.get("NakedOd").toString();
-            if (Double.parseDouble(NakedOd)<4.0){
-                NakedOd="0.1";
-            }
-            if (Double.parseDouble(NakedOd)>5.0){
-                NakedOd="1.0";
-            }
-            if ("4.0".equals(NakedOd)){
-                NakedOd="0.1";
-            }
-            if ("4.1".equals(NakedOd)){
-                NakedOd="0.12";
-            }
-            if ("4.2".equals(NakedOd)){
-                NakedOd="0.15";
-            }
-            if ("4.3".equals(NakedOd)){
-                NakedOd="0.2";
-            }
-            if ("4.4".equals(NakedOd)){
-                NakedOd="0.25";
-            }
-            if ("4.5".equals(NakedOd)){
-                NakedOd="0.3";
-            }
-            if ("4.6".equals(NakedOd)){
-                NakedOd="0.4";
-            }
-            if ("4.7".equals(NakedOd)){
-                NakedOd="0.5";
-            }
-            if ("4.8".equals(NakedOd)){
-                NakedOd="0.6";
-            }
-            if ("4.9".equals(NakedOd)){
-                NakedOd="0.8";
-            }
-            if ("5.0".equals(NakedOd)){
-                NakedOd="1.0";
-            }
-            lMap.put("student",id+"|L");
-            lMap.put("lasy_check_time",lasy_check_time);
-            lMap.put("studeny_sex",sex);
-            lMap.put("shifou_tangwo",0);
-            lMap.put("zuizhong_tizhi",0);
-            lMap.put("gzr_sm",0);
-            lMap.put("zm_sm",0);
-            lMap.put("zm_swhd",0);
-            lMap.put("zm_mtgz",0);
-            lMap.put("zx_swhd",0);
-            lMap.put("xw_swhd",0);
-            lMap.put("life_farvision",0);
-            lMap.put("naked_farvision",NakedOs);
-            lMap.put("diopter_s1",dioSL);
-            lMap.put("diopter_c1",dioCL);
-            lMap.put("diopter_a1",dioAL);
-            lMap.put("y1_x",stuMap.get("DXQJL"));
-            lMap.put("diopter_s2",0);
-            lMap.put("diopter_c2",0);
-            lMap.put("diopter_a2",0);
-            lMap.put("y2_x",0);
-            lMap.put("corneal_mm",corML);
-            lMap.put("corneal_d",corDL);
-            lMap.put("eyeaxis",eyeaxisOs);
-            lMap.put("eyepressure",preOs);
-            lMap.put("age",age);
-            lMap.put("eyeaxis_corneal",eyeaxis_corneal_L);
-            lMap.put("winter",winter);
-            lMap.put("flag",2);
 
 
-
-            rMap.put("student",id+"|R");
-            rMap.put("lasy_check_time",lasy_check_time);
-            rMap.put("studeny_sex",sex);
-            rMap.put("shifou_tangwo",0);
-            rMap.put("zuizhong_tizhi",0);
-            rMap.put("gzr_sm",0);
-            rMap.put("zm_sm",0);
-            rMap.put("zm_swhd",0);
-            rMap.put("zm_mtgz",0);
-            rMap.put("zx_swhd",0);
-            rMap.put("xw_swhd",0);
-            rMap.put("life_farvision",0);
-            rMap.put("naked_farvision",NakedOd);
-            rMap.put("diopter_s1",dioSR);
-            rMap.put("diopter_c1",dioCR);
-            rMap.put("diopter_a1",dioAR);
-            rMap.put("y1_x",stuMap.get("DXQJR"));
-            rMap.put("diopter_s2",0);
-            rMap.put("diopter_c2",0);
-            rMap.put("diopter_a2",0);
-            rMap.put("y2_x",0);
-            rMap.put("corneal_mm",corMR);
-            rMap.put("corneal_d",corDR);
-            rMap.put("eyeaxis",eyeaxisOd);
-            rMap.put("eyepressure",preOd);
-            rMap.put("age",age);
-            rMap.put("eyeaxis_corneal",eyeaxis_corneal_R);
-            rMap.put("winter",winter);
-            rMap.put("flag",2);
-
-            dataList.add(lMap);
-            dataList.add(rMap);
         }
         if ("ld".equals(checkType)){
 
@@ -2487,7 +1892,6 @@ public class schoolServiceImpl implements schoolService {
             dataList.add(rMap);
         }
 
-
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON_UTF8);
         HttpEntity<List<Map<String, Object>>> entity = new HttpEntity<>(dataList, httpHeaders);
@@ -2500,22 +1904,104 @@ public class schoolServiceImpl implements schoolService {
             String ifRl = stuMap.get("student").toString().substring(index + 1);
             if ("L".equals(ifRl)){
                 dengxiaoqiujingl.remove(0);
-                dengxiaoqiujingl.add(stuMap.get("y1Y"));
+                double y1Y = Double.parseDouble(stuMap.get("y1Y").toString());
+                BigDecimal bg = new BigDecimal(y1Y);
+                DecimalFormat df = new DecimalFormat("0.0");
+                y1Y =Double.parseDouble(df.format(bg.setScale(1, BigDecimal.ROUND_HALF_UP)));
+                dengxiaoqiujingl.add(y1Y);
                 luoyanl.remove(0);
-                luoyanl.add(stuMap.get("nakedFarvisionY"));
+
+
+                df = new DecimalFormat("0.00");
+                double nakedFarvisionY = Double.parseDouble(stuMap.get("nakedFarvisionY").toString());
+                bg = new BigDecimal(nakedFarvisionY);
+                nakedFarvisionY =Double.parseDouble(df.format(bg.setScale(2, BigDecimal.ROUND_HALF_UP)));
+                nakedFarvisionY=ShiLiZhuanHuanUtils.zhuanshuanshiliForLd(nakedFarvisionY);
+                luoyanl.add(nakedFarvisionY);
+
+
             }
             if ("R".equals(ifRl)){
                 dengxiaoqiujingr.remove(0);
-                dengxiaoqiujingr.add(stuMap.get("y1Y"));
+                double y1Y = Double.parseDouble(stuMap.get("y1Y").toString());
+                BigDecimal bg = new BigDecimal(y1Y);
+                DecimalFormat df = new DecimalFormat("0.0");
+                y1Y =Double.parseDouble(df.format(bg.setScale(1, BigDecimal.ROUND_HALF_UP)));
+                dengxiaoqiujingr.add(y1Y);
                 luoyanr.remove(0);
-                luoyanr.add(stuMap.get("nakedFarvisionY"));
+                df = new DecimalFormat("0.00");
+                double nakedFarvisionY = Double.parseDouble(stuMap.get("nakedFarvisionY").toString());
+                bg = new BigDecimal(nakedFarvisionY);
+                nakedFarvisionY =Double.parseDouble(df.format(bg.setScale(2, BigDecimal.ROUND_HALF_UP)));
+                nakedFarvisionY=ShiLiZhuanHuanUtils.zhuanshuanshiliForLd(nakedFarvisionY);
+                luoyanr.add(nakedFarvisionY);
             }
         }
 
-        dengxiaoqiujingtime.remove(0);
-        luoyantime.remove(0);
+        HttpHeaders httpHeaders2 = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON_UTF8);
+        HttpEntity<List<Map<String, Object>>> entity2 = new HttpEntity<>(fyuceList, httpHeaders2);
+        ResponseEntity<String> responseEntity2 = restTemplate.postForEntity("http://121.36.21.238:5000/shaicha_model", entity2, String.class);
+        String response2 = responseEntity2.getBody();
+        syuceList = JSON.parseObject(response2, List.class);
+
+        int ltype =0,rtype = 0;
+        for (Map<String, Object> stuMap : syuceList) {
+            int index = stuMap.get("student").toString().indexOf("|");
+            String ifRl = stuMap.get("student").toString().substring(index + 1);
+            if ("L".equals(ifRl)){
+                ltype = Integer.parseInt(stuMap.get("type").toString());
+            }
+            if ("R".equals(ifRl)){
+                rtype = Integer.parseInt(stuMap.get("type").toString());
+            }
+        }
+        stype=ltype>rtype?ltype:rtype;
+
+        if (stype>=ftype){
+            typeList.add(stype);
+        }
+        if (stype<ftype && ftype<=3){
+            typeList.add(stype);
+        }
+        if (stype<ftype && ftype>=4){
+            typeList.add(ftype);
+        }
+        String lyj ="";
+        String ryj ="";
+        if (ltype==1){
+            lyj="根据人工智能模型预测：明年你将进入远视(概率67%)";
+        }else if (ltype==2){
+            lyj="根据人工智能模型预测：明年你将进入近视临床前期(概率67%)";
+        }else if (ltype==3){
+            lyj="根据人工智能模型预测：明年你将进入假性近视(概率67%)";
+        }else if (ltype==4){
+            lyj="根据人工智能模型预测：明年你将进入低度近视(概率67%)";
+        }else if (ltype==5){
+            lyj="根据人工智能模型预测：明年你将进入中度近视(概率67%)";
+        }else if (ltype==6){
+            lyj="根据人工智能模型预测：明年你将进入高度近视(概率67%)";
+        }
+
+        if (rtype==1){
+            ryj="根据人工智能模型预测：明年你将进入远视(概率67%)";
+        }else if (rtype==2){
+            ryj="根据人工智能模型预测：明年你将进入近视临床前期(概率67%)";
+        }else if (rtype==3){
+            ryj="根据人工智能模型预测：明年你将进入假性近视(概率67%)";
+        }else if (rtype==4){
+            ryj="根据人工智能模型预测：明年你将进入低度近视(概率67%)";
+        }else if (rtype==5){
+            ryj="根据人工智能模型预测：明年你将进入中度近视(概率67%)";
+        }else if (rtype==6){
+            ryj="根据人工智能模型预测：明年你将进入高度近视(概率67%)";
+        }
+        ArrayList<String> yj = new ArrayList<>();
+        yj.add(lyj);
+        yj.add(ryj);
         dengxiaoqiujingtime.add("预测");
         luoyantime.add("预测");
+        map.put("typeList",typeList);
         map.put("yanzhour",yanzhour);
         map.put("yanzhoul",yanzhoul);
         map.put("yanzhoutime",yanzhoutime);
@@ -2525,6 +2011,8 @@ public class schoolServiceImpl implements schoolService {
         map.put("luoyanr",luoyanr);
         map.put("luoyanl",luoyanl);
         map.put("luoyantime",luoyantime);
+        map.put("typeTime",luoyantime);
+        map.put("yj",yj);
         return map;
     }
 
@@ -2537,6 +2025,11 @@ public class schoolServiceImpl implements schoolService {
     public static Double getLv (Integer a,Integer b){
         BigDecimal lc = new BigDecimal((float) a / b);
         return lc.setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue()*100;
+    }
+
+    public static Double getLv2 (Integer a,Integer b){
+        BigDecimal lc = new BigDecimal((float) a / b);
+        return lc.setScale(4, BigDecimal.ROUND_HALF_UP).doubleValue()*100;
     }
     /**
      * 实现男女比例,小数转变为最简分数  z为整数部分，c为分子，b为分母
@@ -2656,6 +2149,11 @@ public class schoolServiceImpl implements schoolService {
      */
     public static String format(Double ff){
         DecimalFormat df = new DecimalFormat("0.0");
+        return df.format(ff);
+    }
+
+    public static String format2(Double ff){
+        DecimalFormat df = new DecimalFormat("0.00");
         return df.format(ff);
     }
     /**
