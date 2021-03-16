@@ -1,1 +1,13 @@
-.idea
+/m2/
+/target/
+/.settings/
+/logs/
+/.metadata/
+/RemoteSystemsTempFiles/
+.classpath
+.project
+/bin/
+/applog/
+/.apt_generated/
+/.idea/
+/*.iml
