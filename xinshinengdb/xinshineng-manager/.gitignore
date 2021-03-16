@@ -10,4 +10,4 @@
 /applog/
 /.apt_generated/
 /.idea/
-*.iml
+/*.iml
