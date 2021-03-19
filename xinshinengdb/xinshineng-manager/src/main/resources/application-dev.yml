@@ -35,7 +35,7 @@ spring:
   redis:
       host: 124.70.65.236
       port: 6380
-      password:
+      password: wo41baba
       # 连接超时时间（毫秒）
       timeout: 10000000
       pool:

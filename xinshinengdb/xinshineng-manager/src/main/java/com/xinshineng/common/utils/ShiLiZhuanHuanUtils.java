@@ -82,6 +82,53 @@ public class ShiLiZhuanHuanUtils {
         if ("10/10".equals(shili)){
             return shili="1.0";
         }
+        if ("4.0".equals(shili)){
+            return shili="0.1";
+        }
+
+        if ("4.1".equals(shili)){
+            return shili="0.12";
+        }
+        if ("4.2".equals(shili)){
+            return shili="0.15";
+        }
+        if ("4.3".equals(shili)){
+            return shili="0.2";
+        }
+        if ("4.4".equals(shili)){
+            return shili="0.25";
+        }
+        if ("4.5".equals(shili)){
+            return shili="0.3";
+        }
+        if ("4.6".equals(shili)){
+            return shili="0.4";
+        }
+        if ("4.7".equals(shili)){
+            return shili="0.5";
+        }
+        if ("4.8".equals(shili)){
+            return shili="0.6";
+        }
+        if ("4.9".equals(shili)){
+            return shili="0.8";
+        }
+        if ("5.0".equals(shili)){
+            return shili="1.0";
+        }
+
+        if (Double.parseDouble(shili)<1.0){
+            return shili;
+        }
+        if (Double.parseDouble(shili)>=1.0 && Double.parseDouble(shili)<=2.0){
+            return shili="1.0";
+        }
+        if (Double.parseDouble(shili)>2.0 && Double.parseDouble(shili)<4.0){
+            return shili="0.1";
+        }
+        if (Double.parseDouble(shili)>5.0){
+            return shili="1.0";
+        }
         return shili;
     }
 

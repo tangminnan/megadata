@@ -497,7 +497,6 @@ public class ShaichaStudentServiceImpl implements ShaichaStudentService {
 			firstMap.put("DeZhouShi",0L);
 			firstMap.put("HeZeShi",0L);
 			firstMap.put("LiaoChengShi",0L);
-			firstMap.put("LaiWuShi",0L);
 
 			//筛查新
 			List<Map<String,Long>> shaiChanewTotal = studentDao.getShaiChaTotalnew();
@@ -1178,50 +1177,6 @@ public class ShaichaStudentServiceImpl implements ShaichaStudentService {
 		}else {
 			firstMap.put("LiaoChengShiJS",1);
 		}
-
-		if ((Long) someMap.get("LaiWuShi")!=0L){
-			Long jiNanShiNum = (Long) someMap.get("LaiWuShi");
-			Long jiNanShiJS = (Long) someMap.get("LaiWuShi");
-			BigDecimal bg = new BigDecimal((float) jiNanShiJS / jiNanShiNum);
-			double jsl = (bg.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue())*100;
-			Long qnCheckNumsc = studentDao.getQNCheckNum(year-1,"莱芜市");
-			qnCheckNumsc+=studentDao.getQNCheckNum(year-1,"莱芜区");
-			Long qnJinShisc = 0L;
-			Long qnJinShild = 0L;
-			if (qnCheckNumsc!=0L){
-				qnJinShisc = studentDao.getThisYearJinShiCount(year - 1, "莱芜市");
-				qnJinShisc += studentDao.getThisYearJinShiCount(year - 1, "莱芜区");
-			}
-			Long qnCheckNumld = liuDiaoDao.getQNCheckNum(year-1,"莱芜市");
-			qnCheckNumld += liuDiaoDao.getQNCheckNum(year-1,"莱芜区");
-			if (qnCheckNumld!=0L){
-				qnJinShild = liuDiaoDao.getThisYearJinShiCount(year-1,"莱芜市");
-				qnJinShild += liuDiaoDao.getThisYearJinShiCount(year-1,"莱芜区");
-			}
-			long qnCheckNum = qnCheckNumld + qnCheckNumsc;
-			if (qnCheckNum!=0){
-				long qnJinShiNum = qnJinShisc + qnJinShild;
-				if (qnJinShiNum!=0){
-					bg = new BigDecimal((float) qnJinShiNum / qnCheckNum);
-					double qnjsl = (bg.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue())*100;
-					if (jsl-qnjsl>0){
-						firstMap.put("LaiWuShiJS",2);
-					}
-					if (jsl-qnjsl<0 && jsl-qnjsl>=-1){
-						firstMap.put("LaiWuShiJS",1);
-					}
-					if (jsl-qnjsl<-1){
-						firstMap.put("LaiWuShiJS",0);
-					}
-				}else {
-					firstMap.put("LaiWuShiJS",1);
-				}
-			}else {
-				firstMap.put("LaiWuShiJS",1);
-			}
-		}else {
-			firstMap.put("LaiWuShiJS",1);
-		}
 	}
 
 	private Map<String,Object> jiSuanJinShi(List<Map<String, Long>> thisYearCountForld, List<Map<String, Long>> thisYearCountForsc,int year) {
@@ -1242,7 +1197,7 @@ public class ShaichaStudentServiceImpl implements ShaichaStudentService {
 		smoeMap.put("DeZhouShi",0L);
 		smoeMap.put("HeZeShi",0L);
 		smoeMap.put("LiaoChengShi",0L);
-		smoeMap.put("LaiWuShi",0L);
+
 
 		smoeMap.put("JiNanShiJS",0L);
 		smoeMap.put("QingDaoShiJS",0L);
@@ -1260,7 +1215,7 @@ public class ShaichaStudentServiceImpl implements ShaichaStudentService {
 		smoeMap.put("DeZhouShiJS",0L);
 		smoeMap.put("HeZeShiJS",0L);
 		smoeMap.put("LiaoChengShiJS",0L);
-		smoeMap.put("LaiWuShiJS",0L);
+
 		for (Map<String, Long> scresult : thisYearCountForsc) {
 			if ("济南市".equals(scresult.get("CityName"))){
 				smoeMap.put("JiNanShi",(Long)smoeMap.get("JiNanShi")+scresult.get("num"));
@@ -1327,12 +1282,13 @@ public class ShaichaStudentServiceImpl implements ShaichaStudentService {
 				smoeMap.put("LiaoChengShiJS",(Long)smoeMap.get("LiaoChengShiJS")+studentDao.getThisYearJinShiCount(year, "聊城市"));
 			}
 			if ("莱芜区".equals(scresult.get("CityName"))){
-				smoeMap.put("LaiWuShi",(Long)smoeMap.get("LaiWuShi")+scresult.get("num"));
-				smoeMap.put("LaiWuShiJS",(Long)smoeMap.get("LaiWuShiJS")+studentDao.getThisYearJinShiCount(year, "莱芜区"));
+				smoeMap.put("JiNanShi",(Long)smoeMap.get("JiNanShi")+scresult.get("num"));
+				smoeMap.put("JiNanShiJS",(Long)smoeMap.get("JiNanShiJS")+studentDao.getThisYearJinShiCount(year, "莱芜区"));
+
 			}
 			if ("莱芜市".equals(scresult.get("CityName"))){
-				smoeMap.put("LaiWuShi",(Long)smoeMap.get("LaiWuShi")+scresult.get("num"));
-				smoeMap.put("LaiWuShiJS",(Long)smoeMap.get("LaiWuShiJS")+studentDao.getThisYearJinShiCount(year, "莱芜市"));
+				smoeMap.put("JiNanShi",(Long)smoeMap.get("JiNanShi")+scresult.get("num"));
+				smoeMap.put("JiNanShiJS",(Long)smoeMap.get("JiNanShiJS")+studentDao.getThisYearJinShiCount(year, "莱芜市"));
 			}
 		}
 
@@ -1402,12 +1358,12 @@ public class ShaichaStudentServiceImpl implements ShaichaStudentService {
 				smoeMap.put("LiaoChengShiJS",(Long)smoeMap.get("LiaoChengShiJS")+liuDiaoDao.getThisYearJinShiCount(year, "聊城市"));
 			}
 			if ("莱芜区".equals(ldresult.get("CityName"))){
-				smoeMap.put("LaiWuShi",(Long)smoeMap.get("LaiWuShi")+ldresult.get("num"));
-				smoeMap.put("LaiWuShiJS",(Long)smoeMap.get("LaiWuShiJS")+liuDiaoDao.getThisYearJinShiCount(year, "莱芜区"));
+				smoeMap.put("JiNanShi",(Long)smoeMap.get("JiNanShi")+ldresult.get("num"));
+				smoeMap.put("JiNanShiJS",(Long)smoeMap.get("JiNanShiJS")+liuDiaoDao.getThisYearJinShiCount(year, "莱芜区"));
 			}
 			if ("莱芜市".equals(ldresult.get("CityName"))){
-				smoeMap.put("LaiWuShi",(Long)smoeMap.get("LaiWuShi")+ldresult.get("num"));
-				smoeMap.put("LaiWuShiJS",(Long)smoeMap.get("LaiWuShiJS")+liuDiaoDao.getThisYearJinShiCount(year, "莱芜市"));
+				smoeMap.put("JiNanShi",(Long)smoeMap.get("JiNanShi")+ldresult.get("num"));
+				smoeMap.put("JiNanShiJS",(Long)smoeMap.get("JiNanShiJS")+liuDiaoDao.getThisYearJinShiCount(year, "莱芜市"));
 			}
 		}
 
@@ -1459,7 +1415,6 @@ public class ShaichaStudentServiceImpl implements ShaichaStudentService {
 		totalNum+=(Long)firstMap.get("DeZhouShi");
 		totalNum+=(Long)firstMap.get("HeZeShi");
 		totalNum+=(Long)firstMap.get("LiaoChengShi");
-		totalNum+=(Long)firstMap.get("LaiWuShi");
 		firstMap.put("totalNum",totalNum);
 	}
 
@@ -1514,10 +1469,10 @@ public class ShaichaStudentServiceImpl implements ShaichaStudentService {
 				firstMap.put("LiaoChengShi",(Long)firstMap.get("LiaoChengShi")+result.get("num"));
 			}
 			if ("莱芜区".equals(result.get("CityName"))){
-				firstMap.put("LaiWuShi",(Long)firstMap.get("LaiWuShi")+result.get("num"));
+				firstMap.put("JiNanShi",(Long)firstMap.get("JiNanShi")+result.get("num"));
 			}
 			if ("莱芜市".equals(result.get("CityName"))){
-				firstMap.put("LaiWuShi",(Long)firstMap.get("LaiWuShi")+result.get("num"));
+				firstMap.put("JiNanShi",(Long)firstMap.get("JiNanShi")+result.get("num"));
 			}
 		}
 	}
@@ -1545,6 +1500,13 @@ public class ShaichaStudentServiceImpl implements ShaichaStudentService {
 							List<Map<String,Integer>> yucehouList = new ArrayList<>();
 							if (ldataList.size()==0 || rdataList.size()==0 || yuceqianList.size()==0){
 								List<Map<String,Object>> scYuce = studentDao.getScYuCeForProvince(year-1,checkCity, checkArea);
+								if (scYuce.size()==0){
+									resultMap.put("jxfabinglv","0");
+									resultMap.put("lcfabinglv","0");
+									resultMap.put("zxfabinglv","0");
+									redisTemplate.opsForHash().putAll(checkCity+"morbidity",resultMap);
+									return resultMap;
+								}
 								for (Map<String, Object> stuMap : scYuce) {
 									Double dioAL = 0.0;
 									Double dioSL = 0.0;
