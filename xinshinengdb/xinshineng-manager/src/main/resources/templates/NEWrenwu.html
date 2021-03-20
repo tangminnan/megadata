@@ -206,7 +206,7 @@
 </body>
 </html>
 <script type="text/javascript" th:inline="javascript">
-   var url = 'http://eyemonitor-api.dddmaker.com'
+   var url = 'http://121.36.8.243:8083'
 //   var url = 'http://localhost:8083'
 	var school = [[${school}]];
 	var checkType = [[${checkType}]];
@@ -474,7 +474,7 @@
           success: function (data) {console.info(data)
             if(data.code==0){
                 alert(data.msg);
-                $("select").val("0");
+				$("#signupForm select").val("0");
                 $("#span1").text('');
                 $("#span2").text('');
                 $("#loading").hide();
