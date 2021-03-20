@@ -18,7 +18,7 @@
 </head>
 
 <body>
-<div class="school-title">山东省儿童青少年健康与近视防控大数据平台<span th:text="${dataOne.school}"></span></div>
+<div class="school-title">山东省儿童青少年近视防控大数据平台<span th:text="${dataOne.school}"></span></div>
 <div class="bg">
 	<div class="leftMain">
 		<div class="leftMain_top">
@@ -36,7 +36,7 @@
 					<li>
 						<div class="liIn">
 							<h3>本次筛查人数</h3>
-							<p class="shu"><span class="shu2" th:text="${dataOne.schoolThisNumber}"></span><i>人</i></p>
+							<p class="shu"><span class="shu2" th:text="${dataOne.schoolThisNumber}"></span><i>人</i>   <span style="font-size: 20px">男女生比例：<span th:text="${dataOne.man}"></span></span></p>
 							<!--<div class="zi"><span class="span1">小标题：文字</span><span>小标题：文字</span></div>-->
 							<span class="border_bg_leftTop"></span>
 							<span class="border_bg_rightBottom"></span>
@@ -53,8 +53,8 @@
 					</li>
 					<li>
 						<div class="liIn">
-							<h3>男女生比例</h3>
-							<p class="shu"><span th:text="${dataOne.man}"></span></p>
+							<h3>矫正培养</h3>
+							<p class="shu"><span id="TZ"></span></p>
 							<!--<div class="zi"><span class="span1">小标题：文字</span><span>小标题：文字</span></div>-->
 							<span class="border_bg_leftTop"></span>
 							<span class="border_bg_rightBottom"></span>
@@ -67,17 +67,16 @@
 		<div class="leftMain_middle" style="margin-bottom: 0.1rem;">
 			<div class="leftMain_middle_left" style="width:33.33%;">
 				<div class="leftMain_middle_leftIn">
-					<h3>近2年历次筛查近视率</h3>
+					<h3>人工智能预测明年发病率</h3>
 					<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
 					<div class="biaoge" style="height:24vh;" id="chartmain"></div>
 					<script type="text/javascript" th:inline="javascript">
 						// window.onload = function () {
 						//指定图表的配置项和数据
-						var dataAxis = [[${dataTwo.everyTime}]];
-						dataAxis=dataAxis.slice(0,dataAxis.length-1)
-						var data = [[${dataTwo.zxjsLv}]];
+						var dataAxis = ['假性近视','近视临床前期','真性近视']
+						var data = [[${dataTwo.ycList}]];
 						var yMax = 500;
-						var dataShadow = [[${dataTwo.zxjsLv}]];
+						var dataShadow = [[${dataTwo.ycList}]];
 						dataShadow=dataShadow.slice(0,dataShadow.length-1)
 
 						for (var i = 0; i < data.length; i++) {
@@ -150,16 +149,6 @@
 								}
 							],
 							series: [
-								{ // For shadow
-									type: 'bar',
-									itemStyle: {
-										color: 'rgba(0,0,0,0.05)'
-									},
-									barGap: '-100%',
-									barCategoryGap: '40%',
-									data: dataShadow,
-									animation: false
-								},
 								{
 									type: 'bar',
 									itemStyle: {
@@ -316,7 +305,6 @@
                         var zxjsLv = [[${dataTwo.zxjsLv}]];
                         var lcqqLv = [[${dataTwo.lcqqLv}]];
                         var jxjsLv = [[${dataTwo.jxjsLv}]];
-
                         var everyTime = [[${dataTwo.everyTime}]];
 
 						option = {
@@ -457,7 +445,7 @@
 			<div class="leftMain_middle_right">
 				<div class="leftMain_middle_rightIn">
 
-					<h3 id="TZ"></h3>
+					<h3>各年级近视情况</h3>
 
 					<div class="biaoge biaoge_bi" style="width:100%; height:24vh">
 						<ul class="gradeLv" id="gradeLv">
@@ -590,7 +578,7 @@
 								<li class="HHup"><a class="next"></a></li>
 								<li class="HHdown"><a class="prev"></a></li>
 								<li>姓名</li>
-								<li>年级</li>
+								<li>班级</li>
 								<li>年龄</li>
 								<li>左眼</li>
 								<li>右眼</li>
@@ -819,7 +807,7 @@
 	var CityName = [[${CityName}]];
 	var AreaName = [[${AreaName}]];
 	var href = '/skip/Newhuyan?school='+school+'&checkType='+checkType+'&CityName='+CityName+'&AreaName='+AreaName;
-	$("#TZ").html('各年级近视情况<a '+'href='+href+'>矫正培养</a>')
+	$("#TZ").html('<a '+'href='+href+'>用眼行为矫正培养</a>')
 
 	var dataFive = [[${dataFive}]];
 	if (dataFive.length>0) {

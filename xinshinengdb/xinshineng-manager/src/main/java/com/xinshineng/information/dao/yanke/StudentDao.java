@@ -181,7 +181,7 @@ public interface StudentDao {
 
 	String getLastCheckDate(@Param("username") String username, @Param("password") String password);
 
-    List<Map<String, Object>> getLDYuCe(@Param("checkTime") String checkTime, @Param("school")String school, @Param("cityName")String cityName,@Param("areaName") String areaName);
+    List<Map<String, Object>> getLDYuCe(@Param("checkTime") String checkTime, @Param("school")String school, @Param("cityName")String cityName,@Param("areaName") String areaName,@Param("nianji") String nianji,@Param("banji") String banji);
 
 	Map<String, String> getEyeSightData(Integer id);
 
@@ -206,4 +206,10 @@ public interface StudentDao {
 	Long getThisYearCheckCountForArea(@Param("checkCity") String checkCity,@Param("areaName") String areaName,@Param("year") int year);
 
 	long getThisYearJinShiCountForArea(@Param("checkCity") String checkCity,@Param("areaName") String areaName,@Param("year") int year);
+
+    Map<String, Object> getYuCeForPersonForOld(@Param("checkDate") String checkDate,@Param("name") String name,@Param("idCard") String idCard);
+
+	Integer getOptIdForOld(Integer id);
+
+	List<Map<String, Object>> getDiopterDataForOld(Integer optId);
 }

@@ -48,11 +48,18 @@
             <dl>
                 <dt>左眼初步建议与预警提示：</dt>
                 <dd th:text="${gerenAdvice.zdoctorchubu}"></dd>
+                <dd th:text="${echarts.yj[0]}"></dd>
             </dl>
             <dl>
                 <dt>右眼初步建议与预警提示：</dt>
                 <dd th:text="${gerenAdvice.ydoctorchubu}"></dd>
+                <dd th:text="${echarts.yj[1]}"></dd>
             </dl>
+
+        </div>
+        <div style="margin-bottom: 20px;margin-top: 20px" >
+
+            <div id="test" style="width: 816px;height: 440px"></div>
         </div>
         <div class="zheLine">
             <ul>
@@ -131,11 +138,13 @@
     var myChart1 = echarts.init(document.getElementById('main1'));
     var myChart2 = echarts.init(document.getElementById('main2'));
     var myChart3 = echarts.init(document.getElementById('main3'));
-
+    var myChart4 = echarts.init(document.getElementById('test'))
     var echarts = [[${echarts}]];
 
     //折线图1
     setTimeout(function () {
+        var luoyantime = echarts.luoyantime
+        luoyantime.splice(0,1);
         option = {
             title: {
                 //text: '点击量',
@@ -166,7 +175,7 @@
             xAxis: {
                 type: 'category',
                 boundaryGap: false,
-                data: echarts.luoyantime,
+                data: luoyantime,
                 axisLabel: {
                     //formatter: '{value} 年',//单位
                     textStyle: {
@@ -225,6 +234,8 @@
 
     //折线图2
     setTimeout(function () {
+        var dxqjtime = echarts.dengxiaoqiujingtime;
+        dxqjtime.splice(0,1);
         option = {
             title: {
                 //text: '点击量',
@@ -255,7 +266,7 @@
             xAxis: {
                 type: 'category',
                 boundaryGap: false,
-                data: echarts.dengxiaoqiujingtime,
+                data: dxqjtime,
                 axisLabel: {
                     //formatter: '{value} 年',//单位
                     textStyle: {
@@ -402,95 +413,99 @@
         myChart3.setOption(option);
     });
 
-    /*//折线图4
-    setTimeout(function () {
-        option = {
-            title: {
-                //text: '点击量',
-                textStyle: {
-                    fontWeight: 'normal',
-                    color: '#000',//标题颜色
-            },
+    setTimeout(function (){
 
-            x:"left"
-            },
-            tooltip: {
-                trigger: 'axis'
-            },
-            legend: {
-                data:['左眼','右眼'],
-                textStyle: {
-                    "fontSize": 14,
-                    color:'#000',
-                }
-            },
+        var ecBoxY = ['','远视','近视临床前期','假性近视','轻度近视','中度近视','高度近视']
+        var ecBoxYIndex = -1
+
+        var option = {
             grid: {
                 left: '0',
-                top:'30',
+                top:'90',
                 right: '30',
                 bottom: '0',
                 containLabel: true
             },
+            title: {
+                text: '历次检测状况及预测',
+                textStyle: {
+                    fontWeight: 'bold',
+                    fontSize: '20'
+                }
+            },
+            animation: false,
             xAxis: {
                 type: 'category',
-                boundaryGap: false,
-                data: ['2012','2013','2014','2015','2016','2017','2018'],
-                axisLabel: {
-                        //formatter: '{value} 年',//单位
-                        textStyle: {
-                           fontSize : 14 ,
-                            color:'#000'
-                       },
+                axisLine: {
+                    show: false, //是否显示坐标刻度
+                    lineStyle: {
+                        color: '#eeeeee'
                     }
+                },
+                axisLabel: {
+                    //标签样式
+                    textStyle: {
+                        fontSize: 14,
+                        color: '#999999'
+                    }
+                },
+                data: echarts.typeTime
             },
             yAxis: {
                 type: 'value',
-                axisLabel: {
-                        //formatter: '{value} ml',//单位
-                        textStyle: {
-                           fontSize : 14,
-                            color:'#000'
-                       },
+                splitNumber: 6, //分段数
+                max:6,  // 这里不写最大值会容易出问题
+                axisLine: {
+                    show: false, //是否显示坐标刻度线
+                    lineStyle: {
+                        color: "#f2f4f3"
                     }
-            },
+                },
+                axisLabel: {
+                    inside: true, //刻度值卸载y轴右侧
+                    padding: [-50, 0, 0, 0], //标签的位置
+                    textStyle: {
+                        fontSize: 14,
+                        color: '#999999'
+                    },
+                    formatter: function() {
+                        return ecBoxY[ecBoxYIndex += 1]
+                    },
+                }
+            }/*,
+            visualMap: {
+                show: false,
+                dimension: 0,
+                pieces: [
+                    {
+                        lte: 5,
+                        color: '#0090ff'
+                    },
+                    {
+                        gt: 5,
+                        lte: 9,
+                        color: '#0090ff'
+                    },
+                    {
+                        gt: 9,
+                        color: '#0090ff'
+                    }
+                ]
+            }*/,
             series: [
                 {
-                    name:'左眼',
-                    smooth:true,
-                    symbol:"circle",
-                    type:'line',
-                    stack: '总量',
-                    itemStyle: {
-                         normal: {
-                           color: "#ff5a00",//折线点的颜色
-                           lineStyle: {
-                           color: "#ff5a00"//折线的颜色
-                          }
-                        }
-                     },
-                    data:[120, 132, 101, 134, 90, 230, 210]
-                },
-                {
-                    name:'右眼',
-                    smooth:true,
-                    symbol:"circle",
-                    type:'line',
-                    stack: '总量',
-                    itemStyle: {
-                         normal: {
-                           color: "#20a01d",//折线点的颜色
-                           lineStyle: {
-                           color: "#20a01d"//折线的颜色
-                          }
-                        }
-                     },
-                    data:[220, 182, 191, 234, 290, 330, 310]
+                    name: '',
+                    type: 'line',  // 这里可以按需修改 改成bar就是柱状图
+                    smooth: false,
+                    symbol: 'circle', //标记的样式（小圆点）
+                    symbolSize: 10, //标记的尺寸
+                    data: echarts.typeList
                 }
             ]
-        };
-
-        myChart4.setOption(option);
-    });	*/
+        }
+// 使用刚指定的配置项和数据显示图表。
+        myChart4.setOption(option)
+    })
 </script>
 
 

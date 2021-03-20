@@ -736,8 +736,7 @@ LIMIT #{i},#{j}
 			s_student_new stu,s_school_new sch
 		WHERE
 			stu.school_id = sch.`id`
-		AND
-		 	sch.`ProvinceCode`='370000'
+		AND sch.ProvinceCode = '370000'
 		GROUP BY
 		 	sch.`CityName`
 	</select>
@@ -805,8 +804,7 @@ sch.`ProvinceCode`='370000' AND DATE_FORMAT(stu.`last_check_time`,'%Y') = #{year
 		 	s_student stu,s_school sch
 		WHERE
 			stu.`school_code` = sch.`OrgCode`
-		AND
-		 	sch.`ProvinceCode`='370000'
+		AND sch.ProvinceCode = '370000'
 		GROUP BY
 		 	sch.`CityName`
 	</select>
@@ -819,8 +817,6 @@ sch.`ProvinceCode`='370000' AND DATE_FORMAT(stu.`last_check_time`,'%Y') = #{year
 			s_student_new stu,s_school_new sch
 		WHERE
 			stu.school_id = sch.`id`
-		AND
-		 	sch.`ProvinceCode`='370000'
 	</select>
 
 	<select id="getShaiChaOldTotalNum" resultType="java.lang.Long">
@@ -830,8 +826,6 @@ sch.`ProvinceCode`='370000' AND DATE_FORMAT(stu.`last_check_time`,'%Y') = #{year
 		 	s_student stu,s_school sch
 		WHERE
 			stu.`school_code` = sch.`OrgCode`
-		AND
-		 	sch.`ProvinceCode`='370000'
 	</select>
 
 	<select id="getShaiChaNewEveryYearCount" resultType="java.lang.Long">
@@ -1213,17 +1207,17 @@ SELECT COUNT(stu.new_id)num,stu.`school` FROM s_student_he stu,s_school sch WHER
 	</select>
 
 	<select id="schoolAllNumber" resultType="int">
-		SELECT COUNT(*) FROM s_student_school_he where	school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and last_check_time is not null
+		SELECT COUNT(*) FROM s_student_school_he where	school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} <if test="nianji!=null and nianji !=''">and grade =#{nianji} </if> <if test="banji!=null and banji !=''">and student_class=#{banji} </if>   and last_check_time is not null
 	</select>
 	<select id="schoolAllNumberld" resultType="int">
-		SELECT COUNT(*) FROM y_student_school_he where	school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and last_check_time is not null
+		SELECT COUNT(*) FROM y_student_school_he where	school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} <if test="nianji!=null and nianji !=''">and grade =#{nianji} </if> <if test="banji!=null and banji !=''">and student_class=#{banji} </if> and last_check_time is not null
 	</select>
 	<select id="schoolThisNumber" resultType="int">
-		SELECT COUNT(*) FROM s_student_school_he where	school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate} and dengxiaoqiujingl is not NULL and dengxiaoqiujingr is not NULL and naked_farvision_od is not NULL and naked_farvision_os is not NULL
+		SELECT COUNT(*) FROM s_student_school_he where	school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} <if test="nianji!=null and nianji !=''">and grade =#{nianji} </if> <if test="banji!=null and banji !=''">and student_class=#{banji} </if> and DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate} <if test="nianji!=null and nianji !=''">and grade =#{nianji} </if> <if test="banji!=null and banji !=''">and student_class=#{banji} </if> and dengxiaoqiujingl is not NULL and dengxiaoqiujingr is not NULL and naked_farvision_od is not NULL and naked_farvision_os is not NULL
 	</select>
 
 	<select id="schoolThisNumberld" resultType="int">
-		SELECT COUNT(*) FROM y_student_school_he where	school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate} AND dengxiaoqiujing_od_second is not NULL AND dengxiaoqiujing_os_second is not NULL and naked_farvision_od is not NULL and naked_farvision_os is not NULL
+		SELECT COUNT(*) FROM y_student_school_he where	school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} <if test="nianji!=null and nianji !=''">and grade =#{nianji} </if> <if test="banji!=null and banji !=''">and student_class=#{banji} </if> and DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate} <if test="nianji!=null and nianji !=''">and grade =#{nianji} </if> <if test="banji!=null and banji !=''">and student_class=#{banji} </if> AND dengxiaoqiujing_od_second is not NULL AND dengxiaoqiujing_os_second is not NULL and naked_farvision_od is not NULL and naked_farvision_os is not NULL
 	</select>
 	<select id="illNumber" resultType="int" >
 		SELECT
@@ -1242,7 +1236,7 @@ SELECT COUNT(stu.new_id)num,stu.`school` FROM s_student_he stu,s_school sch WHER
 		FROM
 		s_student_school_he
 		WHERE
-		`school` = #{school} AND`AreaName` = #{AreaName} AND `CityName` = #{CityName} and
+		`school` = #{school} AND`AreaName` = #{AreaName} AND `CityName` = #{CityName} <if test="nianji!=null and nianji !=''">and grade =#{nianji} </if> <if test="banji!=null and banji !=''">and student_class=#{banji} </if> and
 		DATE_FORMAT(`last_check_time`,'%Y-%m') = #{checkdate} and dengxiaoqiujingl is not NULL and dengxiaoqiujingr is not NULL and naked_farvision_od is not NULL and naked_farvision_os is not NULL
 		) AS one
 		WHERE
@@ -1252,21 +1246,22 @@ SELECT COUNT(stu.new_id)num,stu.`school` FROM s_student_he stu,s_school sch WHER
 	<select id="illNumberld" resultType="int">
 		SELECT COUNT(dengxiaoqiujing) num FROM
 		(SELECT LEAST(dengxiaoqiujing_od_second,dengxiaoqiujing_os_second) dengxiaoqiujing FROM y_student_school_he
-		WHERE `school` = #{school} AND`AreaName` = #{AreaName} AND `CityName` = #{CityName} and DATE_FORMAT(`last_check_time`,'%Y-%m') = #{checkdate}
+		WHERE `school` = #{school} AND`AreaName` = #{AreaName} AND `CityName` = #{CityName} and DATE_FORMAT(`last_check_time`,'%Y-%m') = #{checkdate} <if test="nianji!=null and nianji !=''">and grade =#{nianji} </if> <if test="banji!=null and banji !=''">and student_class=#{banji} </if>
 		AND dengxiaoqiujing_od_second is not NULL AND dengxiaoqiujing_os_second is not NULL and naked_farvision_od is not NULL and naked_farvision_os is not NULL) as one
 		WHERE dengxiaoqiujing &lt;='-0.5';
 	</select>
 	<select id="sexThisNumber" resultType="int">
-		SELECT COUNT(*) FROM s_student_school_he where	school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate} and student_sex = #{sex}
+		SELECT COUNT(*) FROM s_student_school_he where	school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate} and student_sex = #{sex} <if test="nianji!=null and nianji !=''">and grade =#{nianji} </if> <if test="banji!=null and banji !=''">and student_class=#{banji} </if>
 	</select>
 	<select id="sexThisNumberld" resultType="int">
-		SELECT COUNT(*) FROM y_student_school_he where	school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate} and student_sex = #{sex}
+		SELECT COUNT(*) FROM y_student_school_he where	school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate} and student_sex = #{sex} <if test="nianji!=null and nianji !=''">and grade =#{nianji} </if> <if test="banji!=null and banji !=''">and student_class=#{banji} </if>
 	</select>
 	<select id="getXueBu" resultType="string">
 		SELECT DISTINCT xue_bu FROM s_student_school_he
         WHERE school = #{school}
         AND AreaName = #{AreaName}
         AND CityName = #{CityName}
+		<if test="nianji!=null and nianji !=''">and grade =#{nianji} </if> <if test="banji!=null and banji !=''">and student_class=#{banji} </if>
         AND DATE_FORMAT(last_check_time, '%Y-%m') = #{checkdate}
 	</select>
 	<select id="getXueBuld" resultType="string">
@@ -1274,6 +1269,7 @@ SELECT COUNT(stu.new_id)num,stu.`school` FROM s_student_he stu,s_school sch WHER
         WHERE school = #{school}
         AND AreaName = #{AreaName}
         AND CityName = #{CityName}
+		<if test="nianji!=null and nianji !=''">and grade =#{nianji} </if> <if test="banji!=null and banji !=''">and student_class=#{banji} </if>
         AND DATE_FORMAT(last_check_time, '%Y-%m') = #{checkdate}
 	</select>
 	<select id="everyCheck" resultType="map">
@@ -1285,7 +1281,7 @@ SELECT COUNT(stu.new_id)num,stu.`school` FROM s_student_he stu,s_school sch WHER
     FROM
     	s_student_school_he
     WHERE
-    	school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName}
+    	school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} <if test="nianji!=null and nianji !=''">and grade =#{nianji} </if> <if test="banji!=null and banji !=''">and student_class=#{banji} </if>
     AND DATE_FORMAT(last_check_time, '%Y') >= '2019' and dengxiaoqiujingl is not NULL and dengxiaoqiujingr is not NULL and  naked_farvision_od is not NULL and naked_farvision_os is not NULL
     GROUP BY
     	DATE_FORMAT(last_check_time, '%Y-%m')
@@ -1299,7 +1295,7 @@ SELECT COUNT(stu.new_id)num,stu.`school` FROM s_student_he stu,s_school sch WHER
     FROM
     	y_student_school_he
     WHERE
-    	school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName}
+    	school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName}  <if test="nianji!=null and nianji !=''">and grade =#{nianji} </if> <if test="banji!=null and banji !=''">and student_class=#{banji} </if>
     AND DATE_FORMAT(last_check_time, '%Y') >= '2019' and dengxiaoqiujing_od_second is not NULL and dengxiaoqiujing_os_second is not NULL and  naked_farvision_od is not NULL and naked_farvision_os is not NULL
     GROUP BY
     	DATE_FORMAT(last_check_time, '%Y-%m')
@@ -1321,7 +1317,7 @@ SELECT COUNT(stu.new_id)num,stu.`school` FROM s_student_he stu,s_school sch WHER
 		FROM
 		s_student_school_he
 		WHERE
-		school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and
+		school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} <if test="nianji!=null and nianji !=''">and grade =#{nianji} </if> <if test="banji!=null and banji !=''">and student_class=#{banji} </if> and
 		DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate} and dengxiaoqiujingl is not NULL and dengxiaoqiujingr is not NULL and naked_farvision_od is not NULL and naked_farvision_os is not NULL
 		) AS one
 		WHERE
@@ -1346,7 +1342,7 @@ SELECT COUNT(stu.new_id)num,stu.`school` FROM s_student_he stu,s_school sch WHER
 		FROM
 		y_student_school_he
 		WHERE
-		school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and
+		school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName}  <if test="nianji!=null and nianji !=''">and grade =#{nianji} </if> <if test="banji!=null and banji !=''">and student_class=#{banji} </if> and
 		DATE_FORMAT(last_check_time,'%Y-%m') =  #{checkdate} and naked_farvision_od is not NULL and naked_farvision_os is not NULL and dengxiaoqiujing_od_first is not NULL and dengxiaoqiujing_os_first is not NULL
 		) AS one
 		WHERE
@@ -1395,7 +1391,7 @@ SELECT COUNT(stu.new_id)num,stu.`school` FROM s_student_he stu,s_school sch WHER
 		FROM
 		s_student_school_he
 		WHERE
-		school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and
+		school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName}  <if test="nianji!=null and nianji !=''">and grade =#{nianji} </if> <if test="banji!=null and banji !=''">and student_class=#{banji} </if> and
 		DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate} and dengxiaoqiujingl is not NULL and dengxiaoqiujingr is not NULL and naked_farvision_od is not NULL and naked_farvision_os is not NULL
 		) AS one
 		WHERE
@@ -1444,7 +1440,7 @@ SELECT COUNT(stu.new_id)num,stu.`school` FROM s_student_he stu,s_school sch WHER
 		FROM
 		y_student_school_he
 		WHERE
-		school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and
+		school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} <if test="nianji!=null and nianji !=''">and grade =#{nianji} </if> <if test="banji!=null and banji !=''">and student_class=#{banji} </if> and
 		DATE_FORMAT(last_check_time,'%Y-%m') =  #{checkdate} and naked_farvision_od is not NULL and naked_farvision_os is not NULL and dengxiaoqiujing_od_first is not NULL and dengxiaoqiujing_os_first is not NULL
 		) AS one
 		WHERE
@@ -1469,7 +1465,7 @@ SELECT COUNT(stu.new_id)num,stu.`school` FROM s_student_he stu,s_school sch WHER
 		FROM
 		s_student_school_he
 		WHERE
-		school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and
+		school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} <if test="nianji!=null and nianji !=''">and grade =#{nianji} </if> <if test="banji!=null and banji !=''">and student_class=#{banji} </if> and
 		DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate} and dengxiaoqiujingl is not NULL and dengxiaoqiujingr is not NULL and naked_farvision_od is not NULL and naked_farvision_os is not NULL
 		) AS one
 		WHERE
@@ -1516,7 +1512,7 @@ SELECT COUNT(stu.new_id)num,stu.`school` FROM s_student_he stu,s_school sch WHER
 		FROM
 		y_student_school_he
 		WHERE
-		school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and
+		school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} <if test="nianji!=null and nianji !=''">and grade =#{nianji} </if> <if test="banji!=null and banji !=''">and student_class=#{banji} </if> and
 		DATE_FORMAT(last_check_time,'%Y-%m') =  #{checkdate} and naked_farvision_od is not NULL and naked_farvision_os is not NULL and dengxiaoqiujing_od_first is not NULL and dengxiaoqiujing_os_first is not NULL
 		) AS one
 		WHERE
@@ -1540,7 +1536,7 @@ SELECT COUNT(stu.new_id)num,stu.`school` FROM s_student_he stu,s_school sch WHER
 		FROM
 		s_student_school_he
 		WHERE
-		school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and
+		school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} <if test="nianji!=null and nianji !=''">and grade =#{nianji} </if> <if test="banji!=null and banji !=''">and student_class=#{banji} </if> and
 		DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate} and dengxiaoqiujingl is not NULL and dengxiaoqiujingr is not NULL and naked_farvision_od is not NULL and naked_farvision_os is not NULL
 		) AS one
 		WHERE
@@ -1560,7 +1556,7 @@ SELECT COUNT(stu.new_id)num,stu.`school` FROM s_student_he stu,s_school sch WHER
 		FROM
 		y_student_school_he
 		WHERE
-		school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and
+		school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} <if test="nianji!=null and nianji !=''">and grade =#{nianji} </if> <if test="banji!=null and banji !=''">and student_class=#{banji} </if> and
 		DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate} and dengxiaoqiujing_od_second is not null and dengxiaoqiujing_os_second is not null
 		) AS one
 		WHERE
@@ -1584,7 +1580,7 @@ SELECT COUNT(stu.new_id)num,stu.`school` FROM s_student_he stu,s_school sch WHER
 		FROM
 		s_student_school_he
 		WHERE
-		school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and
+		school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} <if test="nianji!=null and nianji !=''">and grade =#{nianji} </if> <if test="banji!=null and banji !=''">and student_class=#{banji} </if> and
 		DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate} and dengxiaoqiujingl is not NULL and dengxiaoqiujingr is not NULL and naked_farvision_od is not NULL and naked_farvision_os is not NULL
 		) AS one
 		WHERE
@@ -1608,7 +1604,7 @@ SELECT COUNT(stu.new_id)num,stu.`school` FROM s_student_he stu,s_school sch WHER
 		FROM
 		y_student_school_he
 		WHERE
-		school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} and
+		school = #{school} and AreaName = #{AreaName} AND CityName = #{CityName} <if test="nianji!=null and nianji !=''">and grade =#{nianji} </if> <if test="banji!=null and banji !=''">and student_class=#{banji} </if> and
 		DATE_FORMAT(last_check_time,'%Y-%m') = #{checkdate} and  dengxiaoqiujing_od_first is not NULL and dengxiaoqiujing_os_first is not NULL and dengxiaoqiujing_od_second is not null and dengxiaoqiujing_os_second is not null
 		) AS one
 		WHERE
@@ -1627,7 +1623,7 @@ SELECT COUNT(stu.new_id)num,stu.`school` FROM s_student_he stu,s_school sch WHER
     WHERE
     	school = #{school}
     AND AreaName = #{AreaName}
-    AND CityName = #{CityName}
+    AND CityName = #{CityName} <if test="nianji!=null and nianji !=''">and grade =#{nianji} </if> <if test="banji!=null and banji !=''">and student_class=#{banji} </if>
     AND DATE_FORMAT(last_check_time, '%Y-%m') = #{checkdate} and SUBSTRING(identity_card, 7, 4) &lt; YEAR(NOW()) and dengxiaoqiujingl is not NULL and dengxiaoqiujingr is not NULL and  naked_farvision_od is not NULL and naked_farvision_os is not NULL and naked_farvision_od != '0' and naked_farvision_os != '0' and naked_farvision_os != '' and naked_farvision_od != '' and identity_card REGEXP '^[1-9][[:digit:]]{7}((0[[:digit:]])|(1[0-2]))(([0|1|2][[:digit:]])|3[0-1])[[:digit:]]{3}$|^[1-9][[:digit:]]{5}[1-9][[:digit:]]{3}((0[[:digit:]])|(1[0-2]))(([0|1|2][[:digit:]])|3[0-1])[[:digit:]]{3}([0-9]|X)$'
     ORDER BY student_name
 	</select>
@@ -1643,7 +1639,7 @@ SELECT COUNT(stu.new_id)num,stu.`school` FROM s_student_he stu,s_school sch WHER
     WHERE
     	school = #{school}
     AND AreaName = #{AreaName}
-    AND CityName = #{CityName}
+    AND CityName = #{CityName} <if test="nianji!=null and nianji !=''">and grade =#{nianji} </if> <if test="banji!=null and banji !=''">and student_class=#{banji} </if>
     AND DATE_FORMAT(last_check_time, '%Y-%m') = #{checkdate} and SUBSTRING(identity_card, 7, 4) &lt; YEAR(NOW()) and naked_farvision_od is not NULL and naked_farvision_os is not NULL and dengxiaoqiujing_od_first is not NULL and dengxiaoqiujing_os_first is not NULL and dengxiaoqiujing_od_second is not NULL and dengxiaoqiujing_os_second is not NULL and naked_farvision_od != '0' and naked_farvision_os != '0' and naked_farvision_os != '' and naked_farvision_od != '' and identity_card REGEXP '^[1-9][[:digit:]]{7}((0[[:digit:]])|(1[0-2]))(([0|1|2][[:digit:]])|3[0-1])[[:digit:]]{3}$|^[1-9][[:digit:]]{5}[1-9][[:digit:]]{3}((0[[:digit:]])|(1[0-2]))(([0|1|2][[:digit:]])|3[0-1])[[:digit:]]{3}([0-9]|X)$'
     ORDER BY student_name
 	</select>
@@ -2014,9 +2010,9 @@ where stu1.id=stu2.id limit 0,30
 	</select>
 
 	<select id="getScYuCe" resultType="map">
-SELECT stu.`id`,stu.`student_sex` sex ,stu.last_check_time checkTime,DATE_FORMAT(stu.`last_check_time`,'%Y')-DATE_FORMAT(stu.`birthday`,'%Y') age,stu.`dengxiaoqiujingl` DXQJL,stu.`dengxiaoqiujingr` DXQJR,stu.`naked_farvision_od` NakedOd,stu.`naked_farvision_os` NakedOs
+SELECT stu.`id`,stu.`student_sex` sex ,stu.last_check_time checkTime,DATE_FORMAT(stu.`last_check_time`,'%Y')-SUBSTRING(stu.`identity_card`,7,4) age,stu.`dengxiaoqiujingl` DXQJL,stu.`dengxiaoqiujingr` DXQJR,stu.`naked_farvision_od` NakedOd,stu.`naked_farvision_os` NakedOs
 FROM s_student_new stu,s_school_new sch WHERE stu.`school_id` = sch.`id` AND stu.`dengxiaoqiujingl` IS NOT NULL AND stu.`dengxiaoqiujingr` IS NOT NULL AND stu.`naked_farvision_od` IS NOT NULL AND stu.`naked_farvision_os` IS NOT NULL AND stu.last_check_time IS NOT NULL AND stu.birthday IS NOT NULL
-AND stu.`school`=#{school} AND DATE_FORMAT(stu.`last_check_time`,'%Y-%m')=#{checkTime} AND sch.`CityName`= #{cityName} AND sch.`AreaName`= #{areaName}
+AND stu.`school`=#{school} AND DATE_FORMAT(stu.`last_check_time`,'%Y-%m')=#{checkTime} AND sch.`CityName`= #{cityName} AND sch.`AreaName`= #{areaName} <if test="nianji != null and nianji != ''">and stu.grade=#{nianji}</if> <if test="banji != null and banji != ''">and stu.student_class=#{banji}</if>
 	</select>
 
 	<select id="getScYuCeForOld" resultType="map">
@@ -2025,7 +2021,7 @@ FROM s_student stu,s_school sch WHERE stu.`school_code`= sch.`OrgCode` AND stu.`
 AND stu.`school`=#{school} AND DATE_FORMAT(stu.`last_check_time`,'%Y-%m')=#{checkTime} AND sch.`CityName`= #{cityName} AND sch.`AreaName`= #{areaName}
 	</select>
 	<select id="getOptId" resultType="int">
-		SELECT t_optometry_id FROM s_result_optometry_new WHERE student_id = #{id}
+		SELECT t_optometry_id FROM s_result_optometry_new WHERE student_id = #{id} ORDER BY check_date DESC LIMIT 0,1
 	</select>
 	<select id="getOptIdForOld" resultType="int">
 		SELECT t_optometry_id FROM s_result_optometry WHERE student_id = #{id}
@@ -2055,7 +2051,7 @@ SELECT IFNULL(eye_pressure_od,0.0) preOd,IFNULL(eye_pressure_os,0.0) preOs FROM 
 SELECT IFNULL(eye_pressure_od,0.0) preOd,IFNULL(eye_pressure_os,0.0) preOs FROM s_result_eyepressure WHERE student_id = #{id}
 	</select>
 	<select id="getYuCeForPerson" resultType="map">
-SELECT id,student_sex sex,DATE_FORMAT(last_check_time,'%Y')-DATE_FORMAT(birthday,'%Y') age,last_check_time checkTime,dengxiaoqiujingl DXQJL,dengxiaoqiujingr DXQJR,naked_farvision_od NakedOd,naked_farvision_os NakedOs
+SELECT id,student_sex sex,DATE_FORMAT(last_check_time,'%Y')-SUBSTRING(identity_card,7,4) age,last_check_time checkTime,dengxiaoqiujingl DXQJL,dengxiaoqiujingr DXQJR,naked_farvision_od NakedOd,naked_farvision_os NakedOs
 FROM s_student_new WHERE student_name = #{name} AND identity_card = #{idCard} AND DATE_FORMAT(last_check_time,'%Y-%m') = #{checkDate}
 	</select>
 	<select id="getShiFouHaveOtherTime" resultType="string">
@@ -2069,5 +2065,18 @@ FROM s_student_new WHERE student_name = #{name} AND identity_card = #{idCard} AN
 		where
 		stu.`school_code`=sch.`OrgCode` AND stu.`dengxiaoqiujingl` IS NOT NULL AND stu.`dengxiaoqiujingr` IS NOT NULL AND stu.`naked_farvision_od` IS NOT NULL AND stu.`naked_farvision_os` IS NOT NULL AND stu.last_check_time IS NOT NULL
 		AND stu.`school`=#{school} AND sch.`CityName`=#{cityName} AND sch.`AreaName`=#{areaName} AND DATE_FORMAT(last_check_time,'%Y-%m') &lt; #{checkTime}
+	</select>
+
+	<select id="getYuCeForPersonForOld" resultType="map">
+		SELECT id,student_sex sex,DATE_FORMAT(last_check_time,'%Y')-SUBSTRING(identity_card,7,4) age,last_check_time checkTime,dengxiaoqiujingl DXQJL,dengxiaoqiujingr DXQJR,naked_farvision_od NakedOd,naked_farvision_os NakedOs
+		FROM s_student WHERE student_name = #{name} AND identity_card = #{idCard} AND DATE_FORMAT(last_check_time,'%Y-%m') = #{checkDate}
+	</select>
+
+	<select id="getScYuCeForProvince" resultType="map">
+SELECT stu.`id`,DATE_FORMAT(stu.`last_check_time`,'%Y')-SUBSTRING(stu.`identity_card`,7,4) age,stu.`dengxiaoqiujingl` DXQJL,stu.`dengxiaoqiujingr` DXQJR,stu.`naked_farvision_od` NakedOd,stu.`naked_farvision_os` NakedOs
+FROM s_student_new stu,s_school_new sch WHERE stu.`school_id` = sch.`id` AND stu.`dengxiaoqiujingl` IS NOT NULL AND stu.`dengxiaoqiujingr` IS NOT NULL AND stu.`naked_farvision_od` IS NOT NULL AND stu.`naked_farvision_os` IS NOT NULL AND stu.last_check_time IS NOT NULL
+ AND DATE_FORMAT(stu.`last_check_time`,'%Y')=#{year}
+ <if test="checkCity != null and checkCity !='' ">AND sch.`CityName`= #{checkCity}</if>
+		<if test="checkArea != null and checkArea !='' ">AND sch.`AreaName`= #{checkArea}</if>
 	</select>
 </mapper>

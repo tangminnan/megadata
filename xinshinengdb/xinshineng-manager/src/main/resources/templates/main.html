@@ -13,13 +13,13 @@
     </style>
 <body style="background-color: #06164A;">
     <header>
-        <h1>山东省儿童青少年健康与近视防控大数据平台</h1>
-        <div class="showTime">当前时间：2020年12月<span></span></div>
+        <h1>山东省儿童青少年近视防控大数据平台</h1>
+        <div class="showTime">当前时间：2021年3月<span></span></div>
     </header>
     <section class="mainbox">
         <div class="column">
         	<div class="panel pie">
-                <h2>不同性别患病率</h2>
+                <h2 id="fbl"></h2>
                 <div class="chart"></div>
                 <div class="panel-footer"></div>
             </div>
@@ -112,7 +112,16 @@
               dt.getMinutes() + "分" +
               dt.getSeconds() + "秒";
         });
-
+        var date = new Date();
+        var month = date.getMonth()+1;
+        if (month<=6){
+            var year = date.getFullYear();
+            $("#fbl").text(year+'年发病率预测')
+        }
+        if (month>6){
+            var year = date.getFullYear()+1;
+            $("#fbl").text(year+'年发病率预测')
+        }
         var checkCity='';
         var checkArea='';
         //地图容器
@@ -131,7 +140,6 @@
             "泰安市": "370900",
             "威海市": "371000",
             "日照市": "371100",
-            "莱芜市": "371200",
             "临沂市": "371300",
             "德州市": "371400",
             "聊城市": "371500",
@@ -230,7 +238,6 @@
                             {name: '菏泽市', value: data.HeZeShi},
                             {name: '聊城市', value: data.LiaoChengShi},
                             {name: '泰安市', value: data.TaiAnShi},
-                            {name: '莱芜市', value: data.LaiWuShi},
                             {name: '东营市', value: data.DongYingShi},
                             {name: '滨州市', value: data.BinZhouShi},
                             {name: '德州市', value: data.DeZhouShi}
@@ -371,7 +378,6 @@
                                     {name: '菏泽市', value: data.HeZeShiJS},
                                     {name: '聊城市', value: data.LiaoChengShiJS},
                                     {name: '泰安市', value: data.TaiAnShiJS},
-                                    {name: '莱芜市', value: data.LaiWuShiJS},
                                     {name: '东营市', value: data.DongYingShiJS},
                                     {name: '滨州市', value: data.BinZhouShiJS},
                                     {name: '德州市', value: data.DeZhouShiJS}
@@ -398,6 +404,7 @@
                         //渲染地图
 
                         chart.setOption(option);
+                        chart.off('click');
                         chart.on('click', function (params) {
                             console.log( params );
                             if( params.name in provinces ){
@@ -420,10 +427,9 @@
 
                 })
             })
-            //不同性别患病比例
-            setTimeout(function () {
+            //发病比例
+            setTimeout(function (){
                 var myChart = echarts.init(document.querySelector(".pie .chart"));
-
                 $.ajax({
                     cache: true,
                     type: "GET",
@@ -433,7 +439,7 @@
                         parent.layer.alert("网络超时");
                     },
                     success: function (data) {
-                        option = {
+                        option ={
                             color: ["#2f89cf"],
                             tooltip: {
                                 trigger: "axis",
@@ -453,7 +459,7 @@
                             xAxis: [
                                 {
                                     type: "category",
-                                    data: ['男性', '女性'],
+                                    data: ['假性近视','近视临床前期','真性近视'],
                                     axisTick: {
                                         alignWithLabel: true
                                     },
@@ -496,14 +502,14 @@
                             ],
                             series: [
                                 {
-                                    name: "患病率",
+                                    name: "发病率",
                                     type: "bar",
                                     barWidth: "50%",
-                                    data: [data.manLv, data.womenLv],
+                                    data: [data.jxfabinglv,data.lcfabinglv,data.zxfabinglv],
                                     itemStyle: {
-                                        normal: {
-                                            color: function (params) {
-                                                var colorList = ['rgb(100,155,182)', 'rgb(173,91,91)'];
+                                        normal:{
+                                            color: function (params){
+                                                var colorList = ['rgb(100,155,182)','rgb(173,91,91)','rgb(246,185,29)'];
                                                 return colorList[params.dataIndex];
                                             }
                                         },
@@ -518,6 +524,7 @@
                         myChart.setOption(option);
                     }
                 });
+
 
             })
             //筛查流调患病比例
@@ -895,6 +902,7 @@
                     ];
                     chart.clear();
                     //渲染地图
+                    chart.off('click');
                     chart.on('click', function (params) {
                         console.log( params );
                         if( params.name in provinces ){
@@ -1020,7 +1028,7 @@
                                             xAxis: [
                                                 {
                                                     type: "category",
-                                                    data: ['男性','女性'],
+                                                    data: ['假性近视','近视临床前期','真性近视'],
                                                     axisTick: {
                                                         alignWithLabel: true
                                                     },
@@ -1063,16 +1071,14 @@
                                             ],
                                             series: [
                                                 {
-                                                    name: "患病率",
+                                                    name: "发病率",
                                                     type: "bar",
                                                     barWidth: "50%",
-                                                    data: [data.manLv,data.womenLv],
+                                                    data: [data.jxfabinglv,data.lcfabinglv,data.zxfabinglv],
                                                     itemStyle: {
                                                         normal:{
                                                             color: function (params){
-                                                                var colorList = ['rgb(100,155,182)','rgb(173,91,91)'];
-
-
+                                                                var colorList = ['rgb(100,155,182)','rgb(173,91,91)','rgb(246,185,29)'];
                                                                 return colorList[params.dataIndex];
                                                             }
                                                         },
@@ -1287,7 +1293,7 @@
             });
 
 
-            //不同性别患病比例
+            //发病比例
             setTimeout(function (){
                 var myChart = echarts.init(document.querySelector(".pie .chart"));
                 $.ajax({
@@ -1319,7 +1325,7 @@
                             xAxis: [
                                 {
                                     type: "category",
-                                    data: ['男性','女性'],
+                                    data: ['假性近视','近视临床前期','真性近视'],
                                     axisTick: {
                                         alignWithLabel: true
                                     },
@@ -1362,16 +1368,14 @@
                             ],
                             series: [
                                 {
-                                    name: "患病率",
+                                    name: "发病率",
                                     type: "bar",
                                     barWidth: "50%",
-                                    data: [data.manLv,data.womenLv],
+                                    data: [data.jxfabinglv,data.lcfabinglv,data.zxfabinglv],
                                     itemStyle: {
                                         normal:{
                                             color: function (params){
-                                                var colorList = ['rgb(100,155,182)','rgb(173,91,91)'];
-
-
+                                                var colorList = ['rgb(100,155,182)','rgb(173,91,91)','rgb(246,185,29)'];
                                                 return colorList[params.dataIndex];
                                             }
                                         },

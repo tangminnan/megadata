@@ -368,7 +368,6 @@
 	</select>
 	<select id="getThisYearCheckCount" resultType="map">
 		SELECT sch.`CityName`,COUNT(*) num FROM y_student stu,y_school_new sch WHERE stu.school_id = sch.`id` AND sch.`ProvinceCode`='370000' AND stu.`last_check_time` IS NOT NULL AND  DATE_FORMAT(stu.`last_check_time`,'%Y') = #{year} GROUP BY sch.`CityName`;
-
 	</select>
 	<select id="getThisYearCheckCountForArea" resultType="long">
 		SELECT
@@ -763,9 +762,11 @@ AND dengxiaoqiujing_od_second IS NOT NULL AND dengxiaoqiujing_os_second AND City
 		SELECT MAX(DATE_FORMAT(last_check_time,'%Y-%m')) checkdate FROM y_student_school_he WHERE student_name = #{username} AND identity_card = #{password}
 	</select>
 	<select id="getLDYuCe" resultType="map">
-SELECT stu.`id`,stu.`student_sex` sex,stu.`last_check_time` checkTime,DATE_FORMAT(stu.`last_check_time`,'%Y')-DATE_FORMAT(stu.`birthday`,'%Y') age
+SELECT stu.`id`, DATE_FORMAT(stu.`last_check_time`,'%Y')-SUBSTRING(stu.`identity_card`,7,4) age
 FROM y_student stu,y_school_new sch WHERE stu.`school_id`=sch.`id` AND stu.`birthday` IS NOT NULL AND stu.`last_check_time` IS NOT NULL
 AND stu.`school`=#{school} AND sch.`CityName`=#{cityName} AND sch.`AreaName`=#{areaName} AND DATE_FORMAT(stu.`last_check_time`,'%Y-%m')=#{checkTime}
+<if test="nianji != null and nianji != ''">and stu.grade = #{nianji}</if>
+<if test="banji != null and banji != ''">and stu.student_class = #{banji}</if>
 	</select>
 	<select id="getEyeSightData" resultType="map">
 		SELECT IFNULL(naked_farvision_od,0.0) nakedOd,IFNULL(naked_farvision_os,0.0) nakedOs,IFNULL(life_farvision_od,0.0) lifeOd,IFNULL(life_farvision_os,0.0) lifeOs FROM y_result_eyesight WHERE student_id =#{id}
@@ -786,8 +787,17 @@ AND stu.`school`=#{school} AND sch.`CityName`=#{cityName} AND sch.`AreaName`=#{a
 		SELECT IFNULL(eye_pressure_od,0.0) preOd,IFNULL(eye_pressure_os,0.0) preOs FROM y_result_eyepressure WHERE student_id = #{id}
 	</select>
 	<select id="getYuCeForPerson" resultType="map">
-SELECT id,student_sex sex,last_check_time checkTime,DATE_FORMAT(last_check_time,'%Y')-DATE_FORMAT(birthday,'%Y') age
-FROM y_student WHERE student_name = #{name} AND identity_card = #{idCard} AND DATE_FORMAT(last_check_time,'%Y-%m') = #{checkDate}
+	SELECT id,student_sex sex,last_check_time checkTime,DATE_FORMAT(last_check_time,'%Y')-DATE_FORMAT(birthday,'%Y') age
+	FROM y_student WHERE student_name = #{name} AND identity_card = #{idCard} AND DATE_FORMAT(last_check_time,'%Y-%m') = #{checkDate}
+	</select>
 
+	<select id="getYuCeForPersonForOld" resultType="map">
+	SELECT id FROM y_student_old WHERE student_name = #{name} AND identity_card = #{idCard} AND DATE_FORMAT(last_check_time,'%Y-%m') = #{checkDate}
+	</select>
+	<select id="getOptIdForOld" resultType="int">
+		SELECT t_optometry_id FROM y_result_optometry_old WHERE student_id = #{id}
+	</select>
+	<select id="getDiopterDataForOld" resultType="map">
+		SELECT IFNULL(diopter_a,0.0) dioA,IFNULL(diopter_c,0.0) dioC,IFNULL(diopter_s,0.0) dioS,IFNULL(dengxiaoqiujing,0.0) DXQJ,ifRL,first_second FROM y_result_diopter_old WHERE t_optometry_id = #{optId} AND TYPE = 'AVG'
 	</select>
 </mapper>

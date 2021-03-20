@@ -1,6 +1,7 @@
 package com.xinshineng.information.controller;
 
 import com.sun.org.apache.xpath.internal.operations.Mod;
+import com.xinshineng.common.utils.StringUtils;
 import com.xinshineng.information.dao.shaicha.ShaichaStudentDao;
 import com.xinshineng.information.service.jigou.service.JiGouService;
 import com.xinshineng.information.service.shaicha.service.ShaichaStudentService;
@@ -35,41 +36,68 @@ public class skipController {
     }
     @RequiresPermissions("sys:xuexiao")
     @GetMapping("/school")
-    public String skipToSchool(Model model, String school, String CityName, String AreaName, String checkdate,String checkType){
+    public String skipToSchool(Model model, String school, String CityName, String AreaName, String checkdate,String checkType,String nianji,String banji){
 
         Map<String, String> dataOne;
-        dataOne = redisTemplate.opsForHash().entries(school+AreaName+checkdate+checkType+"dataOne");
-        if(dataOne.isEmpty()){
-            dataOne = schoolservice.dataOne(school, CityName, AreaName, checkdate,checkType);
-        }
-
         Map<String, List> dataTwo;
-        dataTwo = redisTemplate.opsForHash().entries(school+AreaName+checkdate+checkType+"dataTwo");
-        if (dataTwo.isEmpty()){
-            dataTwo = schoolservice.dataTwo(school, CityName, AreaName, checkdate,checkType);
-        }
-
         List<Map> dataThree;
-        dataThree = redisTemplate.opsForList().range(school+AreaName+checkdate+checkType+"dataThree",0,-1);
-        if (dataThree.size()==0){
-            dataThree = schoolservice.dataThree(school, CityName, AreaName, checkdate,checkType);
-        }
-
         List<Map> dataFour;
-        dataFour = redisTemplate.opsForList().range(school+AreaName+checkdate+checkType+"dataFour",0,-1);
-        if (dataFour.size()==0){
-            dataFour = schoolservice.dataFour(school, CityName, AreaName, checkdate,checkType);
+        List<Map> dataFive;
+        List<Map> dataSix;
+        if (StringUtils.isBlank(nianji) && StringUtils.isBlank(banji)){
+            dataOne = redisTemplate.opsForHash().entries(school+AreaName+checkdate+checkType+"dataOne");
+            dataTwo = redisTemplate.opsForHash().entries(school+AreaName+checkdate+checkType+"dataTwo");
+            dataThree = redisTemplate.opsForList().range(school+AreaName+checkdate+checkType+"dataThree",0,-1);
+            dataFour = redisTemplate.opsForList().range(school+AreaName+checkdate+checkType+"dataFour",0,-1);
+            dataFive = redisTemplate.opsForList().range(school+AreaName+checkdate+checkType+"dataFive",0,-1);
+            dataSix = redisTemplate.opsForList().range(school+AreaName+checkdate+checkType+"dataSix",0,-1);
+
+
+        }else{
+            if (StringUtils.isBlank(banji)){
+                dataOne = redisTemplate.opsForHash().entries(school+AreaName+checkdate+checkType+nianji+"dataOne");
+                dataTwo = redisTemplate.opsForHash().entries(school+AreaName+checkdate+checkType+nianji+"dataTwo");
+                dataThree = redisTemplate.opsForList().range(school+AreaName+checkdate+checkType+nianji+"dataThree",0,-1);
+                dataFour = redisTemplate.opsForList().range(school+AreaName+checkdate+checkType+nianji+"dataFour",0,-1);
+                dataFive = redisTemplate.opsForList().range(school+AreaName+checkdate+checkType+nianji+"dataFive",0,-1);
+                dataSix = redisTemplate.opsForList().range(school+AreaName+checkdate+checkType+nianji+"dataSix",0,-1);
+
+
+            }else {
+                dataOne = redisTemplate.opsForHash().entries(school+AreaName+checkdate+checkType+nianji+banji+"dataOne");
+                dataTwo = redisTemplate.opsForHash().entries(school+AreaName+checkdate+checkType+nianji+banji+"dataTwo");
+                dataThree = redisTemplate.opsForList().range(school+AreaName+checkdate+checkType+nianji+banji+"dataThree",0,-1);
+                dataFour = redisTemplate.opsForList().range(school+AreaName+checkdate+checkType+nianji+banji+"dataFour",0,-1);
+                dataFive = redisTemplate.opsForList().range(school+AreaName+checkdate+checkType+nianji+banji+"dataFive",0,-1);
+                dataSix = redisTemplate.opsForList().range(school+AreaName+checkdate+checkType+nianji+banji+"dataSix",0,-1);
+            }
         }
 
-        List<Map> dataFive;
-        dataFive = redisTemplate.opsForList().range(school+AreaName+checkdate+checkType+"dataFive",0,-1);
-        if (dataFive.size()==0){
-            dataFive = schoolservice.dataFive(school, CityName, AreaName, checkdate,checkType);
+        if(dataOne.isEmpty()){
+            dataOne = schoolservice.dataOne(school, CityName, AreaName, checkdate,checkType,nianji,banji);
         }
-        List<Map> dataSix;
-        dataSix = redisTemplate.opsForList().range(school+AreaName+checkdate+checkType+"dataSix",0,-1);
+
+        if (dataTwo.isEmpty()){
+            dataTwo = schoolservice.dataTwo(school, CityName, AreaName, checkdate,checkType,nianji,banji);
+        }
+
+
+        if (dataThree.size()==0){
+            dataThree = schoolservice.dataThree(school, CityName, AreaName, checkdate,checkType,nianji,banji);
+        }
+
+
+        if (dataFour.size()==0){
+            dataFour = schoolservice.dataFour(school, CityName, AreaName, checkdate,checkType,nianji,banji);
+        }
+
+
+        if (dataFive.size()==0){
+            dataFive = schoolservice.dataFive(school, CityName, AreaName, checkdate,checkType,nianji,banji);
+        }
+
         if(dataSix.size()==0) {
-            dataSix = schoolservice.dataSix(school, CityName, AreaName, checkdate, checkType);
+            dataSix = schoolservice.dataSix(school, CityName, AreaName, checkdate, checkType,nianji,banji);
         }
         model.addAttribute("dataOne",dataOne);
         model.addAttribute("dataTwo",dataTwo);

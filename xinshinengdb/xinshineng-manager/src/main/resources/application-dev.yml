@@ -33,11 +33,11 @@ spring:
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
 
   redis:
-      host: localhost
-      port: 6379
-      password:
+      host: 124.70.65.236
+      port: 6380
+      password: wo41baba
       # 连接超时时间（毫秒）
-      timeout: 10000
+      timeout: 10000000
       pool:
         # 连接池中的最大空闲连接
         max-idle: 8

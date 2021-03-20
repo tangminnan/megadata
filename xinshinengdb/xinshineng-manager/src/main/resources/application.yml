@@ -1,5 +1,5 @@
 server:
-  session-timeout: 60000
+  session-timeout: 60000000
 #    tomcat:
 #        max-threads: 1000
 #        min-spare-threads: 30
