@@ -207,33 +207,37 @@
 </html>
 <script type="text/javascript" th:inline="javascript">
    var url = 'http://121.36.8.243:8083'
-//   var url = 'http://localhost:8083'
-	var school = [[${school}]];
+// var url = 'http://eyemonitor-api.dddmaker.com'
+
+   var school = [[${school}]];
 	var checkType = [[${checkType}]];
 	var CityName = [[${CityName}]];
 	var AreaName = [[${AreaName}]];
+	localStorage.clear();
 
 	var XueBu='';
 	var Grade='';
 	var Clazz='';
 	var idCards=[];
-	$.ajax({
-		cache: true,
-		type: "GET",
-		async: false,
-		url: '/Newhuyan/XueBu?school='+school+'&CityName='+CityName+'&AreaName='+AreaName+'&checkType='+checkType,
-		error: function (request) {
-			parent.layer.alert("网络超时");
-		},
-		success: function (data) {
-			var html=`<option>=请选择=</option>`;
-			for (let i = 0; i < data.length; i++) {
-				html+=`<option value=`+data[i]+`>`+data[i]+`</option>`
-			}
+   {
+       $.ajax({
+           cache: true,
+           type: "GET",
+           async: false,
+           url: '/Newhuyan/XueBu?school=' + school + '&CityName=' + CityName + '&AreaName=' + AreaName + '&checkType=' + checkType,
+           error: function (request) {
+               parent.layer.alert("网络超时");
+           },
+           success: function (data) {
+               var html = `<option>=请选择=</option>`;
+               for (let i = 0; i < data.length; i++) {
+                   html += `<option value=` + data[i] + `>` + data[i] + `</option>`
+               }
 
-			$("#XB").html(html)
-		}
-	})
+               $("#XB").html(html)
+           }
+       });
+   }
 	var XueBuChange = function (xuebu){
 		if ('=请选择='==xuebu){
 			$("#grade").html(`<option>=请选择=</option>`);
@@ -505,9 +509,16 @@
 	    alert("班级不可为空"); return ;
 	}
 
-	let pcorapp=school+XB+grade+clazz;
-    	window.location.href="/Newhuyan/getRenWuHistory?pcorapp="+pcorapp;
 
+
+        let pcorapp=school+XB+grade+clazz;
+    	window.location.href="/Newhuyan/getRenWuHistory?pcorapp="+pcorapp+"&school="+school+"&checkType="+checkType
+		+"&CityName="+CityName+"&AreaName="+AreaName;
+    	localStorage.setItem("pcorapp",pcorapp);
+      	localStorage.setItem("school",school);
+      	localStorage.setItem("checkType",checkType);
+      	localStorage.setItem("CityName",CityName);
+      	localStorage.setItem("AreaName",AreaName);
   }
 </script>
 

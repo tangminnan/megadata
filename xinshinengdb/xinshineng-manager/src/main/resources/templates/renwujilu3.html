@@ -7,9 +7,22 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 <title>任务记录详情</title>
 	<link rel="stylesheet" href="/css/css2.css" type="text/css">
-	<script type="text/javascript" src="/js/jquery-3.5.1.min.js"></script></head>
+	<script type="text/javascript" src="/js/jquery-3.5.1.min.js"></script>
+
+
+<style>
+	.fanhui{
+		display: inline-block;
+		float:right;
+		padding: 0px;
+		font-size:20px;
+		margin-left: -45px;
+	}
+</style>
+
+</head>
 <body>
-   <div class="topbanner">任务记录详情</div>
+   <div class="topbanner">任务记录详情<div class="fanhui" onclick="fanhui()">返回</div></div>
    <h3 class="h3_tit">任务记录详情</h3>
    <div class="main RW_jilu xiangqing_JL_HH">
   	   <div class="nameHH">
@@ -99,6 +112,13 @@
 		return result;
 	}
 
+	
+	function fanhui() {
+       let  startTime=localStorage.getItem("startTime");
+       let  taskTime=localStorage.getItem("taskTime");
+       let  pcorapp=localStorage.getItem("pcorapp");
+        window.location.href="/Newhuyan/getRenwuDetail?pcorapp="+pcorapp+"&startTime="+startTime+"&taskTime="+taskTime;
+    }
 </script>
 </html>
 

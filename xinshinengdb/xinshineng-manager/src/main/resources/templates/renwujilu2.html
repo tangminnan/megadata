@@ -26,11 +26,18 @@
 	.loading_context {
 		color: #fff;
 	}
+	.fanhui{
+		display: inline-block;
+		float:right;
+		padding: 0px;
+		font-size:20px;
+		margin-left: -45px;
+	}
 </style>
 
 </head>
 <body>
-   <div class="topbanner">任务打卡记录</div>
+   <div class="topbanner">任务打卡记录<div class="fanhui" onclick="fanhui()">返回</div></div>
    <h3 class="h3_tit">任务打卡记录</h3>
    <div class="main RW_jilu renwu_LB">
    	   <div class="nameHH">
@@ -99,8 +106,20 @@
 
     function mainData(taskIds,name,time){
         window.location.href="/Newhuyan/mainData?taskIds="+taskIds+"&name="+name+"&time="+time;
-
+        localStorage.setItem("startTime",startTime);
+        localStorage.setItem("taskTime",taskTime);
     }
+
+    function fanhui() {
+        let pcorapp=localStorage.getItem("pcorapp");
+        let school=localStorage.getItem("school");
+        let checkType=localStorage.getItem("checkType");
+        let CityName=localStorage.getItem("CityName");
+        let AreaName=localStorage.getItem("AreaName");
+        window.location.href="/Newhuyan/getRenWuHistory?pcorapp="+pcorapp+"&school="+school+"&checkType="+checkType
+            +"&CityName="+CityName+"&AreaName="+AreaName;
+    }
+
 
 </script>
 </html>
