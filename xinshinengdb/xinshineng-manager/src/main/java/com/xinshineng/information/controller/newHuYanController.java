@@ -57,8 +57,12 @@ public class newHuYanController {
     }
 
     @GetMapping("/getRenWuHistory")
-    public String getRenWuHistory(String pcorapp,Model model){
+    public String getRenWuHistory(String pcorapp,String school, String CityName, String AreaName, String checkType,Model model){
         model.addAttribute("pcorapp",pcorapp);
+        model.addAttribute("CityName",CityName);
+        model.addAttribute("AreaName",AreaName);
+        model.addAttribute("checkType",checkType);
+        model.addAttribute("school",school);
         return "renwujilu1";
     }
 
